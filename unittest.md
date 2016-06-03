@@ -162,3 +162,77 @@ Ran 7 tests in 0.000s
 
 OK
 ```
+
+> 不清楚文件提到的 test suite 怎麼弄，先 pass
+
+## 重新使用舊測試
+
+(略)
+
+## 忽略測試與預期的錯誤
+
+testSkip.py:
+```python
+import unittest
+import sys
+
+__version__ = (1, 2)
+
+class TestSkipCase(unittest.TestCase):
+
+    @unittest.skip("demonstrating skipping")
+    def test_nothing(self):
+        self.fail("shouldn't happen")
+
+    @unittest.skipIf(__version__ < (1, 3), "not supported in this library version")
+    def test_format(self):
+        # Tests that work for only a certain version of the library.
+        pass
+
+    @unittest.skipUnless(sys.platform.startswith("win"), "requires Windows")
+    def test_windows_support(self):
+        # windows specific testing code
+        pass
+
+    def test_catchExcept(self):
+        try:
+            1 / 0
+        except:
+            raise unittest.SkipTest("skipping because ...")
+        self.assertEqual(True)
+```
+
+testExpectedFailure.py:
+```python
+import unittest
+
+class ExpectedFailureTestCase(unittest.TestCase):
+    @unittest.expectedFailure
+    def test_fail(self):
+        self.assertEqual(1, 0, "broken")
+```
+
+測試結果：
+```shell
+$ python -m unittest discover -v -p "test*.py"
+test_fail (testExpectedFailure.ExpectedFailureTestCase) ... expected failure
+test_catchExcept (testSkip.TestSkipCase) ... skipped 'skipping because ...'
+test_format (testSkip.TestSkipCase) ... skipped 'not supported in this library version'
+test_nothing (testSkip.TestSkipCase) ... skipped 'demonstrating skipping'
+test_windows_support (testSkip.TestSkipCase) ... skipped 'requires Windows'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK (skipped=4, expected failures=1)
+```
+
+以下修飾詞 (decorator) 用來忽略或預期失敗：
+
+| 修飾詞 | 說明 |
+|--------|------|
+| `@unittest.skip(reason)` | 無條件忽略測試。reason 說明為何要忽略測試 |
+| `@unittest.skipIf(condition, reason)` | 如果條件成立，則忽略測試 |
+| `@unittest.skipUnless(condition, reason)` | 除非條件成立，否則忽略測試 |
+| `@unittest.expectedFailure` | 標記測試為預期錯誤。執行時如果測試失敗，結果不算失敗 |
+| `exception unittest.SkipTest(reason)` | 產生例外，忽略測試 |
