@@ -254,3 +254,8 @@ OK (skipped=4, expected failures=1)
 | `assertIsInstance(a, b)` | isinstance(a, b) |
 | `assertNotIsInstance(a, b)` | not isinstance(a, b) |
 
+## Grouping tests
+
+`class unittest.TestSuite(tests=())`
+
+== TBC ==
