@@ -236,3 +236,21 @@ OK (skipped=4, expected failures=1)
 | `@unittest.skipUnless(condition, reason)` | 除非條件成立，否則忽略測試 |
 | `@unittest.expectedFailure` | 標記測試為預期錯誤。執行時如果測試失敗，結果不算失敗 |
 | `exception unittest.SkipTest(reason)` | 產生例外，忽略測試 |
+
+## 測試方法
+
+| 方法 | 檢查 |
+|------|------|
+| `assertEqual(a, b)` | a == b |
+| `assertNotEqual(a, b)` | a != b |
+| `assertTrue(x)` | bool(x) is True |
+| `assertFalse(x)` | bool(x) is False |
+| `assertIs(a, b)` | a is b |
+| `assertIsNot(a, b)` | a is not b |
+| `assertIsNone(x)` | x is None |
+| `assertIsNotNone(x)` | x is not None |
+| `assertIn(a, b)` | a in b |
+| `assertNotIn(a, b)` | a not in b |
+| `assertIsInstance(a, b)` | isinstance(a, b) |
+| `assertNotIsInstance(a, b)` | not isinstance(a, b) |
+
