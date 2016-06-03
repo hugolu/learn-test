@@ -88,10 +88,22 @@ class TestArithmetic(unittest.TestCase):
 執行結果：
 ```shell
 $ python -m unittest -h                                 # 顯示 help message
-$ $ python -m unittest TestArithmetic                   # 測試 TestArithmetic 模組，不含副檔名 (.py)
+$ python -m unittest TestArithmetic                     # 測試 TestArithmetic 模組，不含副檔名 (.py)
 ....
 ----------------------------------------------------------------------
 Ran 4 tests in 0.000s
+
+OK
+$ python -m unittest TestArithmetic.TestArithmetic      # 測試 TestArithmetic 模組的 TestArithmetic 類別
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+$ python -m unittest TestArithmetic.TestArithmetic.test_add # 測試 TestArithmetic 模組的 TestArithmetic 類別的 test_add 測試項目
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
 
 OK
 $ python -m unittest -v TestArithmetic                  # 顯示測試細節
@@ -106,6 +118,32 @@ Ran 4 tests in 0.000s
 OK
 $ python -m unittest TestArithmetic TestStringMethods   # 測試兩個模組
 .......
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+OK
+```
+
+## 測試探索
+
+```shell
+$ ls
+TestArithmetic.py    TestStringMethods.py
+$ python -m unittest discover -p "Test*.py"             # 找出 "Test*.py" 的檔案測試
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+OK
+$ python -m unittest discover -v -p "Test*.py"          # 找出 "Test*.py" 的檔案測試，並顯示測試細節
+test_add (TestArithmetic.TestArithmetic) ... ok
+test_divide (TestArithmetic.TestArithmetic) ... ok
+test_multiply (TestArithmetic.TestArithmetic) ... ok
+test_subtrat (TestArithmetic.TestArithmetic) ... ok
+test_isupper (TestStringMethods.TestStringMethods) ... ok
+test_split (TestStringMethods.TestStringMethods) ... ok
+test_upper (TestStringMethods.TestStringMethods) ... ok
+
 ----------------------------------------------------------------------
 Ran 7 tests in 0.000s
 
