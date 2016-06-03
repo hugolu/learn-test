@@ -17,49 +17,62 @@ Python unittest 測試框架發想自 JUnit 並與其他單元測試的框架有
 
 ## 基本範例
 
-TestStringMethods:
+Arithmetic.py:
 ```python
 import unittest
 
-class TestStringMethods(unittest.TestCase):
+def add(a, b):
+    return a + b
 
-    def test_upper(self):
-        self.assertEqual('foo'.upper(), 'FOO')
+def subtract(a, b):
+    return a - b
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+def multiply(a, b):
+    return a * b
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
+def divide(a, b):
+    return a / b
+
+class TestArithmetic(unittest.TestCase):
+
+    def test_add(self):
+        self.assertEqual(add(1, 1), 2)
+
+    def test_subtract(self):
+        self.assertEqual(subtract(5, 2), 3)
+
+    def test_multiply(self):
+        self.assertEqual(multiply(3, 2), 6)
+
+    def test_divide(self):
+        self.assertEqual(divide(3.0, 2), 1.5)
 
 if __name__ == '__main__':
     unittest.main()
 ```
 
-- `test_upper` 測試 `upper()` 函數是否正確運作
-- `test_isupper` 測試 `isupper()` 函數是否正確運作
-- `test_split` 測試 `split()` 函數是否正確運作，並驗證例外是否發生
+- `test_add` 測試 `add()` 函數是否正確運作
+- `test_subtract` 測試 `subtract()` 函數是否正確運作
+- `test_multiply` 測試 `multiply()` 函數是否正確運作
+- `test_divide` 測試 `divide()` 函數是否正確運作
+- `if __name__ == '__main__'` 判斷是否執行執行，若是則執行測試
 
 執行結果：
 ```shell
-$ python TestStringMethods.py
-...
+$ python Arithmetic.py
+....
 ----------------------------------------------------------------------
-Ran 3 tests in 0.000s
+Ran 4 tests in 0.000s
 
 OK
-$ python TestStringMethods.py -v                        # 使用參數 -v 提供測試細節
-test_isupper (__main__.TestStringMethods) ... ok
-test_split (__main__.TestStringMethods) ... ok
-test_upper (__main__.TestStringMethods) ... ok
+/tmp/test$ python Arithmetic.py -v                      # 使用參數 -v 提供測試細節
+test_add (__main__.TestArithmetic) ... ok
+test_divide (__main__.TestArithmetic) ... ok
+test_multiply (__main__.TestArithmetic) ... ok
+test_subtract (__main__.TestArithmetic) ... ok
 
 ----------------------------------------------------------------------
-Ran 3 tests in 0.000s
+Ran 4 tests in 0.000s
 
 OK
 ```
