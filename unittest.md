@@ -17,6 +17,7 @@ Python unittest 測試框架發想自 JUnit 並與其他單元測試的框架有
 
 ## 基本範例
 
+TestStringMethods:
 ```python
 import unittest
 
@@ -44,7 +45,7 @@ if __name__ == '__main__':
 - `test_isupper` 測試 `isupper()` 函數是否正確運作
 - `test_split` 測試 `split()` 函數是否正確運作，並驗證例外是否發生
 
-執行結果，使用參數 `-v` 提供測試細節：
+執行結果：
 ```shell
 $ python TestStringMethods.py
 ...
@@ -52,15 +53,61 @@ $ python TestStringMethods.py
 Ran 3 tests in 0.000s
 
 OK
-```
-```shell
-$ python TestStringMethods.py -v
+$ python TestStringMethods.py -v                        # 使用參數 -v 提供測試細節
 test_isupper (__main__.TestStringMethods) ... ok
 test_split (__main__.TestStringMethods) ... ok
 test_upper (__main__.TestStringMethods) ... ok
 
 ----------------------------------------------------------------------
 Ran 3 tests in 0.000s
+
+OK
+```
+
+## 命令列
+
+TestArithmetic.py:
+```python
+import unittest
+
+class TestArithmetic(unittest.TestCase):
+
+    def test_add(self):
+        self.assertEqual(1 + 1, 2)
+
+    def test_subtrat(self):
+        self.assertEqual(5 - 2, 3)
+
+    def test_multiply(self):
+        self.assertEqual(2 * 3, 6)
+
+    def test_divide(self):
+        self.assertEqual(3.0 / 2, 1.5)
+```
+
+執行結果：
+```shell
+$ python -m unittest -h                                 # 顯示 help message
+$ $ python -m unittest TestArithmetic                   # 測試 TestArithmetic 模組，不含副檔名 (.py)
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+$ python -m unittest -v TestArithmetic                  # 顯示測試細節
+test_add (TestArithmetic.TestArithmetic) ... ok
+test_divide (TestArithmetic.TestArithmetic) ... ok
+test_multiply (TestArithmetic.TestArithmetic) ... ok
+test_subtrat (TestArithmetic.TestArithmetic) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+$ python -m unittest TestArithmetic TestStringMethods   # 測試兩個模組
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
 
 OK
 ```
