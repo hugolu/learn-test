@@ -70,5 +70,6 @@
 - [Lettuce](http://lettuce.it/) is a Behavior-Driven Development tool written by Gabriel Falcão G. de Moura.
 - [unittest](https://docs.python.org/3/library/unittest.html) — Unit testing framework
 - [unittest.mock](https://docs.python.org/3/library/unittest.mock.html) — mock object library
+- [unittest.mock-examples](https://docs.python.org/3/library/unittest.mock-examples.html) - getting started
 - [Doubles](http://doubles.readthedocs.io/) is a Python package that provides test doubles for use in automated tests.
 
