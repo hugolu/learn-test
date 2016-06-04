@@ -108,7 +108,43 @@ KeyError: 'foo'
 
 ## Using Mock
 ### Mock Patching Methods
+
+Mock 通常用在
+
+- 取代物件方法 (stub)
+- 檢查物件方法呼叫是否合乎預期 (spy)
+
+```python
+>>> from unittest.mock import MagicMock
+>>> class SomeClass:
+...     def method(self, a, b, c):
+...             return a + b + c
+...
+>>> real = SomeClass()
+>>> real.method(1,2,3)
+6
+>>> real.method = MagicMock(name='method')
+>>> real.method(2,3,4)
+<MagicMock name='method()' id='139869459937992'>
+>>> real.method.assert_called_with(2,3,4)
+```
 ### Mock for Method Calls on an Object
+
+傳遞物件給方法，檢查物件是否被正確使用
+
+```python
+>>> class ProductionClass:
+...     def closer(self, something):
+...             something.close()
+...
+>>> real = ProductionClass()
+>>> mock = MagicMock()
+>>> real.closer(mock)
+>>> mock.close.assert_called_with()
+```
+- `ProductionClass.closer` 會呼叫傳入參數的方法 `something.close()`
+- `mock = MagicMock()` 產生 spy 傳入方法中，然後檢是否被正確呼叫
+
 ### Mocking Classes
 ### Naming your mocks
 ### Tracking all Calls
