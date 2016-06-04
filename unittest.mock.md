@@ -114,6 +114,7 @@ KeyError: 'foo'
 ----
 
 ## Using Mock
+
 ### Mock Patching Methods
 
 Mock 通常用在
@@ -360,7 +361,21 @@ AttributeError: Mock object has no attribute 'old_method'
 ## Patch Decorators
 
 ## Further Examples
+
 ### Mocking chained calls
+
+一旦理解 `return_value` 這個屬性，偽裝一連串的呼叫使用上會很直覺。當 `mock` 第一次被呼叫，或是在呼叫前讀取 `return_value`，新的 `mock` 物件就因應而生。
+
+```python
+>>> from unittest.mock import Mock
+>>> mock = Mock()
+>>> mock().foo(a=2,b=3)
+<Mock name='mock().foo()' id='139808365932616'>
+>>> mock.return_value.foo.assert_called_with(a=2,b=3)
+```
+- 呼叫 `mock()` 則產生一個新的 mock 物件，然後繼續呼叫新 mock 物件的方法 `foo(a=2,b=3)` 
+- 最後用 `mock.return_value.foo.assert_called_with(a=2,b=3)` 檢查一開始的 `mock` 產生的物件 `mock.return_value` 的 `foo` 方法是否以 `(a=2,b=3)` 方式呼叫
+
 ### Partial mocking
 ### Mocking a Generator Method
 ### Applying the same patch to every test method
