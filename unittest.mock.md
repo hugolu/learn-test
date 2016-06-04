@@ -272,7 +272,57 @@ True
 ```
 
 ### Raising exceptions with mocks
+
+做出一個會產生例外的 mock
+```python
+>>> from unittest.mock import Mock
+>>> mock = Mock(side_effect=Exception('Boom!'))
+>>> mock()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python3.4/unittest/mock.py", line 902, in __call__
+    return _mock_self._mock_call(*args, **kwargs)
+  File "/usr/lib/python3.4/unittest/mock.py", line 958, in _mock_call
+    raise effect
+Exception: Boom!
+```
+
 ### Side effect functions and iterables
+
+`side_effect` 可以設定為函數或 **iterable**。當 mock 預計要被多次呼叫，每次回傳不同的值。當設定 side_effect 成為 iterable，每次呼叫會從 iterable 回傳 next value。
+
+```python
+>>> from unittest.mock import MagicMock
+>>> mock = MagicMock(side_effect=[4,5,6])
+>>> mock()
+4
+>>> mock()
+5
+>>> mock()
+6
+>>> mock()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python3.4/unittest/mock.py", line 902, in __call__
+    return _mock_self._mock_call(*args, **kwargs)
+  File "/usr/lib/python3.4/unittest/mock.py", line 961, in _mock_call
+    result = next(effect)
+StopIteration
+```
+
+更進階用法是根據傳入參數變化回傳的值，此時 side_effect 可以是個 **function**。下例透過 dictionary 偽造傳入參數與回傳值的對應關係。
+```python
+>>> vals = {(1,2): 1, (2,3): 2}
+>>> def side_effect(*args):
+...     return vals[args]
+...
+>>> mock = MagicMock(side_effect=side_effect)
+>>> mock(1,2)
+1
+>>> mock(2,3)
+2
+```
+
 ### Creating a Mock from an Existing Object
 
 ## Patch Decorators
