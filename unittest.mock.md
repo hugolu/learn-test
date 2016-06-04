@@ -325,6 +325,38 @@ StopIteration
 
 ### Creating a Mock from an Existing Object
 
+有時隨著時間演進，測試與待測物變得不匹配，例如 `Foo` 原先有 `old_method` 方法，但後來改成 `method`。使用 spec 關鍵字，當存取的方法或屬性不存在於 spec 定義的物件中，就會立即產生錯誤。
+
+```python
+>>> class Foo:
+...     def method():
+...             return 'foo'
+...
+>>> mock = Mock(spec=Foo)
+>>> mock.method.return_value = 'bar'
+>>> mock.method()
+'bar'
+>>> mock.old_method.return_value = 'baz'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python3.4/unittest/mock.py", line 574, in __getattr__
+    raise AttributeError("Mock object has no attribute %r" % name)
+AttributeError: Mock object has no attribute 'old_method'
+```
+
+也可以使用 spec 定義呼叫 mock 的方法，不管參數是根據位置傳遞或是依照參數名稱傳遞。
+```python
+>>> def f(a,b,c): pass
+...
+>>> mock = Mock(spec=f)
+>>> mock(1,2,3)
+<Mock name='mock()' id='140452137637368'>
+>>> mock.assert_called_with(a=1, b=2, c=3)
+>>> mock(c=3, b=2, a=1)
+<Mock name='mock()' id='140452137637368'>
+>>> mock.assert_called_with(a=1, b=2, c=3)
+```
+
 ## Patch Decorators
 
 ## Further Examples
