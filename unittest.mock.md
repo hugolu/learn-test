@@ -16,6 +16,7 @@ unittest.mock 是 python 用於測試的函式庫，用 mock 物件替換待測�
 
 ## 快速導覽
 
+### 範例一
 Something.py:
 ```python
 class Something:
@@ -64,3 +65,42 @@ Ran 3 tests in 0.004s
 
 OK
 ```
+
+### 範例二
+
+`side_effect` 允許執行副作用，包含當 mock 被呼叫時產生例外。
+
+```python
+>>> from unittest.mock import Mock
+>>> mock = Mock(side_effect=KeyError('foo'))
+>>> mock()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python3.4/unittest/mock.py", line 902, in __call__
+    return _mock_self._mock_call(*args, **kwargs)
+  File "/usr/lib/python3.4/unittest/mock.py", line 958, in _mock_call
+    raise effect
+KeyError: 'foo'
+```
+- 呼叫 `mock` 產生例外
+
+```python
+>>> values ={'a' : 1, 'b' : 2, 'c' : 3}
+>>> def side_effect(arg):
+...     return values[arg]
+...
+>>> mock.side_effect = side_effect
+>>> mock('a'), mock('b'), mock('c')
+(1, 2, 3)
+```
+- 透過 `side_effect()` 控制呼叫 `mock` 時回應的值
+
+```python
+>>> mock.side_effect = [5, 4, 3, 2, 1]
+>>> mock(), mock(), mock()
+(5, 4, 3)
+```
+- 預設呼叫 `mock` 回應的值
+
+### 範例三
+
