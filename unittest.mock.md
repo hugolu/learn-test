@@ -216,6 +216,61 @@ software under test:
 [call.method(1), call.method(2), call.method(3)]
 ```
 ### Setting Return Values and Attributes
+
+設定 mock 回傳值很簡單
+```python
+>>> from unittest.mock import Mock
+>>> mock = Mock()
+>>> mock.return_value = 3
+>>> mock()
+```
+
+可以定義 mock 方法的回傳值
+```python
+>>> mock = Mock()
+>>> mock.method.return_value = 3
+>>> mock.method()
+3
+```
+
+可以在建構函式中宣告回傳值
+```python
+>>> mock = Mock(return_value = 3)
+>>> mock()
+3
+```
+
+可以設定 mock 的屬性值
+```python
+>>> mock = Mock()
+>>> mock.x = 3
+>>> mock.x
+3
+```
+
+有時候要設定更複雜的情況，例如 `mock.connection.cursor().execute("SELECT 1")`，如果希望回傳一個陣列，就要設定一個遞迴呼叫的回傳結果。
+```python
+>>> from unittest.mock import call
+>>> mock = Mock()
+>>> cursor = mock.connection.coursor.return_value
+>>> cursor.execute.return_value = ['foo']
+>>> mock.connection.coursor().execute("SELECT 1")
+['foo']
+>>> expected = call.connection.coursor().execute("SELECT 1").call_list()
+>>> mock.mock_calls
+[call.connection.coursor(), call.connection.coursor().execute('SELECT 1')]
+>>> mock.mock_calls == expected
+True
+```
+- `cursor = mock.connection.coursor.return_value` 產生第一個回傳值，回傳一個 `cursor`
+- `cursor.execute.return_value = ['foo']` 設定執行第一個回傳值的結果，回傳一個陣列
+
+使用偽造的 cursor 查詢資料庫
+```python
+>>> cursor.execute("SELECT 1")
+['foo']
+```
+
 ### Raising exceptions with mocks
 ### Side effect functions and iterables
 ### Creating a Mock from an Existing Object
