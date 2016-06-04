@@ -14,6 +14,13 @@ unittest.mock 是 python 用於測試的函式庫，用 mock 物件替換待測�
 - **Spy** 記錄他們怎麼被呼叫的資訊。
 - **Mock** 是一連串預先編排的執行動作，對特定預期的呼叫做出反應，如果收到非預期呼叫方式則丟出例外。
 
+參考 - [Test Double（1）：什麼是測試替身？](http://teddy-chen-tw.blogspot.tw/2014/09/test-double1.html)
+
+SUT：System Under Test或Software Under Test
+
+- SUT：System Under Test或Software Under Test的簡寫，代表待測程式。如果是單元測試，SUT就是一個function或method。
+- DOC：Depended-on Component（相依元件），又稱為Collaborator（合作者）。DOC是SUT執行的時候會使用到的元件。例如，有一個函數X如果執行失敗會寄送email，則email元件就是函數X的DOC。
+
 ## 快速導覽
 
 ### 範例一
@@ -146,6 +153,39 @@ Mock 通常用在
 - `mock = MagicMock()` 產生 spy 傳入方法中，然後檢是否被正確呼叫
 
 ### Mocking Classes
+
+常見的情況是要在測試中用替換某類別，當你 patch 一個類別，這個類別就被 mock 取代。類別的物件是在被呼叫的方法中產生，你可以藉由查看被偽裝類別的回傳值存取偽裝物件。
+
+> 不用 IoC 嗎？
+
+module.py:
+```python
+class Foo:
+    def method(self):
+        return 'foo'
+```
+
+software under test:
+```python
+>>> import module
+>>> def some_function():
+...     instance = module.Foo()
+...     return instance.method()
+...
+>>> some_function()
+'foo'
+```
+
+用 mock 取代 `module.Foo`
+```python
+>>> from unittest.mock import patch
+>>> with patch('module.Foo') as mock:
+...     instance = mock.return_value
+...     instance.method.return_value = 'bar
+...     result = some_function()
+...     assert result == 'bar'
+```
+
 ### Naming your mocks
 ### Tracking all Calls
 ### Setting Return Values and Attributes
