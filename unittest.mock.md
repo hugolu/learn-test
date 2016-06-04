@@ -104,3 +104,32 @@ KeyError: 'foo'
 
 ### 範例三
 
+----
+
+## Using Mock
+### Mock Patching Methods
+### Mock for Method Calls on an Object
+### Mocking Classes
+### Naming your mocks
+### Tracking all Calls
+### Setting Return Values and Attributes
+### Raising exceptions with mocks
+### Side effect functions and iterables
+### Creating a Mock from an Existing Object
+
+## Patch Decorators
+
+## Further Examples
+### Mocking chained calls
+### Partial mocking
+### Mocking a Generator Method
+### Applying the same patch to every test method
+### Mocking Unbound Methods
+### Checking multiple calls with mock
+### Coping with mutable arguments
+### Nesting Patches
+### Mocking a dictionary with MagicMock
+### Mock subclasses and their attributes
+### Mocking imports with patch.dict
+### Tracking order of calls and less verbose call assertions
+### More complex argument matching
