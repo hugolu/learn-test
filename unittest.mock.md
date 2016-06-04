@@ -187,7 +187,34 @@ software under test:
 ```
 
 ### Naming your mocks
+
+命名 mock 物件，當出現錯誤可以快速找到原因
+
+```python
+>>> from unittest.mock import MagicMock
+>>> mock = MagicMock(name='foo')
+>>> mock
+<MagicMock name='foo' id='140366347445360'>
+>>> mock.method
+<MagicMock name='foo.method' id='140366338380744'>
+```
+
 ### Tracking all Calls
+
+`mock_calls` 屬性紀錄所有呼叫 mock 與其子類的歷程
+
+```python
+>>> from unittest.mock import MagicMock
+>>> mock = MagicMock()
+>>> mock.method(1)
+<MagicMock name='mock.method()' id='140667031061560'>
+>>> mock.method(2)
+<MagicMock name='mock.method()' id='140667031061560'>
+>>> mock.method(3)
+<MagicMock name='mock.method()' id='140667031061560'>
+>>> mock.mock_calls
+[call.method(1), call.method(2), call.method(3)]
+```
 ### Setting Return Values and Attributes
 ### Raising exceptions with mocks
 ### Side effect functions and iterables
