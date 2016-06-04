@@ -6,20 +6,20 @@
 unittest.mock 是 python 用於測試的函式庫，用 mock 物件替換待測試系統的某些部分，宣告這些偽造的部分應該如何被使用。
 
 ## Test Double
-參考 - [TestDouble](http://www.martinfowler.com/bliki/TestDouble.html)
 
+[介紹Test Double](http://teddy-chen-tw.blogspot.tw/2014/09/test-double1.html)之前先介紹兩個測試常用術語：
+
+- SUT：System Under Test或Software Under Test的簡寫，代表待測程式。如果是單元測試，SUT就是一個function或method。
+- DOC：Depended-on Component（相依元件），又稱為Collaborator（合作者）。DOC是SUT執行的時候會使用到的元件。例如，有一個函數X如果執行失敗會寄送email，則email元件就是函數X的DOC。
+
+[Test Double 的種類](http://www.martinfowler.com/bliki/TestDouble.html):
 - **Dummy** 用來傳遞給函式但不會真的被使用，通常只充當函式參數讓程式順利編譯。
 - **Fake** 物件真正功能，但通常會採用捷徑實作，不適合用在生產環境。(範例：InMemoryTestDatabase)
 - **Stub** 為測試時期的呼叫提供罐裝答案，通常不會對外界所有輸入做出反應。
 - **Spy** 記錄他們怎麼被呼叫的資訊。
 - **Mock** 是一連串預先編排的執行動作，對特定預期的呼叫做出反應，如果收到非預期呼叫方式則丟出例外。
 
-參考 - [Test Double（1）：什麼是測試替身？](http://teddy-chen-tw.blogspot.tw/2014/09/test-double1.html)
 
-SUT：System Under Test或Software Under Test
-
-- SUT：System Under Test或Software Under Test的簡寫，代表待測程式。如果是單元測試，SUT就是一個function或method。
-- DOC：Depended-on Component（相依元件），又稱為Collaborator（合作者）。DOC是SUT執行的時候會使用到的元件。例如，有一個函數X如果執行失敗會寄送email，則email元件就是函數X的DOC。
 
 ## 快速導覽
 
