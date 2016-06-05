@@ -360,6 +360,70 @@ AttributeError: Mock object has no attribute 'old_method'
 
 ## Patch Decorators
 
+“使用patch或者patch.object的目的是为了控制mock的范围，意思就是在一个函数范围内，或者一个类的范围内，或者with语句的范围内mock掉一个对象。” - [Python Mock的入门](https://segmentfault.com/a/1190000002965620)
+
+- [`patch()`](https://docs.python.org/3.4/library/unittest.mock.html#unittest.mock.patch) acts as a function decorator, class decorator or a context manager. Inside the body of the function or with statement, the target is patched with a new object. When the function/with statement exits the patch is undone.
+- [`patch.object()`](https://docs.python.org/3.4/library/unittest.mock.html#unittest.mock.patch.object) can be used as a decorator, class decorator or a context manager. Arguments new, spec, create, spec_set, autospec and new_callable have the same meaning as for patch(). Like patch(), patch.object() takes arbitrary keyword arguments for configuring the mock object it creates.
+
+Game.py:
+```python
+import random
+
+def choice(*seq):
+    return random.choice(seq)
+
+class Game:
+    def coin(self):
+        return choice(['head', 'tail'])
+
+    def bet(self, side):
+        return 'win' if side == self.coin() else 'lose'
+```
+- `choice()` 隨機回傳 seq 裡面任意元素
+- `coin()` 透過 `choice()` 決定硬幣正反面
+- `bet()` 判斷 `side` 與 `coin()` 是否相同，決定輸贏
+
+testGame.py:
+```python
+import unittest
+from unittest.mock import patch
+
+class TestGame(unittest.TestCase):
+
+    def test_head_tail(self):
+        def always_tail(self):
+            return 'tail'
+        with patch('Game.choice', always_tail):
+            from Game import Game
+            game = Game()
+            self.assertEqual(game.bet('head'), 'lose')
+
+    def test_head_head(self):
+        from Game import Game
+        def always_head(self):
+            return 'head'
+        with patch.object(Game, 'coin', always_head):
+            game = Game()
+            self.assertEqual(game.bet('head'), 'win')
+```
+
+為了測試 `Game.bet` 裡面判斷輸贏的邏輯是否正確，必須將底層的依賴元件取代為可操作結果的 test double。取代有兩種方式，`patch` 與 `patch.object`：
+
+- `test_head_tail`: 用 `always_tail` 取代 `Game` 模組的 `choice` 函式
+- `test_head_head`: 用 `always_head` 取代 `Game` 類別的 `coni` 方法
+
+run test:
+```chell
+$ python -m unittest -v test
+test_head_head (test.TestGame) ... ok
+test_head_tail (test.TestGame) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.010s
+
+OK
+```
+
 ## Further Examples
 
 ### Mocking chained calls
