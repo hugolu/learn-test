@@ -34,37 +34,78 @@ $ sudo apt-get update
 $ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm git
 ```
 
-## 安裝 python
-
-```shell
-$ sudo apt-get install python3.4
-```
-
 ## 安裝 [pip](https://pip.pypa.io/en/stable/) python 套件管理程式
 
 ```shell
 $ sudo apt-get install python-pip
 ```
 
-## 檢查 python 版本
-
-```shell
-$ python --version
-Python 2.7.9
-$ which python
-/usr/bin/python
-$ ls -al /usr/bin/python*
-lrwxrwxrwx 1 root root       9 Mar 16  2015 /usr/bin/python -> python2.7
-lrwxrwxrwx 1 root root       9 Mar 16  2015 /usr/bin/python2 -> python2.7
--rwxr-xr-x 1 root root 3785928 Mar  1  2015 /usr/bin/python2.7
--rwxr-xr-x 2 root root 4476488 Oct  8  2014 /usr/bin/python3.4
--rwxr-xr-x 2 root root 4476488 Oct  8  2014 /usr/bin/python3.4m
-```
-
 ## 透過 [pyenv](http://blog.codylab.com/python-pyenv-management/) 管理 python 版本
+- [使用 Pyenv 管理多個 Python 版本](http://blog.codylab.com/python-pyenv-management/)
+- [pyenv 教程](https://wp-lai.gitbooks.io/learn-python/content/0MOOC/pyenv.html)
 
 ```shell
 $ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 $ sudo pip install virtualenv
+```
+
+添加以下內容到 `~/.bashrc`
+```
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+```
+
+重新載入 `~/.bashrc`
+```shell
+$ source ~/.bashrc
+```
+
+查看可用的 python 版本
+```shell
+$ pyenv versions
+  system
+```
+
+列出可用的 python 版本
+```shell
+$ pyenv install -l
+Available versions:
+  ...
+  3.4.0
+  3.4-dev
+  3.4.1
+  3.4.2
+  3.4.3
+  3.4.4
+  3.5.0
+  3.5-dev
+  3.5.1
+  3.6.0a1
+  3.6-dev
+  ...
+```
+
+安裝 python 3.4.1
+```shell
+$ pyenv install 3.4.1
+$ pyenv versions
+  system
+* 3.4.1 (set by /home/vagrant/.python-version)
+```
+
+切換 python 版本
+```shell
+$ pyenv version
+system (set by /home/vagrant/.python-version)
+$ python --version
+Python 2.7.9
+
+$ pyenv local 3.4.1
+
+$ pyenv version
+3.4.1 (set by /home/vagrant/.python-version)
+$ python --version
+Python 3.4.1
 ```
