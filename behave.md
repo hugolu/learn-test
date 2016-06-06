@@ -144,3 +144,101 @@ def step_impl(context):
 - 修改每個 `step_impl`
 
 > `list(fibs(context.fib_number))[-1]`: 將 `fibs()` 計算結果轉成 `list`，然侯取出最後一個值 (寫得很有技巧，但可讀性很差)
+
+將 steps 改得更有彈性
+```python
+# file:features/steps/step_fib.py
+# ----------------------------------------------------------------------------
+# PROBLEM DOMAIN:
+# ----------------------------------------------------------------------------
+def fibs(num):
+    a = b = 1
+    for i in range(num):
+        yield a
+        a, b = b, a + b
+# ----------------------------------------------------------------------------
+# STEPS:
+# ----------------------------------------------------------------------------
+@given(u'we have the number {number}')
+def step_impl(context, number):
+    context.fib_number = int(number)
+
+@when(u'we calc the fib')
+def step_impl(context):
+    context.fib_number=list(fibs(context.fib_number))[-1]
+
+@then(u'we get the fib number {number}')
+def step_impl(context, number):
+    context.expected_number = int(number)
+    assert context.fib_number == context.expected_number, "Calc fib number: %d" % context.fib_number
+```
+
+跑一次 behave
+```shell
+$ behave
+Feature: Calc Fib # features/fib.feature:2
+  In order to introduce Behave
+  We calc fib as example
+  Scenario: Calc fib number       # features/fib.feature:6
+    Given we have the number 10   # features/steps/step_fib.py:13 0.000s
+    When we calc the fib          # features/steps/step_fib.py:17 0.000s
+    Then we get the fib number 55 # features/steps/step_fib.py:21 0.000s
+
+1 feature passed, 0 failed, 0 skipped
+1 scenario passed, 0 failed, 0 skipped
+3 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 0m0.000s
+```
+
+修改 features: 新增測試條件
+```python
+# file:features/fib.feature
+Feature:Calc Fib
+    In order to introduce Behave
+    We calc fib as example
+
+  Scenario Outline: Calc fib number
+     Given we have the number <number>
+      When we calc the fib
+      Then we get the fib number <fib_number>
+
+        Examples: Some numbers
+            | number    | fib_number    |
+            | 1         | 1             |
+            | 2         | 2             |
+            | 10        | 55            |
+```
+
+執行 behave 驗證
+```shell
+$ behave
+Feature: Calc Fib # features/fib.feature:2
+  In order to introduce Behave
+  We calc fib as example
+  Scenario Outline: Calc fib number -- @1.1 Some numbers  # features/fib.feature:13
+    Given we have the number 1                            # features/steps/step_fib.py:13 0.000s
+    When we calc the fib                                  # features/steps/step_fib.py:17 0.000s
+    Then we get the fib number 1                          # features/steps/step_fib.py:21 0.000s
+
+  Scenario Outline: Calc fib number -- @1.2 Some numbers  # features/fib.feature:14
+    Given we have the number 2                            # features/steps/step_fib.py:13 0.000s
+    When we calc the fib                                  # features/steps/step_fib.py:17 0.000s
+    Then we get the fib number 2                          # features/steps/step_fib.py:21 0.000s
+      Assertion Failed: Calc fib number: 1
+
+
+  Scenario Outline: Calc fib number -- @1.3 Some numbers  # features/fib.feature:15
+    Given we have the number 10                           # features/steps/step_fib.py:13 0.000s
+    When we calc the fib                                  # features/steps/step_fib.py:17 0.000s
+    Then we get the fib number 55                         # features/steps/step_fib.py:21 0.000s
+
+
+Failing scenarios:
+  features/fib.feature:14  Calc fib number -- @1.2 Some numbers
+
+0 features passed, 1 failed, 0 skipped
+2 scenarios passed, 1 failed, 0 skipped
+8 steps passed, 1 failed, 0 skipped, 0 undefined
+Took 0m0.001s
+```
+- 發生錯誤 `Assertion Failed: Calc fib number: 1`: 原因是 features 定義時誤以為第二個 fibonacci 數是 2 (1 才是對的)
