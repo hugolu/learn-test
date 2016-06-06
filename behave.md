@@ -5,7 +5,7 @@
 - [Behave official site](http://pythonhosted.org/behave/)
 - [behave Examples and Tutorials](https://jenisys.github.io/behave.example/index.html)
 
-## 透過範例快速瀏覽
+## 透過範例快速上手
 
 參考：[Python BDD自动化测试框架初探](http://lovesoo.org/python-bdd-exploration-of-the-automated-testing-framework.html)，計算 fibonacci 數列
 
@@ -113,7 +113,7 @@ Failing scenarios:
 Took 0m0.000s
 ```
 
-修改 steps，並實作出 fibs
+修改 steps，並實作 fibs
 ```python
 # file:features/steps/step_fib.py
 # ----------------------------------------------------------------------------
