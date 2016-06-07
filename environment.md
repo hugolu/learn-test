@@ -18,11 +18,20 @@ opentable/win-2008r2-standard-amd64-nocm (virtualbox, 1.0.1)
 ubuntu/trusty64                          (virtualbox, 20151020.0.0)
 ```
 
-初始化設定，啟動機器後登入系統
+初始化設定
 ```shell
 $ mkdir test
 $ cd test
 $ vagrant init ARTACK/debian-jessie
+```
+
+因為將來要弄一個 web server，為了讓 host os 可以連接，需要產生一個 private network 介面，修改 Vagrantfile 加入下面一行
+```
+config.vm.network "private_network", ip: "192.168.33.10"
+```
+
+啟動機器後登入系統
+```shell
 $ vagrant up
 $ vagrant ssh
 ```
