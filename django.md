@@ -12,7 +12,7 @@ Let's 開始練功吧
 - [Writing your first Django app, part 6](https://docs.djangoproject.com/en/1.9/intro/tutorial06/)
 - [Writing your first Django app, part 7](https://docs.djangoproject.com/en/1.9/intro/tutorial07/)
 
-## 寫出第一支 Django 應用 part 1
+## 寫出第一支 Django 應用 之一
 
 ### 檢查套件是否安裝
 ```shell
@@ -142,3 +142,6 @@ urlpatterns = [
 ```
 Hello, world. You're at the polls index.
 ```
+
+## 寫出第一支 Django 應用 之二
+
