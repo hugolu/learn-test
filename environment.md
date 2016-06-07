@@ -124,3 +124,11 @@ pip 1.5.6 from /home/vagrant/.pyenv/versions/3.4.1/lib/python3.4/site-packages (
 $ pip install behave
 pip install -U behave
 ```
+
+## 安裝 Django - 
+
+- [How to get Django](https://www.djangoproject.com/download/)
+
+```shell
+$ pip install Django==1.9.7
+```
