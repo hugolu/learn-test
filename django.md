@@ -106,6 +106,7 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 ```
+- 最簡的的 view，回應字串
 
 產生 polls/urls.py:
 ```python
@@ -117,6 +118,8 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 ]
 ```
+- 為了能呼叫到 view，需要將它對應到一個 URL
+- 接著設定 URLConf，在當前目錄產生 `urls.py` 檔案，將沒有內容的 URL `r'^$'` 對應到 `index`
 
 修改 root URLConf，讓它知道如何重新導向 polls 的請求，mysite/urls.py:
 ```python
@@ -128,6 +131,12 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 ]
 ```
+- `r'^polls/'` 指向在 polls.urls 模組的 root URLconf
+- 使用 `include()`參考到其他的 URLConf
+- 除了 `admin.site.urls` 之外，其他的 URL pattern 都要用 `include()` 參考過去
+- `url(regex, view, kwargs=None, name=None, prefix='')` 傳遞四個參數，先看前兩個
+    - 使用正規表示式 `regex` 來匹配 URL
+    - 如果正規表示匹配，則呼叫 `view` 函數 
 
 修改完成後啟動 server，透過瀏覽器看到下面訊息
 ```
