@@ -63,3 +63,61 @@ $ python manage.py runserver 0.0.0.0:8000
 設定好之後，透過瀏覽器查看結果
 
 ![Welcome to Django](welcome2django.png)
+
+> 確定 server 正常執行後，在執行 `python manage.py runserver` 的 console 按下 <ctrl> + c，中斷程式繼續下面的修改 (之後開發步驟都是 run-test-shutdown 循環，不再累述)
+
+### 產生第一個 app
+
+```shell
+$ python manage.py startapp polls
+$ tree polls
+polls
+├── admin.py
+├── apps.py
+├── __init__.py
+├── migrations
+│   └── __init__.py
+├── models.py
+├── tests.py
+└── views.py
+
+1 directory, 7 files
+```
+
+### 寫第一個 View
+
+修改 polls/views.py:
+```python
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+```
+
+產生 polls/urls.py:
+```python
+from django.conf.urls import url
+
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+]
+```
+
+修改 root URLConf，讓它知道如何重新導向 polls 的請求，mysite/urls.py:
+```python
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^polls/', include('polls.urls')),
+    url(r'^admin/', admin.site.urls),
+]
+```
+
+修改完成後啟動 server，透過瀏覽器看到下面訊息
+```
+Hello, world. You're at the polls index.
+```
