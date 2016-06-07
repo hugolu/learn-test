@@ -91,6 +91,11 @@ polls
 1 directory, 7 files
 ```
 
+#### Project vs. apps 的區別
+- app 是一個做一些像網誌, 公共紀錄資料庫或小型投票系統的 web application。
+- project 是一堆針對某特定網站的設定與 app 的集合。
+- 一個 project 可以包含多個 app，一個 app 可以存在多個 project 中。
+
 ### 寫第一個 View
 
 修改 polls/views.py:
