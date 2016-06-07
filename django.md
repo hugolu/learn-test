@@ -24,9 +24,8 @@ $ python -c "import django; print(django.get_version())"
 
 ```shell
 $ django-admin startproject mysite
-$ cd mysite
-$ tree
-.
+$ tree mysite/
+mysite/
 ├── manage.py
 └── mysite
     ├── __init__.py
@@ -35,7 +34,15 @@ $ tree
     └── wsgi.py
 
 1 directory, 5 files
+$ cd mysite
 ```
+- 外層 `mysite/`: root directory，名字隨便取
+- `manage.py`: 用來操作  Django 專案的命令列工具
+- 內層 `mysite/`: 真正放 python 專案的地方，將要 import 一堆東西到這裏。
+- `mysite/__init__.py`: 空檔案，告訴 python 各個目錄應該被當成 python package。
+- `mysite/settings.py`: 設定檔。
+- `mysite/urls.py`: URL 宣告檔，描述網站的內容結構。
+- `mysite/wsgi.py`: WSGI-compatible web servers 進入點
 
 ###  啟動 Server
 
