@@ -34,13 +34,17 @@ $ sudo apt-get update
 $ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm git
 ```
 
-## 安裝 [pip](https://pip.pypa.io/en/stable/) python 套件管理程式
+## 安裝 pip - python 套件管理程式
+
+- [安裝 PIP 來管理 Python Packages](https://blog.longwin.com.tw/2014/08/python-setup-pip-package-2014/)
+- [pip](https://pip.pypa.io/en/stable/)
 
 ```shell
 $ sudo apt-get install python-pip
 ```
 
-## 透過 [pyenv](http://blog.codylab.com/python-pyenv-management/) 管理 python 版本
+## 安裝 pyenv - python 版本管理程式
+
 - [使用 Pyenv 管理多個 Python 版本](http://blog.codylab.com/python-pyenv-management/)
 - [pyenv 教程](https://wp-lai.gitbooks.io/learn-python/content/0MOOC/pyenv.html)
 
@@ -109,3 +113,5 @@ $ pyenv version
 $ python --version
 Python 3.4.1
 ```
+
+> Python 自 2.1 起開始內建 unittest，積極面可作為測試驅動開發(TDD)，消極面至少提供一個容易上手的測試框架。往後實驗會用到 unittest.mock，這個在 python 2 沒有提供，需要切換到 python 3 才能使用測試替身 (Test Double) 切開相依的元件。
