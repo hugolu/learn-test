@@ -145,3 +145,47 @@ Hello, world. You're at the polls index.
 
 ## 寫出第一支 Django 應用 之二
 
+### 設定資料庫
+
+mysite/settings.py 資料庫相關設定
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+```
+Some of these applications make use of at least one database table, though, so we need to create the tables in the database before we can use them. To do that, run the following command:
+
+某些應用使用至少一個資料庫表格，所以使用前需要在資料庫中產生一個表格。執行下面指令
+```shell
+$ python manage.py migrate
+```
+- `migrate` 命令查看 INSTALLED_APPS 設定，然後產生任何需要的資料庫表格。
+
+### 產生模型 (model)
+
+現在來定義 model，基本上是資料庫的 layout 以及以些 metadata。
+
+polls/models.py
+```python
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+```
+
+## 啟動 model
+
+剛剛 model 的一點點程式碼提供 Django 很多訊息。藉由這些訊息，Django 可以：
+
+- 產生資料庫 schema
+- 產生 python database-access API 存取 Question 與 Choice 物件
