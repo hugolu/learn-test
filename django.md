@@ -134,3 +134,26 @@ Django 不採取 MVC 架構，而是 MTV 架構。操作 View 與 URL 之前，�
 3. Model (models.py) 定義資料庫的資料以及如何跟它互動的方式
 4. 處理完 request 任務，View 就會回覆 HTTP Response 給瀏覽器
 5. Templates 放置 HTML 檔案，這些檔案包含 HTML 語法與網頁如何呈現的邏輯
+
+創建一個 View，修改 article/views.py，新增一下程式
+```python
+from django.http import HttpResponse
+
+def home(request):
+    s = "Hello World!"
+    return HttpResponse(s)
+```
+- 沒有涉及底層 Model，僅僅回覆 "Hello World!" 訊息
+
+告訴 Django 要如何處理 URL，修改 blog/urls.py，在 `urlpatterns` 加入下面程式
+```python
+urlpatterns = [
+    ...
+    url(r'^$', 'article.views.home'),
+]
+```
+
+重啟服務，連接 `http://192.168.33.10:8000/`，看到以下訊息
+```
+Hello World!
+```
