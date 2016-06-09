@@ -125,7 +125,7 @@ Python 3.4.1
 
 > Python 自 2.1 起開始內建 unittest，積極面可作為測試驅動開發(TDD)，消極面至少提供一個容易上手的測試框架。往後實驗會用到 unittest.mock，這個在 python 2 沒有提供，需要切換到 python 3 才能使用測試替身 (Test Double) 切開相依的元件。
 
-## 安裝 behave - Python BDD framework
+## 安裝 behave - Python BDD Framework
 
 ```shell
 $ pip --version
@@ -134,7 +134,13 @@ $ pip install behave
 pip install -U behave
 ```
 
-## 安裝 Django - 
+## 安裝 Sqlite - Lightweight SQL Database
+
+```shell
+$ sudo apt-get install sqlite3 libsqlite3-dev
+```
+
+## 安裝 Django - Python Web Framework
 
 - [How to get Django](https://www.djangoproject.com/download/)
 
