@@ -33,7 +33,31 @@ eval "$(pyenv init -)"
 ```
 
 重新載入 ~/.bashrc
-```
+```shell
 $ source ~/.bashrc
+```
+
+安裝 Python 3.5.1
+```shell
+$ pyenv install 3.5.1
+```
+
+設定 Python 3.5.1
+```shell
+$ pyenv local 3.5.1
+$ python --version
+Python 3.5.1
+```
+
+設定虛擬環境 (從此只要在 virtualenv 下面安裝的 package 都只會存在于這個 virtualenv 當中，安裝套件不需要 root 權限)
+```shell
+$ pyvenv myvenv
+$ source myvenv/bin/activate
+(myvenv) vagrant@debian:~$
+```
+
+下載、安裝 Django
+```shell
+$ pip install Django==1.9.7
 ```
 
