@@ -75,6 +75,7 @@ blog/
 │   └── wsgi.py
 └── manage.py
 ```
+- 內層的 `blog/` 放置 project 相關的設定
 
 進入 `blog/` 啟動服務
 ```shell
@@ -87,3 +88,37 @@ $ python manage.py runserver 0.0.0.0:8000
 It worked!
 Congratulations on your first Django-powered page.
 ```
+
+## Django APPs
+
+- Django Project 由多個 Django APP 組成，每個 Django App 可以被多個 Django Project 所使用
+- Django App 就是一個功能單純的應用
+
+創建 Django App
+```shell
+$ python manage.py startapp article
+$ tree article/
+article/
+├── admin.py
+├── apps.py
+├── __init__.py
+├── migrations
+│   └── __init__.py
+├── models.py
+├── tests.py
+└── views.py
+```
+
+讓 project 知道多了這個 app，編輯 `blog/settings.py`
+```
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'article',
+]
+```
+- 在 INSTALLED_APPS 內新增 `article`
