@@ -61,3 +61,29 @@ $ source myvenv/bin/activate
 $ pip install Django==1.9.7
 ```
 
+## Djando Project
+
+建立 project
+```shell
+$ django-admin.py startproject blog
+$ tree blog/
+blog/
+├── blog
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── manage.py
+```
+
+進入 `blog/` 啟動服務
+```shell
+$ cd blog/
+$ python manage.py runserver 0.0.0.0:8000
+```
+
+開啟瀏覽器，連接 `http://192.168.33.10:8000/` ([虛擬機](environment.md))，看到以下訊息
+```
+It worked!
+Congratulations on your first Django-powered page.
+```
