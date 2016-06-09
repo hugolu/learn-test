@@ -1,6 +1,8 @@
 # sqlite 快速瀏覽
 
-參考資料
+這份文件快速瀏覽 SQLite 基本語法，包含創建資料庫、創建表格，新增、更新、查詢、刪除記錄 (CURD)。
+
+## 參考資料
 
 - [SQLite 教程](http://www.runoob.com/sqlite/sqlite-tutorial.html)
 - [SQLite 官網](https://www.sqlite.org/)
@@ -161,7 +163,7 @@ ID          NAME        AGE         ADDRESS     SALARY
 ```
 
 ## 刪除表格
--http://www.runoob.com/sqlite/sqlite-drop-table.html
+- http://www.runoob.com/sqlite/sqlite-drop-table.html
 
 刪除表格前，列出目前的表格
 ```sql
