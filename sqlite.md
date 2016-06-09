@@ -159,3 +159,19 @@ ID          NAME        AGE         ADDRESS     SALARY
 5           David       27          Texas       85000.0
 6           Kim         22          Texas       45000.0
 ```
+
+## 刪除表格
+-http://www.runoob.com/sqlite/sqlite-drop-table.html
+
+刪除表格前，列出目前的表格
+```sql
+sqlite> .tables
+COMPANY     DEPARTMENT
+```
+
+使用 `DROP TABLE` 刪除表格
+```sql
+sqlite> DROP TABLE DEPARTMENT;
+sqlite> .tables
+COMPANY
+```
