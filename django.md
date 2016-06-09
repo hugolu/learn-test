@@ -122,3 +122,15 @@ INSTALLED_APPS = [
 ]
 ```
 - 在 INSTALLED_APPS 內新增 `article`
+
+## Django Views & Django URLs
+
+Django 不採取 MVC 架構，而是 MTV 架構。操作 View 與 URL 之前，先由下圖了解 URL Request 被如何處理，然後變成使用者在瀏覽器看到的結果。
+
+![Python MTV model](http://1.bp.blogspot.com/-zsIAtTJ0aNg/VdgZlmmnADI/AAAAAAAA6A0/edFRO2N9Yb8/s1600/432038560_9f8b830dfe_o.png)(圖片出處 http://mropengate.blogspot.tw/2015/08/mvcdjangomtv.html)
+
+1. URL 派送器 (urls.py) 將 URL Request 對應到 View 的函式
+2. View 函式 (views.py) 執行 request 動作，通常引發讀寫資料庫的動作
+3. Model (models.py) 定義資料庫的資料以及如何跟它互動的方式
+4. 處理完 request 任務，View 就會回覆 HTTP Response 給瀏覽器
+5. Templates 放置 HTML 檔案，這些檔案包含 HTML 語法與網頁如何呈現的邏輯
