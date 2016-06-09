@@ -1,4 +1,4 @@
-# sqlite
+# sqlite 快速瀏覽
 
 參考資料
 
@@ -27,4 +27,40 @@ seq  name             file
 使用 `.quit` 退出資料庫
 ```sql
 sqlite> .quit
+```
+
+## 創建表格
+
+建立 `COMPANY` 與 `DEPARTMENT` 兩個表格
+```sql
+sqlite> CREATE TABLE COMPANY (
+   ...> ID INT PRIMARY KEY  NOT NULL,
+   ...> NAME    TEXT NOT    NULL,
+   ...> AGE     INT NOT     NULL,
+   ...> ADDRESS CHAR(50),
+   ...> SALARY  REAL
+   ...> );
+sqlite> CREATE TABLE DEPARTMENT (
+   ...> ID INT PRIMARY KEY  NOT NULL,
+   ...> DEPT    CHAR(50)    NOT NULL,
+   ...> EMP_ID  INT         NOT NULL
+   ...> );
+```
+
+使用 `.tables` 列出表格
+```sql
+sqlite> .tables
+COMPANY     DEPARTMENT
+```
+
+使用 `.schema` 顯示表格結構
+```sql
+sqlite> .schema COMPANY
+CREATE TABLE COMPANY (
+ID INT PRIMARY KEY  NOT NULL,
+NAME    TEXT NOT    NULL,
+AGE     INT NOT     NULL,
+ADDRESS CHAR(50),
+SALARY  REAL
+);
 ```
