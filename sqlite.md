@@ -2,7 +2,7 @@
 
 參考資料
 
-- [SQLite 语法](http://www.runoob.com/sqlite/sqlite-syntax.html)
+- [SQLite 教程](http://www.runoob.com/sqlite/sqlite-tutorial.html)
 - [SQLite 官網](https://www.sqlite.org/)
 
 ## 創建資料庫
@@ -30,6 +30,7 @@ sqlite> .quit
 ```
 
 ## 創建表格
+- http://www.runoob.com/sqlite/sqlite-create-table.html
 
 建立 `COMPANY` 與 `DEPARTMENT` 兩個表格
 ```sql
@@ -63,4 +64,63 @@ AGE     INT NOT     NULL,
 ADDRESS CHAR(50),
 SALARY  REAL
 );
+```
+
+## 插入紀錄
+- http://www.runoob.com/sqlite/sqlite-insert.html
+
+方法一
+```sql
+sqlite> INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+   ...> VALUES (1, 'Paul', 32, 'California', 20000.00 );
+sqlite> INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+   ...> VALUES (2, 'Allen', 25, 'Texas', 15000.00 );
+sqlite>
+sqlite> INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+   ...> VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );
+sqlite>
+sqlite> INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+   ...> VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );
+sqlite>
+sqlite> INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+   ...> VALUES (5, 'David', 27, 'Texas', 85000.00 );
+sqlite>
+sqlite> INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+   ...> VALUES (6, 'Kim', 22, 'South-Hall', 45000.00 );
+```
+
+方法二
+```sql
+sqlite> INSERT INTO COMPANY VALUES (7, 'James', 24, 'Houston', 10000.00 );
+```
+
+## 查詢記錄
+- http://www.runoob.com/sqlite/sqlite-select.html
+
+使用 `SELECT` 查詢表格資料
+```sql
+sqlite> SELECT * FROM COMPANY;
+1|Paul|32|California|20000.0
+2|Allen|25|Texas|15000.0
+3|Teddy|23|Norway|20000.0
+4|Mark|25|Rich-Mond |65000.0
+5|David|27|Texas|85000.0
+6|Kim|22|South-Hall|45000.0
+7|James|24|Houston|10000.0
+```
+
+使用 `.header on` 命令顯示表格標頭，使用 `.mode column` 排列欄位，提高表格可讀性
+```sql
+sqlite> .header on
+sqlite> .mode column
+sqlite> SELECT * FROM COMPANY;
+ID          NAME        AGE         ADDRESS     SALARY
+----------  ----------  ----------  ----------  ----------
+1           Paul        32          California  20000.0
+2           Allen       25          Texas       15000.0
+3           Teddy       23          Norway      20000.0
+4           Mark        25          Rich-Mond   65000.0
+5           David       27          Texas       85000.0
+6           Kim         22          South-Hall  45000.0
+7           James       24          Houston     10000.0
 ```
