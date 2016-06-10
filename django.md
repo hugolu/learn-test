@@ -710,3 +710,12 @@ $ heroku open
 ```
 
 上面那招只能在 terminal console 跟 web browser 在同一個機器的情況下使用，因為我是透過虛擬環境開發的，要自行打開瀏覽器輸入剛剛 heroku 給的 app 名稱加上 “heroku.com” 才能連上，例如 https://guarded-harbor-11820.herokuapp.com/
+
+## What’s next?
+
+不管是  [Django Tutorial](http://daikeren.github.io/django_tutorial/) 還是 [Django Girls 學習指南](https://www.gitbook.com/book/djangogirlstaipei/django-girls-taipei-tutorial/details) 在文章最後都有一個 Todo list，可能是修改 template 使用 tag/filter 或套用 css/javascript，修改 Model 增加、刪除欄位，上傳檔案，增加留言功能等等。我的下一步是什麼呢？
+
+- 結合 Django 與 Behave，透過與 stakeholder 的對話逐步完成網站的功能
+- 使用 Python unittest 開發 View 或 Model 的功能
+- 使用 CI 做到測試自動化
+- 研究如何自動部署到 Heroku
