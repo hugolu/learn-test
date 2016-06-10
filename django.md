@@ -342,3 +342,43 @@ You have mail in /var/mail/vagrant
 ```
 
 設定完成，啟動服務，登入 http://192.168.33.10:8000/admin/，透過 Web UI 新增、查詢、修改、刪除記錄。
+
+## Django Views & Django URL 再訪
+
+想辦法做出讓網站可以根據 URL 動態產生網頁，例如 URL=`article/1/` 呈顯第一則文章
+
+先從 view 開始，修改 article/views.py，加上下面程式碼
+```python
+from article.models import Article
+
+def detail(request, pk):
+    article = Article.objects.get(pk=int(pk))
+    s = """
+    <html>
+    <head></head>
+    <body>
+    <h1>{0}</h1>
+    {1}
+    </body>
+    </html>
+    """.format(article.title, article.content)
+    return HttpResponse(s)
+```
+- `detail` 根據參數 `pk` 查詢文章的標題與內容，插入 HTML 中，然後回覆給瀏覽器
+
+接著，修該 blog/urls.py，讓 Django 能夠解析 URL Request，得到要給 `detail` 的 `pk`
+```python
+urlpatterns = [
+    ...
+    url(r'^article/(?P<pk>[0-9]+)/$', 'article.views.detail'),
+]
+```
+- `(?P<pk>[0-9]+)` 解析 URL=`article/1` 後面的數字，得到 pk 這個 group name 然後傳給 `detail`
+- [Named Group](https://docs.djangoproject.com/ja/1.9/topics/http/urls/#named-groups): In Python regular expressions, the syntax for named regular-expression groups is `(?P<name>pattern)`, where `name` is the name of the group and `pattern` is some pattern to match.
+
+設定完成，啟動服務，打開 http://192.168.33.10:8000/article/1 ，看到第一篇文章的標題與內容。
+```
+Article
+
+Test1
+```
