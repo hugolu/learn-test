@@ -157,3 +157,49 @@ urlpatterns = [
 ```
 Hello World!
 ```
+
+## Django Model
+
+Django 支援許多資料庫，只要簡單設定就能存取 sqlite、PostgreSQL、MySQL 與 Oracle。
+
+與資料庫相關設定放在 blog/settings.py，來看看
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+```
+- `ENGINE` 採用 sqlite3
+- `NAME` 宣告資料庫檔案位置在 `blog/db.sqlite3`
+
+Django 中透過 Model 來處理與底層資料庫的互動，要在 Model 定義表格的存取方式
+
+- Model 繼承 `django.db.models.Model`
+- Model 的屬性 (attribute) 都是一個資料庫的欄位
+- 透過 Model API 執行資料庫 query，將每種資料庫 SQL 版本間的差異隱藏起來
+
+設定 blog/article 的資料 Model，修改 articles/models.py，加入以下程式碼
+```python
+from django.db import models
+
+# Create your models here.
+class Category(models.Model):
+    name = models.CharField(u'Name', max_length=50)
+
+    def __str__(self):
+        return self.name
+
+class Article(models.Model):
+    content = models.TextField(u'Content')
+    title = models.CharField(u'Title', max_length=50)
+    category = models.ForeignKey('Category', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+```
+- 建立兩個 Model: Category & Article
+- Category 宣告一個屬性: `name`，並定義 `__str__` 用字串表示自己
+- Article 宣告三個屬性: `content` 表示文章內容, `title` 表示文章標題, `category` 使用 `ForeignKey` 定義資料表格間的關聯性
+
