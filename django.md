@@ -429,3 +429,74 @@ Article
 
 TEST1
 ```
+
+## Django Forms
+
+除了透過 Django Admin 修改資料，還可以手動產生自己的介面。
+
+傳統 framework 會這麼做:
+
+- 用 HTML 刻個 form
+- 處理 HTTP POST request
+- 檢查表單欄位內容是否正確
+- 把確認過的資料存進 database 當中
+
+Django Form 提供另一種方便的方式，產生表單對應相對 Model 欄位，提供讀取、修改的功能。
+
+先在 article/views.py 產生一個表單類別
+```python
+from django import forms
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'content', ]
+```
+
+然後告訴 View 如何處理 ArticleForm
+```python
+def create(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            new_article = form.save()
+            return HttpResponseRedirect('/article/' + str(new_article.pk))
+
+    form = ArticleForm()
+    return render(request, 'create_article.html', {'form': form})
+```
+- 如果 request 是 POST，表示使用者送出表單，則驗證資料合法後寫入資料庫，然後將網頁導向剛剛輸入的資料
+- 如果 request 不是 POST，表示使用者準備填寫表單，則送出 `create_article.html`
+
+接者產生 article/templates/create_article.html，讓使用者可以填寫資料
+```html
+<html>
+<head></head>
+<body>
+<form action="." method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" />
+</form>
+</body>
+</html>
+```
+- 透過 `form.as_p` 在 HTML 中產生表單
+- 使用 `csrf_token` 做到 [Cross Site Request Forgery protection](https://docs.djangoproject.com/en/dev/ref/contrib/csrf/)，避免網站被攻擊
+
+> [[技術分享] Cross-site Request Forgery (Part 1)](http://cyrilwang.pixnet.net/blog/post/31813568-%5B%E6%8A%80%E8%A1%93%E5%88%86%E4%BA%AB%5D-cross-site-request-forgery-(part-1)): 簡單來說，CSRF 就是在使用者不知情的情況下，讓瀏覽器送出請求給目標網站以達攻擊目的。 對於 HTTP 協定有所了解的讀者，看到這句話可能會覺得很困惑。因為在預設的情況下，任何人只要知道 URL 與參數都可以對網站發出任何請求，如此說來不是所有的網站都會遭受 CSRF 的攻擊了嗎？可以說是，也可以說不是。因此嚴格來說，CSRF 通常指的是發生在使用者已經登入目標網站後，駭客利用受害者的身分來進行請求，如此一來不但可以獲得受害者的權限，而且在系統的相關紀錄中也很難發現可疑之處。
+
+最後修改 blog/urls.py，把 URL request 與 View 串起來
+```python
+urlpatterns = [
+    ...
+    url(r'^create/$', 'article.views.create'),
+]
+```
+
+設定完成，啟動服務，打開 http://192.168.33.10:8000/create 產生一篇文章，送出表單看看是否被導向剛剛產生的文章。
+```
+hello world
+
+this is a test
+```
