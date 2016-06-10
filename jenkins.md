@@ -1,6 +1,7 @@
 # Jenkins
 
 Jenkins is an award-winning, cross-platform, **continuous integration** and **continuous delivery** application that increases your productivity. Use Jenkins to build and test your software projects continuously making it easier for developers to integrate changes to the project, and making it easier for users to obtain a fresh build. It also allows you to continuously deliver your software by providing powerful ways to define your build pipelines and integrating with a large number of testing and deployment technologies. - 摘錄 [Jenkins](https://wiki.jenkins-ci.org/display/JENKINS/Meet+Jenkins) 官網介紹
+
 ## 安裝
 
 參考: https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
@@ -20,3 +21,16 @@ jenkins  10670  0.0  0.0  18596   172 ?        S    16:27   0:00 /usr/bin/daemon
 jenkins  10671  9.9 35.4 1186188 179532 ?      Sl   16:27   0:34 /usr/bin/java -Djava.awt.headless=true -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080 --ajp13Port=-1
 vagrant  10752  0.0  0.4  12720  2124 pts/1    S+   16:33   0:00 grep --color=auto jenkins
 ```
+
+## 啟動與存取
+
+參考: https://wiki.jenkins-ci.org/display/JENKINS/Starting+and+Accessing+Jenkins
+
+啟動 Jenkins 最簡單的方式
+```shell
+$ java -jar jenkins.war
+```
+
+打開瀏覽器，開啟 http://192.168.33.10:8080/ (192.168.33.10 是[虛擬機](environment.md)的IP)，就能看到管理介面
+
+![Jenkins](jenkins.png)
