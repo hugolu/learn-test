@@ -197,9 +197,105 @@ class Article(models.Model):
     category = models.ForeignKey('Category', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.title
 ```
 - 建立兩個 Model: Category & Article
 - Category 宣告一個屬性: `name`，並定義 `__str__` 用字串表示自己
 - Article 宣告三個屬性: `content` 表示文章內容, `title` 表示文章標題, `category` 使用 `ForeignKey` 定義資料表格間的關聯性
 
+剛剛只是定義 Model，資料庫的表格還沒建立起來，要透過以下指令產生
+```shell
+$ python manage.py makemigrations
+$ python manage.py migrate
+```
+
+現在透過 Django 提供的 shell 來看看資料庫表格的樣子
+```
+$ python manage.py shell
+>>> 
+```
+- 看到 `>>>` 提示符號表示進入 Python REPL
+
+試試創建三筆記錄
+```python
+>>> from article.models import Article, Category
+>>> Article.objects.create(content="Test1", title="article 1")
+<Article: article 1>
+>>> Article.objects.create(content="Test2", title="article 2")
+<Article: article 2>
+>>> c = Category.objects.create(name="category 1")
+>>> Article.objects.create(content="Test3", title="article 3", category=c)
+<Article: article 3>
+>>>
+```
+
+查詢剛剛插入的資料
+```python
+>>> Article.objects.all()
+[<Article: article 1>, <Article: article 1>, <Article: article 2>, <Article: article 3>]
+>>> for article in Article.objects.all():
+...     print(article.title)
+...
+article 1
+article 2
+article 3
+```
+
+修改一筆記錄
+```python
+>>> from article.models import Article, Category
+>>> a = Article.objects.get(title="article 1")
+>>> a.title = "Article"
+>>> a.save()
+```
+
+操作完畢，使用 Ctrl-D 離開 Python REPL
+
+Django Model 幫忙處理了與資料庫互動的部分，我很好奇它做了什麼，以下透過 sqlite 直接下 SQL 來看看
+```shell
+$ sqlite3 db.sqlite3
+```
+
+透過 `.table` 命令列出所有表格
+```mysql
+sqlite> .tables
+article_article             auth_user_groups
+article_category            auth_user_user_permissions
+auth_group                  django_admin_log
+auth_group_permissions      django_content_type
+auth_permission             django_migrations
+auth_user                   django_session
+```
+- `article_article` 對應到 article/models.py 裡面的 `class Article(models.Model)`
+- `article_category` 對應到 article/models.py 裡面的 `class Category(models.Model)`
+
+使用 `.schema` 顯示表格 schema
+```sql
+sqlite> .schema article_article
+CREATE TABLE "article_article" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "content" text NOT NULL, "title" varchar(50) NOT NULL, "category_id" integer NULL REFERENCES "article_category" ("id"));
+CREATE INDEX "article_article_b583a629" ON "article_article" ("category_id");
+sqlite> .schema article_category
+CREATE TABLE "article_category" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(50) NOT NULL);
+```
+- 除了原先設定的表格，Django Model 還透過 `id` 維護一個自動增加的唯一主鍵
+
+查詢 `article_article` 與 `article_category` 表格內容
+```sql
+sqlite> .header on
+sqlite> .mode column
+sqlite> SELECT * FROM article_article;
+id          content     title       category_id
+----------  ----------  ----------  -----------
+1           Test1       Article
+2           Test2       article 2
+3           Test3       article 3   1
+sqlite> SELECT * FROM article_category;
+id          name
+----------  ----------
+1           category 1
+```
+
+不做任何修改，使用 `.quit` 離開
+```sql
+sqlite> .quit
+```
