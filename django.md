@@ -535,3 +535,70 @@ urlpatterns = [
 > 實驗發現，似乎不需要修改 blog/urls.py 這部分，只要在 blog/settings.py 新增 'grappelli' 這個 app 即可
 
 設定完成，啟動服務，打開 http://192.168.33.10:8000/admin 看看網頁是不是變漂亮了。
+
+## Deploy 前置動作
+
+目前所做的工作只能透過本機瀏覽器看到結果，想讓全世界看到你的作品就要部署到伺服器上。[Heroku](https://dashboard.heroku.com/) 提供免費額度的服務給一些小型網站，讓還沒獲利的網站可以免費營運。接下來設定部署環境準備將剛剛寫的程式放上雲端。
+
+安裝部署需要的工具
+```shell
+$ pip install dj-database-url gunicorn dj-static
+```
+
+將虛擬環境套件的版本列出來，儲存在 requirements.txt
+```shell
+$ pip freeze > requirements.txt
+```
+
+建立 Procfile 檔案，告訴 Heroku 要如何啟動我們的應用
+```
+web: gunicorn --pythonpath mysite mysite.wsgi
+```
+
+為了讓 Heroku 知道要用哪一個版本的 Python，新增 runtime.txt 
+```
+python-3.5.1
+```
+
+跟 blog/settings.py 不同，正式上線的環境透過 blog/production_settings.py 來設定
+```python
+# Import all default settings.
+from .settings import *
+
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config()
+}
+
+# Static asset configuration.
+STATIC_ROOT = 'staticfiles'
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure().
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers.
+ALLOWED_HOSTS = ['*']
+
+# Turn off DEBUG mode.
+DEBUG = False
+```
+
+WSGI - Web Server Gateway Interface 是 Python 定義網頁程式和伺服器溝通的介面。為了讓 Heroku 的服務能夠透過 WSGI 介面與我們的網站溝通，修改 mysite/mysite/wsgi.py 如下：
+```python
+import os
+from django.core.wsgi import get_wsgi_application
+from dj_static import Cling
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
+application = Cling(get_wsgi_application())
+```
+- 將 dj_static 引入，並在 application 上使用它，以協助幫我們部署 static 檔案（例如圖片、CSS、JavaScript 檔案等等）
+
+不想把開發時使用的檔案，例如虛擬環境、本機資料庫、Python cache等等放到網路上。建立一個 .gitignore 檔案，排除這些資料
+```
+*.pyc
+__pycache__
+staticfiles
+db.sqlite3
+```
+
