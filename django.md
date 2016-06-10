@@ -500,3 +500,38 @@ hello world
 
 this is a test
 ```
+
+## Django 的第三方套件們
+
+除了 Django 自帶的套件，[Django Packages](https://www.djangopackages.com/) 提供更多樣化的套件。
+
+接下來試著安裝 django-grappelli，讓 admin 畫面變得更漂亮些。
+
+安裝套件
+```shell
+$ pip install django-grappelli
+```
+
+告訴 Django 新增 app，修改 blog/settings.py
+```python
+INSTALLED_APPS = [
+    'grappelli',
+    'django.contrib.admin',
+    ...
+]
+```
+- 加入 grappelli 放在 django.contrib.admin 之前
+
+修改 blog/urls.py，加上相對 URL
+```python
+from django.conf.urls import include
+
+urlpatterns = [
+    url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^admin/', admin.site.urls),
+    ...
+]
+```
+> 實驗發現，似乎不需要修改 blog/urls.py 這部分，只要在 blog/settings.py 新增 'grappelli' 這個 app 即可
+
+設定完成，啟動服務，打開 http://192.168.33.10:8000/admin 看看網頁是不是變漂亮了。
