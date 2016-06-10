@@ -711,7 +711,14 @@ $ heroku open
 
 上面那招只能在 terminal console 跟 web browser 在同一個機器的情況下使用，因為我是透過虛擬環境開發的，要自行打開瀏覽器輸入剛剛 heroku 給的 app 名稱加上 “heroku.com” 才能連上，例如 https://guarded-harbor-11820.herokuapp.com/
 
-### [Check your processes](https://devcenter.heroku.com/articles/application-offline#check-your-processes)
+### Troubleshooting
+
+參考: https://devcenter.heroku.com/articles/application-offline
+
+查看 app 日誌訊息
+```shell
+$ heroku logs
+```
 
 檢查目前 process 狀態
 ```shell
@@ -735,6 +742,8 @@ web.1: crashed 2016/06/10 12:00:30 +0200 (~ 17s ago)
 ```shell
 $ heroku restart
 ```
+
+> learn-test/blog 裡面放的就是先前過做的事情，除了 “Deploy to Heroku” 這部分。想將這個 Project 部署到 Heroku，請先複製到 learn-test/ 以外的目錄 (因為 deploy 需要初始化 git repository，這會與 learn-test/.git 衝突)，然後按照 Step1~8 完成部署動作。
 
 ## What’s next?
 
