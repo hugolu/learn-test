@@ -1,0 +1,11 @@
+<html>
+<head></head>
+<body>
+<h1>{{ article.title }}</h1>
+{% if article.pk == 1 %}
+{{ article.content|upper }}
+{% else %}
+{{ article.content }}
+{% endif %}
+</body>
+</html>
