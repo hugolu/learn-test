@@ -299,3 +299,46 @@ id          name
 ```sql
 sqlite> .quit
 ```
+
+## Django Admin
+
+除了可以透過 Shell 操作 Model，Django 提供了 admin app 讓使用者可以透過 web UI 做創造、讀取、更新、刪除的動作。
+
+Django 預設安裝 admin，打開 blog/settings.py 查看
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    ...
+]
+```
+
+URL 導向設定在 blog/urls.py
+```python
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    ...
+]
+```
+
+修改 article/admin.py，告訴 Django 建立了 Category, Article 這兩個 Model
+```python
+from django.contrib import admin
+from article.models import Article, Category
+
+# Register your models here.
+admin.site.register(Article)
+admin.site.register(Category)
+```
+
+設定 superuser 帳號
+```shell
+$ python manage.py createsuperuser
+Username (leave blank to use 'vagrant'): django
+Email address: printk@gmail.com
+Password:
+Password (again):
+Superuser created successfully.
+You have mail in /var/mail/vagrant
+```
+
+設定完成，啟動服務，登入 http://192.168.33.10:8000/admin/，透過 Web UI 新增、查詢、修改、刪除記錄。
