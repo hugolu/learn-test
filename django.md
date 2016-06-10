@@ -552,7 +552,7 @@ $ pip freeze > requirements.txt
 
 建立 Procfile 檔案，告訴 Heroku 要如何啟動我們的應用
 ```
-web: gunicorn --pythonpath mysite mysite.wsgi
+web: gunicorn --pythonpath blog blog.wsgi
 ```
 
 為了讓 Heroku 知道要用哪一個版本的 Python，新增 runtime.txt 
@@ -583,13 +583,13 @@ ALLOWED_HOSTS = ['*']
 DEBUG = False
 ```
 
-WSGI - Web Server Gateway Interface 是 Python 定義網頁程式和伺服器溝通的介面。為了讓 Heroku 的服務能夠透過 WSGI 介面與我們的網站溝通，修改 mysite/mysite/wsgi.py 如下：
+WSGI - Web Server Gateway Interface 是 Python 定義網頁程式和伺服器溝通的介面。為了讓 Heroku 的服務能夠透過 WSGI 介面與我們的網站溝通，修改 blog/wsgi.py 如下：
 ```python
 import os
 from django.core.wsgi import get_wsgi_application
 from dj_static import Cling
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "blog.settings")
 application = Cling(get_wsgi_application())
 ```
 - 將 dj_static 引入，並在 application 上使用它，以協助幫我們部署 static 檔案（例如圖片、CSS、JavaScript 檔案等等）
