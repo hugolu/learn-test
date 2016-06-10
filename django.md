@@ -382,3 +382,50 @@ Article
 
 Test1
 ```
+
+## Django Template
+
+剛剛把 HTML 放在 View 會讓邏輯控制與網頁呈現的程式碼交錯混合，增加了前後端工程的複雜度。接下來要將 HTML 的提到 Templates 目錄中，讓前端網頁設計師處理 HTML 時不需要知道後端操作的邏輯。
+
+在 article 目錄創建 templates 目錄，裡面新增一個檔案 article/templates/detail.html
+```html
+<html>
+<head></head>
+<body>
+<h1>{{ article.title }}</h1>
+{{ article.content }}
+</body>
+</html>
+```
+- Django 定義許多 [template languate](https://docs.djangoproject.com/en/1.9/ref/templates/language/)，方便前端工程師存取後端的變數
+- 這個 HTML 預期被 View 呼叫時會得到 `article` 物件，藉由 `{{ article.title }}` 與 `{{ article.content }}` 取得文章的標題與內容
+
+修改之前的 View，article/views.py
+```python
+def detail(request, pk):
+    article = Article.objects.get(pk=int(pk))
+    return render(request, 'detail.html', {'article': article})
+```
+- 透過 python dictionary 傳遞 `article` 變數給 template
+
+除了簡單的變數取代，還可以使用 [if](https://docs.djangoproject.com/en/1.9/ref/templates/builtins/#std:templatetag-if) tag 與 [up](https://docs.djangoproject.com/en/1.9/ref/templates/builtins/#upper) filter 增加 template 的變化。修改 article/templates/detail.html
+```html
+<html>
+<head></head>
+<body>
+<h1>{{ article.title }}</h1>
+{% if article.pk == 1 %}
+{{ article.content|upper }}
+{% else %}
+{{ article.content }}
+{% endif %}
+</body>
+</html>
+```
+
+設定完成，啟動服務，打開 http://192.168.33.10:8000/article/1 ，看到第一篇文章的內容是否變成大寫。
+```
+Article
+
+TEST1
+```
