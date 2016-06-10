@@ -602,3 +602,111 @@ staticfiles
 db.sqlite3
 ```
 
+## Deploy to Heroku
+
+在開始部署（deploy）之前
+
+1. 註冊 Heroku 帳號：https://id.heroku.com/signup
+2. 安裝 Heroku 工具箱：https://toolbelt.heroku.com
+
+以虛擬機 (ARTACK/debian-jessie) 為例，安裝工具步驟如下
+```shell
+$ wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+```
+
+### Step 1. 登入 Heroku
+
+```shell
+$ heroku login
+```
+
+### Step 2. 建立 git repository
+
+```shell
+$ git init
+$ git add .
+$ git commit -m "my blog app"
+```
+
+### Step 3-1: 新增新的 Heroku app
+
+新增一個可以上傳 repository 的地方
+```shell
+$ heroku create
+Heroku CLI submits usage information back to Heroku. If you would like to disable this, set `skip_analytics: true` in /home/vagrant/.heroku/config.json
+Creating app... done, ⬢ guarded-harbor-11820
+https://guarded-harbor-11820.herokuapp.com/ | https://git.heroku.com/guarded-harbor-11820.git
+```
+- 沒給 app 名稱，由 Heroku 隨機產生，得到 `guarded-harbor-11820`
+
+### Step 3-2: 指定已經存在的 app
+
+用指令 heroku apps 查看新增過 app 的名稱
+```shell
+$ heroku apps
+=== My Apps
+guarded-harbor-11820
+hidden-brook-77287
+```
+
+設定成你想要上傳的 app
+```shell
+$ heroku git:remote -a guarded-harbor-11820
+```
+
+使用 `git remote` 指令檢查剛剛的設定
+```shell
+$ git remote -v
+heroku	https://git.heroku.com/guarded-harbor-11820.git (fetch)
+heroku	https://git.heroku.com/guarded-harbor-11820.git (push)
+```
+
+### Step 4: 設定環境變數
+
+```shell
+$ heroku config:set DJANGO_SETTINGS_MODULE=blog.production_settings
+```
+
+### Step 5: 利用 git push 上傳到 Heroku
+```shell
+$ git push heroku master
+Counting objects: 24, done.
+Compressing objects: 100% (20/20), done.
+Writing objects: 100% (24/24), 5.12 KiB | 0 bytes/s, done.
+Total 24 (delta 0), reused 0 (delta 0)
+remote: Compressing source files... done.
+remote: Building source:
+remote:
+remote: -----> Python app detected
+remote: -----> Installing python-3.5.1
+remote:      $ pip install -r requirements.txt
+...
+```
+- python 版本依照 runtime.txt 安裝 python-3.5.1
+
+### Step 6: 啟動 web process
+
+```shell
+$ heroku ps:scale web=1
+```
+
+### Step 7: Django project 初始化
+
+進行資料庫初始化
+```shell
+$ heroku run python manage.py migrate
+```
+
+為新資料庫建立一個 superuser
+```shell
+$ heroku run python manage.py createsuperuser
+```
+
+### Step 8: 開啟瀏覽器觀看你的網站
+
+透過 open 指令會自動在瀏覽器打開你的網站
+```shell
+$ heroku open
+```
+
+上面那招只能在 terminal console 跟 web browser 在同一個機器的情況下使用，因為我是透過虛擬環境開發的，要自行打開瀏覽器輸入剛剛 heroku 給的 app 名稱加上 “heroku.com” 才能連上，例如 https://guarded-harbor-11820.herokuapp.com/
