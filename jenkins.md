@@ -22,6 +22,13 @@ jenkins  10671  9.9 35.4 1186188 179532 ?      Sl   16:27   0:34 /usr/bin/java -
 vagrant  10752  0.0  0.4  12720  2124 pts/1    S+   16:33   0:00 grep --color=auto jenkins
 ```
 
+設定 Jenkins 服務
+```shell
+$ sudo service jenkins start        # 啟動
+$ sudo service jenkins stop         # 停止
+$ sudo service jenkins restart      # 重新啟動
+```
+
 ## 啟動與存取
 
 參考: https://wiki.jenkins-ci.org/display/JENKINS/Starting+and+Accessing+Jenkins
