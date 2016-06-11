@@ -33,8 +33,6 @@ $ java -jar jenkins.war
 
 打開瀏覽器，開啟 http://192.168.33.10:8080/ (192.168.33.10 是[虛擬機](environment.md)的IP)，就能看到管理介面
 
-![Jenkins](jenkins.png)
-
 ### 變更語言
 
 啟動 Jenkins 後，因為瀏覽器語系關係為顯示為中文操作介面，想改成與官網說明一樣的英文介面，依照下面步驟
@@ -42,6 +40,8 @@ $ java -jar jenkins.war
 - 安裝插件：「管理 Jenkins」→「管理外掛程式」→「過濾條件」輸入 locale →「
 下載並於重新啟動後安裝」
 - 變更語系：「管理 Jenkins」→「設定系統」→「預設語言」輸入 en_US，並選取「Ignore browser preference and force this language to all users」
+
+![Jenkins](jenkins.png)
 
 ### Jenkins 功能階層圖
 ```
