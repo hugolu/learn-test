@@ -77,7 +77,7 @@ Jenkins Home
 echo "Hello World"
 ```
 
-手動執行
+### 手動執行
 
 - 在 Jenkins Dashboard 按下「Build Now」
 - 點選「Build History」的第一次 Build item 「#1」
@@ -90,6 +90,13 @@ Building in workspace /var/lib/jenkins/jobs/HelloWorld/workspace
 Hello World
 Finished: SUCCESS
 ```
+
+### 自動執行 (週期)
+
+- 在 Project HelloWorld 內點選「Configure」
+- 「Build Triggers」內點選「Build periodically」，「Schedule」填入`* * * * *` (表示每分鐘 build 一次)
+- 按下「Save」儲存離開
+- 等待數分鐘，可以在 Build History，看到許多自動執行的 build results
 
 ----
 ## 參考
