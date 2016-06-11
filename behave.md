@@ -1,10 +1,5 @@
 # Behave
 
-參考連結:
-
-- [Behave official site](http://pythonhosted.org/behave/)
-- [behave Examples and Tutorials](https://jenisys.github.io/behave.example/index.html)
-
 ## 透過範例快速上手
 
 參考：[Python BDD自动化测试框架初探](http://lovesoo.org/python-bdd-exploration-of-the-automated-testing-framework.html)，計算 fibonacci 數列
@@ -242,3 +237,10 @@ Failing scenarios:
 Took 0m0.001s
 ```
 - 發生錯誤 `Assertion Failed: Calc fib number: 1`: 原因是 features 定義時誤以為第二個 fibonacci 數是 2 (1 才是對的)
+
+----
+## 參考
+
+- [Behave official site](http://pythonhosted.org/behave/)
+- [behave Examples and Tutorials](https://jenisys.github.io/behave.example/index.html)
+- [Behavior-Driven Development in Python](http://code.tutsplus.com/tutorials/behavior-driven-development-in-python--net-26547)
