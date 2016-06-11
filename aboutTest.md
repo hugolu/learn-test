@@ -1,11 +1,9 @@
 # 測試的分類
 
-參考：https://www.thoughtworks.com/continuous-delivery
-
-![](http://continuousdelivery.com/images/test-quadrant.png)
-(圖片來自：http://continuousdelivery.com/foundations/test-automation/)
-
 ## 業務導向且支持開發過程的測試
+
+![測試象限圖](http://continuousdelivery.com/images/test-quadrant.png)
+(圖片來自：http://continuousdelivery.com/foundations/test-automation/)
 
 ### 驗收測試
 - 確保用戶故事的驗收條件得到滿足
@@ -64,3 +62,8 @@
 - 測試人員與開發人員基於驗收條件，**實現**驗收測試自動化
 - 開發人員編寫程式**滿足**驗收條件
 - 只要有自動化測試失敗，無論是單元測試、組件測試、驗收測試，開發人員要優先處理並修復問題
+
+----
+## 參考
+- https://continuousdelivery.com/foundations/test-automation/
+- https://www.thoughtworks.com/continuous-delivery
