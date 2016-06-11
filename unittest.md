@@ -1,7 +1,5 @@
 # unittest 筆記
 
-參考：[unittest — Unit testing framework](https://docs.python.org/3/library/unittest.html)
-
 Python unittest 測試框架發想自 JUnit 並與其他單元測試的框架有類似的味道：
 
 - 支援自動化測試
@@ -259,3 +257,8 @@ OK (skipped=4, expected failures=1)
 `class unittest.TestSuite(tests=())`
 
 == TBC ==
+
+----
+## 參考
+
+- [unittest — Unit testing framework](https://docs.python.org/3/library/unittest.html)
