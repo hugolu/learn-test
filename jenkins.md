@@ -65,7 +65,9 @@ Jenkins Home
         |-- Job_C
 ```
 
-## 建立第一個 Build Job
+## 建立第一個 Build Job - 簡單的 Hello World
+
+### 建立 build job
 
 - 在 Jenkins Dashboard 選擇「create new jobs」
 - 「Item name」填入 HelloWorld，選擇「Freestyle project」
@@ -97,6 +99,54 @@ Finished: SUCCESS
 - 「Build Triggers」內點選「Build periodically」，「Schedule」填入`* * * * *` (表示每分鐘 build 一次)
 - 按下「Save」儲存離開
 - 等待數分鐘，可以在 Build History，看到許多自動執行的 build results
+
+### 刪除 build job
+
+- 在 Project HelloWorld 內點選「Delete Project」
+
+## 建立第二個 Build Job - 配合 git 進行自動化建置
+
+### 安裝 Git plugin
+
+- 在 Jenkins Dashboard 選擇「Manage Jenkins」
+- 點選「Manage Plugins」，選擇「Available」，「filter」輸入 Git plugin
+- 選取「Git plugin」，按下「Install without restart」
+- 等候安裝完成
+
+```
+Git client plugin	Success
+Git plugin	        Success
+```
+
+### 建立 git project
+
+建立目錄
+```shell
+$ mkdir jenkins-test
+$ cd jenkins-test
+```
+
+初始化 git repository
+```shell
+$ git init
+```
+
+產生 HelloWorld.py
+```
+$ echo 'print("Hello World")' > HelloWorld.py
+$ python HelloWorld.py
+Hello World
+```
+
+將 HelloWorld.py 加入 git
+```shell
+$ git add .
+$ git commit -m "add a python file"
+```
+
+### 建立 build job
+
+-= TBC =-
 
 ----
 ## 參考
