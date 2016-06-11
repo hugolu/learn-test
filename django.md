@@ -753,3 +753,9 @@ $ heroku restart
 - 使用 Python unittest 開發 View 或 Model 的功能
 - 使用 CI 做到測試自動化
 - 研究如何自動部署到 Heroku
+
+----
+## 參考
+-  [Django Tutorial](http://daikeren.github.io/django_tutorial/)
+-  [Django Girls 學習指南](https://www.gitbook.com/book/djangogirlstaipei/django-girls-taipei-tutorial/details)
+-  [Django documentation](https://docs.djangoproject.com/en/1.9/)
