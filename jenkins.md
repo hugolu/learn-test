@@ -61,3 +61,5 @@ Jenkins Home
 ----
 ## 參考
 - [CI (Continuous integration) 關鍵技術：使用 Jenkins](http://www.books.com.tw/products/0010596579)
+- [Jenkins CI 實戰手冊](http://jenkins.readbook.tw/)
+- [持續整合與自動化測試 - 使用 Jenkins 與 Docker 進行課程實作](https://www.gitbook.com/book/smlsunxie/jenkins-workshop/details)
