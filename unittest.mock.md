@@ -1,8 +1,5 @@
 # unittest.mock
 
-參考 - [unittest.mock — mock object library
-](https://docs.python.org/3.4/library/unittest.mock.html), [unittest.mock — getting started](https://docs.python.org/3.4/library/unittest.mock-examples.html)
-
 unittest.mock 是 python 用於測試的函式庫，用 mock 物件替換待測試系統的某些部分，宣告這些偽造的部分應該如何被使用。
 
 ## Test Double
@@ -452,3 +449,9 @@ OK
 ### Mocking imports with patch.dict
 ### Tracking order of calls and less verbose call assertions
 ### More complex argument matching
+
+----
+## 參考
+- [unittest.mock — mock object library
+](https://docs.python.org/3.4/library/unittest.mock.html)
+- [unittest.mock — getting started](https://docs.python.org/3.4/library/unittest.mock-examples.html)
