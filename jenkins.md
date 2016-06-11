@@ -191,6 +191,39 @@ Hello World
 Finished: SUCCESS
 ```
 
+### 自動執行 (週期)
+
+- 在 Project HelloWorld 內點選「Configure」
+- 「Build Triggers」內點選「Poll SCM」，「Schedule」填入`* * * * *` (表示每分鐘查詢 git repository 一次)
+- 按下「Save」儲存離開
+- 如果 git repository 有更新，就可以在一分鐘內看到自動執行的 build
+
+修改 HelloWorld.py 內容
+```python
+print("Hello World, Jenkins")
+```
+
+看到 Console Output
+```
+Started by an SCM change
+Building in workspace /var/lib/jenkins/jobs/HelloWorld/workspace
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision c0453333cdeb477df4a58f4dbd91beeffb702978 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f c0453333cdeb477df4a58f4dbd91beeffb702978
+ > git rev-list faa1a5b97edfe03363ad1d7420d61de3be0a89f4 # timeout=10
+[workspace] $ /bin/bash /tmp/hudson3266137535786680039.sh
+Hello World, Jenkins
+Finished: SUCCESS
+```
+
 -= TBC =-
 
 ----
