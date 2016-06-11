@@ -1,11 +1,9 @@
 # 關於測試，我說的其實是......
 
-## 參考資料
-- [Continuous Testing](http://continuousdelivery.com/foundations/test-automation/)
-- [Behavior-Driven Development in Python](http://code.tutsplus.com/tutorials/behavior-driven-development-in-python--net-26547)
-- [behave](http://pythonhosted.org/behave/) is behaviour-driven development, Python style.
-- [Lettuce](http://lettuce.it/) is a Behavior-Driven Development tool written by Gabriel Falcão G. de Moura.
-- [unittest](https://docs.python.org/3/library/unittest.html) — Unit testing framework
-- [unittest.mock](https://docs.python.org/3/library/unittest.mock.html) — mock object library
-- [unittest.mock-examples](https://docs.python.org/3/library/unittest.mock-examples.html) - getting started
-- [Doubles](http://doubles.readthedocs.io/) is a Python package that provides test doubles for use in automated tests.
+## Study Map
+
+- [可執行的需求](executable-specifications.md) - 短週期反覆探索需求，使用用戶故事表達需求，使用場景確認用戶故事，使用驗收測試確認需求
+- [Behave](behave.md) - BDD 不只是測試應用的工具，更是溝通需求的哲學
+- [unittest](unittest.md), [unittest.mock](unittest.mock.md) - TDD 不只是單元測試的工具，更是引導開發的精靈
+- [django](django.md), [behave-django](behave-django.md) - 在真實環境，實現測試驅動開發
+- [Jenkins](jenkins.md) - 透過自動化測試、自動化建置與部署，提高敏捷開發的可能性
