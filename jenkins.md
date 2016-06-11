@@ -69,7 +69,7 @@ Jenkins Home
 
 - 在 Jenkins Dashboard 選擇「create new jobs」
 - 「Item name」填入 HelloWorld，選擇「Freestyle project」
-- 「Build」，「Add build step」選擇「Execute shell」，填入下面 shell script
+- 「Build」，「Add build step」選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
 
 ```shell
