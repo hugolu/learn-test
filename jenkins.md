@@ -124,6 +124,8 @@ Git plugin	        Success
 ```shell
 $ mkdir jenkins-test
 $ cd jenkins-test
+$ pwd
+/home/vagrant/jenkins-test
 ```
 
 初始化 git repository
@@ -145,6 +147,49 @@ $ git commit -m "add a python file"
 ```
 
 ### 建立 build job
+
+- 在 Jenkins Dashboard 選擇「create new jobs」
+- 「Item name」填入 HelloWorld，選擇「Freestyle project」
+- 「Source Code Management」選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
+`
+- 「Build」，「Add build step」選擇「Execute shell」，「Command」填入下面 shell script
+按下「Save」儲存離開
+
+```shell
+#!/bin/bash
+python HelloWorld.py
+```
+
+### 手動執行
+
+- 在 Jenkins Dashboard 按下「Build Now」
+- 點選「Build History」的第一次 Build item 「#1」
+- 點選「Console Output」，看到以下過程
+
+```
+Started by user anonymous
+Building in workspace /var/lib/jenkins/jobs/HelloWorld/workspace
+Cloning the remote Git repository
+Cloning repository file:///home/vagrant/jenkins-test
+ > git init /var/lib/jenkins/jobs/HelloWorld/workspace # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision faa1a5b97edfe03363ad1d7420d61de3be0a89f4 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f faa1a5b97edfe03363ad1d7420d61de3be0a89f4
+First time build. Skipping changelog.
+[workspace] $ /bin/bash /tmp/hudson2911057101357331543.sh
+Hello World
+Finished: SUCCESS
+```
 
 -= TBC =-
 
