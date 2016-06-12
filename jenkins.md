@@ -65,13 +65,13 @@ Jenkins Home
         |-- Job_C
 ```
 
-## 建立第一個 Build Job - 簡單的 Hello World
+## 建立第一個 Build Job - “Hello World”
 
-### 建立 build job
+### 建立專案
 
-- 在 Jenkins Dashboard 選擇「create new jobs」
-- 「Item name」填入 HelloWorld，選擇「Freestyle project」
-- 「Build」，「Add build step」選擇「Execute shell」，「Command」填入下面 shell script
+- 到 Jenkins 首頁，選擇「create new jobs」
+- 「Item name」填入 `ProjectOne`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
+- 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
 
 ```shell
@@ -81,38 +81,42 @@ echo "Hello World"
 
 ### 手動執行
 
-- 在 Jenkins Dashboard 按下「Build Now」
-- 點選「Build History」的第一次 Build item 「#1」
-- 點選「Console Output」，看到以下過程
+- 到 `ProjectOne` 頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選 `#1`
+- 點選「Console Output」，看到以下 build process
 
 ```
 Started by user anonymous
-Building in workspace /var/lib/jenkins/jobs/HelloWorld/workspace
-[workspace] $ /bin/bash /tmp/hudson7493974156939444115.sh
+Building in workspace /var/lib/jenkins/jobs/ProjectOne/workspace
+[workspace] $ /bin/bash /tmp/hudson2917613460417409130.sh
 Hello World
 Finished: SUCCESS
 ```
 
 ### 自動執行 (週期)
 
-- 在 Project HelloWorld 內點選「Configure」
-- 「Build Triggers」內點選「Build periodically」，「Schedule」填入`* * * * *` (表示每分鐘 build 一次)
+- 到 `ProjectOne` 頁面，點選「Configure」
+- 「Build Triggers」下點選「Build periodically」，「Schedule」填入`* * * * *` (表示每分鐘 build 一次)
 - 按下「Save」儲存離開
-- 等待數分鐘，可以在 Build History，看到許多自動執行的 build results
+- 等待數分鐘，看到「Build History」出現多個 Build item
 
-### 刪除 build job
+### 刪除專案
 
-- 在 Project HelloWorld 內點選「Delete Project」
+- 到 `ProjectOne` 頁面，點選「Delete Project」
+- 「Are you sure about deleting the Project ‘ProjectOne’?」，選擇「確定/Yes」
+- 專案已被刪除
 
 ## 建立第二個 Build Job - 配合 git 進行自動化建置
 
 ### 安裝 Git plugin
 
-- 在 Jenkins Dashboard 選擇「Manage Jenkins」
-- 點選「Manage Plugins」，選擇「Available」，「filter」輸入 Git plugin
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Git plugin`
 - 選取「Git plugin」，按下「Install without restart」
 - 等候安裝完成
 
+安裝以下套件
 ```
 Git client plugin	Success
 Git plugin	        Success
