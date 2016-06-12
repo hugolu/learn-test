@@ -65,7 +65,7 @@ Jenkins Home
         |-- Job_C
 ```
 
-## 建立第一個 Build Job - “Hello World”
+## 第一個 Build Job - “Hello World”
 
 ### 建立專案
 
@@ -106,7 +106,7 @@ Finished: SUCCESS
 - 「Are you sure about deleting the Project ‘ProjectOne’?」，選擇「確定/Yes」
 - 專案已被刪除
 
-## 建立第二個 Build Job - 配合 Git 進行自動化建置
+## 第二個 Build Job - 配合 Git 進行自動化建置
 
 ### 安裝 Git plugin
 
@@ -243,7 +243,7 @@ Hello World, Jenkins
 Finished: SUCCESS
 ```
 
-## 建立第三個 Build Job - 建置自動化測試
+## 第三個 Build Job - 建置自動化測試
 
 ### 修改 Git project
 
@@ -416,6 +416,36 @@ OK
 Finished: SUCCESS
 ```
 
+## 第四個 Build Job - 自動化測試工具
+
+- 透過 [coverage](http://nedbatchelder.com/code/coverage/) 產生代碼覆蓋率的資料
+- 透過 [nose](https://nose.readthedocs.org/en/latest/) 運行單元測試
+- 透過 [pylint](https://www.pylint.org/) 檢查 Python 代碼是否合乎規範
+
+### 安裝 Pythin 套件
+
+```shell
+$ pip install coverage nose pylint
+```
+
+### 安裝 Jenkins 套件
+
+#### 安裝 Cobertura plugin
+
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Cobertura plugin`
+- 選取「Cobertura plugin」，按下「Install without restart」
+- 等候安裝完成
+
+#### 安裝 Violations plugin
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Violations plugin`
+- 選取「Violations plugin」，按下「Install without restart」
+- 等候安裝完成
+
+-= TBC =-
 ----
 ## 參考
 - [Using Jenkins](https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins) - Jenkins 官網文件
