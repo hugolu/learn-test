@@ -54,8 +54,11 @@ $ sudo apt-get install python-pip
 
 ## 安裝 pyenv - python 版本管理程式
 
+安裝與管理套件版本是軟體開發頗讓人頭疼的一環，幸好靠著 pyenv 管理多個 Python 版本問題，與 virtualenv 創造虛擬（獨立）Python 環境的工具，Python 工程師的生活才能過得輕鬆點。
+
 - [使用 Pyenv 管理多個 Python 版本](http://blog.codylab.com/python-pyenv-management/)
 - [pyenv 教程](https://wp-lai.gitbooks.io/learn-python/content/0MOOC/pyenv.html)
+- [Python 開發好幫手 – virtualenv](http://tech.mozilla.com.tw/posts/2155/python-%E9%96%8B%E7%99%BC%E5%A5%BD%E5%B9%AB%E6%89%8B-virtualenv)
 
 ```shell
 $ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
@@ -124,6 +127,22 @@ Python 3.4.1
 ```
 
 > Python 自 2.1 起開始內建 unittest，積極面可作為測試驅動開發(TDD)，消極面至少提供一個容易上手的測試框架。往後實驗會用到 unittest.mock，這個在 python 2 沒有提供，需要切換到 python 3 才能使用測試替身 (Test Double) 切開相依的元件。
+
+建立虛擬環境
+```shell
+$ virtualenv .env
+$ source .env/bin/activate
+```
+
+使用 pip 安裝套件，會安裝在 .env
+```shell
+$ pip install coverage nose pylint
+```
+
+修改 .bash，加入下面內容 (jenkins 登入後使用 .env)
+```
+. $HOME/.env/bin/activate
+```
 
 ## 安裝 behave - Python BDD Framework
 
