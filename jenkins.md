@@ -81,9 +81,9 @@ echo "Hello World"
 
 ### 手動執行
 
-- 到 `ProjectOne` 頁面，點選「Build Now」
-- 看到「Build History」出現 Build item，點選 `#1`
-- 點選「Console Output」，看到以下 build process
+- 到「ProjectOne」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選 #1
+- 點選「Console Output」，看到以下 Build process
 
 ```
 Started by user anonymous
@@ -95,18 +95,18 @@ Finished: SUCCESS
 
 ### 自動執行 (週期)
 
-- 到 `ProjectOne` 頁面，點選「Configure」
-- 「Build Triggers」下點選「Build periodically」，「Schedule」填入`* * * * *` (表示每分鐘 build 一次)
+- 到「ProjectOne」頁面，點選「Configure」
+- 「Build Triggers」下點選「Build periodically」，「Schedule」填入 `* * * * *` (表示每分鐘 build 一次)
 - 按下「Save」儲存離開
 - 等待數分鐘，看到「Build History」出現多個 Build item
 
 ### 刪除專案
 
-- 到 `ProjectOne` 頁面，點選「Delete Project」
+- 到「ProjectOne」頁面，點選「Delete Project」
 - 「Are you sure about deleting the Project ‘ProjectOne’?」，選擇「確定/Yes」
 - 專案已被刪除
 
-## 建立第二個 Build Job - 配合 git 進行自動化建置
+## 建立第二個 Build Job - 配合 Git 進行自動化建置
 
 ### 安裝 Git plugin
 
@@ -116,15 +116,17 @@ Finished: SUCCESS
 - 選取「Git plugin」，按下「Install without restart」
 - 等候安裝完成
 
-安裝以下套件
+#### 安裝以下套件
+
 ```
 Git client plugin	Success
 Git plugin	        Success
 ```
 
-### 建立 git project
+### 建立 Git project
 
-建立目錄
+#### 建立目錄
+
 ```shell
 $ mkdir jenkins-test
 $ cd jenkins-test
@@ -132,33 +134,35 @@ $ pwd
 /home/vagrant/jenkins-test
 ```
 
-初始化 git repository
+#### 初始化 Git repository
+
 ```shell
 $ git init
 ```
 
-產生 HelloWorld.py
+#### 產生 HelloWorld.py
+
 ```
 $ echo 'print("Hello World")' > HelloWorld.py
 $ python HelloWorld.py
 Hello World
 ```
 
-將 HelloWorld.py 加入 git
+#### 將 HelloWorld.py 加入 git
+
 ```shell
 $ git add .
 $ git commit -m "add a python file"
 ```
 
-### 建立 build job
+### 建議專案
 
-- 在 Jenkins Dashboard 選擇「create new jobs」
-- 「Item name」填入 HelloWorld，選擇「Freestyle project」
-- 「Source Code Management」選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
+- 到 Jenkins 首頁，選擇「create new jobs」
+- 「Item name」填入 `ProjectTwo`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
+- 「Source Code Management」內選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
 `
-- 「Build」，「Add build step」選擇「Execute shell」，「Command」填入下面 shell script
-按下「Save」儲存離開
-
+- 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
+- 按下「Save」儲存離開
 ```shell
 #!/bin/bash
 python HelloWorld.py
@@ -166,16 +170,16 @@ python HelloWorld.py
 
 ### 手動執行
 
-- 在 Jenkins Dashboard 按下「Build Now」
-- 點選「Build History」的第一次 Build item 「#1」
-- 點選「Console Output」，看到以下過程
+- 到「ProjectTwo」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選 #1
+- 點選「Console Output」，看到以下 Build process
 
 ```
 Started by user anonymous
-Building in workspace /var/lib/jenkins/jobs/HelloWorld/workspace
+Building in workspace /var/lib/jenkins/jobs/ProjectTwo/workspace
 Cloning the remote Git repository
 Cloning repository file:///home/vagrant/jenkins-test
- > git init /var/lib/jenkins/jobs/HelloWorld/workspace # timeout=10
+ > git init /var/lib/jenkins/jobs/ProjectTwo/workspace # timeout=10
 Fetching upstream changes from file:///home/vagrant/jenkins-test
  > git --version # timeout=10
  > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
@@ -186,31 +190,42 @@ Fetching upstream changes from file:///home/vagrant/jenkins-test
  > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
  > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
  > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
-Checking out Revision faa1a5b97edfe03363ad1d7420d61de3be0a89f4 (refs/remotes/origin/master)
+Checking out Revision 1efe2522977e2ae51be6a3fd8f249ac1a9e0a03c (refs/remotes/origin/master)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f faa1a5b97edfe03363ad1d7420d61de3be0a89f4
+ > git checkout -f 1efe2522977e2ae51be6a3fd8f249ac1a9e0a03c
 First time build. Skipping changelog.
-[workspace] $ /bin/bash /tmp/hudson2911057101357331543.sh
+[workspace] $ /bin/bash /tmp/hudson1698813741464662757.sh
 Hello World
 Finished: SUCCESS
 ```
 
 ### 自動執行 (週期)
 
-- 在 Project HelloWorld 內點選「Configure」
-- 「Build Triggers」內點選「Poll SCM」，「Schedule」填入`* * * * *` (表示每分鐘查詢 git repository 一次)
+- 到「ProjectTwo」頁面，點選「Configure」
+- 「Build Triggers」下點選「Poll SCM」，「Schedule」填入 `* * * * *` (表示每分鐘查詢 git repository 一次，如果 git repository 有更新則觸發 Build Job)
 - 按下「Save」儲存離開
 - 如果 git repository 有更新，就可以在一分鐘內看到自動執行的 build
 
-修改 HelloWorld.py 內容
+#### 修改 HelloWorld.py 內容
+
 ```python
 print("Hello World, Jenkins")
 ```
 
-看到 Console Output
+#### 更新 git repository
+
+```shell
+$ git add HelloWorld.py
+$ git commit -m "modify HelloWorld.py"
+```
+
+- 到「ProjectTwo」頁面
+- 看到「Build History」出現 Build item，點選 #2
+- 點選「Console Output」，看到以下 Build process
+
 ```
 Started by an SCM change
-Building in workspace /var/lib/jenkins/jobs/HelloWorld/workspace
+Building in workspace /var/lib/jenkins/jobs/ProjectTwo/workspace
  > git rev-parse --is-inside-work-tree # timeout=10
 Fetching changes from the remote Git repository
  > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
@@ -219,11 +234,11 @@ Fetching upstream changes from file:///home/vagrant/jenkins-test
  > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
  > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
  > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
-Checking out Revision c0453333cdeb477df4a58f4dbd91beeffb702978 (refs/remotes/origin/master)
+Checking out Revision 996523706ed38a101b9d979a38c1c6830fe4a9d0 (refs/remotes/origin/master)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f c0453333cdeb477df4a58f4dbd91beeffb702978
- > git rev-list faa1a5b97edfe03363ad1d7420d61de3be0a89f4 # timeout=10
-[workspace] $ /bin/bash /tmp/hudson3266137535786680039.sh
+ > git checkout -f 996523706ed38a101b9d979a38c1c6830fe4a9d0
+ > git rev-list 1efe2522977e2ae51be6a3fd8f249ac1a9e0a03c # timeout=10
+[workspace] $ /bin/bash /tmp/hudson4922745401393127731.sh
 Hello World, Jenkins
 Finished: SUCCESS
 ```
