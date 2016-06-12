@@ -155,11 +155,11 @@ $ git add .
 $ git commit -m "add a python file"
 ```
 
-### 建議專案
+### 建立專案
 
 - 到 Jenkins 首頁，選擇「create new jobs」
 - 「Item name」填入 `ProjectTwo`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
-- 「Source Code Management」內選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
+- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
 `
 - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
@@ -243,7 +243,178 @@ Hello World, Jenkins
 Finished: SUCCESS
 ```
 
--= TBC =-
+## 建立第三個 Build Job - 建置自動化測試
+
+### 修改 Git project
+
+#### 新增檔案 unittest.sh
+
+```shell
+#!/bin/bash
+python HelloWorld.py
+```
+
+#### 提交到 git repository
+
+```shell
+$ chmod +x unittest.sh
+$ git add unittest.sh
+$ git commit -m "add an unittest driver"
+```
+
+### 建立專案
+
+- 到 Jenkins 首頁，選擇「create new jobs」
+- 「Item name」填入 `ProjectThree`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
+- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
+`
+- 「Build Triggers」下點選「Poll SCM」，「Schedule」填入 `* * * * *` (表示每分鐘查詢 git repository 一次，如果 git repository 有更新則觸發 Build Job)
+- 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
+- 按下「Save」儲存離開
+
+```shell
+#!/bin/bash
+./unittest.sh
+```
+
+- 到「ProjectThree」頁面
+- 看到「Build History」出現 Build item，點選 #1
+- 點選「Console Output」，看到以下 Build process
+
+```
+Started by an SCM change
+Building in workspace /var/lib/jenkins/jobs/ProjectThree/workspace
+Cloning the remote Git repository
+Cloning repository file:///home/vagrant/jenkins-test
+ > git init /var/lib/jenkins/jobs/ProjectThree/workspace # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision f1b215d4c9163d6bbf7f09520bee42ffde83b968 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f f1b215d4c9163d6bbf7f09520bee42ffde83b968
+First time build. Skipping changelog.
+[workspace] $ /bin/bash /tmp/hudson7637229310567895394.sh
+Hello World, Jenkins
+Finished: SUCCESS
+```
+
+### 新增單元測試
+
+#### 新增檔案 Arithmetic.py
+
+```python
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b
+
+##############################################
+# Unittest
+
+import unittest
+
+class TestArithmetic(unittest.TestCase):
+
+    def testAdd(self):
+        self.assertEqual(add(1, 1), 2)
+
+    def test_subtract(self):
+        self.assertEqual(subtract(5, 2), 3)
+
+    def test_multiply(self):
+        self.assertEqual(multiply(3, 2), 6)
+
+    def test_divide(self):
+        self.assertEqual(divide(3.0, 2), 1.5)
+```
+
+#### 修改檔案 unittest.sh
+
+```shell
+#!/bin/bash
+
+python HelloWorld.py
+python -m unittest -v Arithmetic
+```
+
+#### 執行測試
+
+```
+$ ./unittest.sh
+Hello World, Jenkins
+testAdd (Arithmetic.TestArithmetic) ... ok
+test_divide (Arithmetic.TestArithmetic) ... ok
+test_multiply (Arithmetic.TestArithmetic) ... ok
+test_subtract (Arithmetic.TestArithmetic) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.003s
+
+OK
+```
+
+> 非常重要的原則：上傳檔案前，要確定程式碼可以編譯成功，單元測試可以順利通過
+
+#### 新增檔案 .gitignore (避免上傳不必要的資料)
+
+```
+__pycache__
+```
+
+#### 更新 git repository
+
+```shell
+$ git add .
+$ git commit -m "add Arithmetic with unittest"
+```
+
+- 到「ProjectThree」頁面
+- 看到「Build History」出現 Build item，點選 #2
+- 點選「Console Output」，看到以下 Build process
+
+```
+Started by an SCM change
+Building in workspace /var/lib/jenkins/jobs/ProjectThree/workspace
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 552a5914cbb0f63fadbea460f9a590224ab0c2ca (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 552a5914cbb0f63fadbea460f9a590224ab0c2ca
+ > git rev-list f1b215d4c9163d6bbf7f09520bee42ffde83b968 # timeout=10
+[workspace] $ /bin/bash /tmp/hudson6318001843908183136.sh
+Hello World, Jenkins
+testAdd (Arithmetic.TestArithmetic) ... ok
+test_divide (Arithmetic.TestArithmetic) ... ok
+test_multiply (Arithmetic.TestArithmetic) ... ok
+test_subtract (Arithmetic.TestArithmetic) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.009s
+
+OK
+Finished: SUCCESS
+```
 
 ----
 ## 參考
