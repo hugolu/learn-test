@@ -52,7 +52,7 @@ $ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev 
 $ sudo apt-get install python-pip
 ```
 
-## 安裝 pyenv - python 版本管理程式
+## 安裝 pyenv、virtualenv
 
 安裝與管理套件版本是軟體開發頗讓人頭疼的一環，幸好靠著 pyenv 管理多個 Python 版本問題，與 virtualenv 創造虛擬（獨立）Python 環境的工具，Python 工程師的生活才能過得輕鬆點。
 
