@@ -428,6 +428,17 @@ Finished: SUCCESS
 $ pip install coverage nose pylint
 ```
 
+為了讓 Jenkins 能夠執行 coverage, nose, pylint，以及使用 Python 3.5.1，必須也跟開發者一樣[設定環境](https://github.com/hugolu/learn-test/blob/master/environment.md#安裝-pyenv---python-版本管理程式)，設定前先以 jenkins 使用者身份登入
+
+```shell
+$ sudo su jenkins
+$
+$ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+$ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+$ sudo pip install virtualenv
+...
+```
+
 ### 安裝 Jenkins 套件
 
 #### 安裝 Cobertura plugin
