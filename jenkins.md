@@ -422,23 +422,6 @@ Finished: SUCCESS
 - 透過 [nose](https://nose.readthedocs.org/en/latest/) 運行單元測試
 - 透過 [pylint](https://www.pylint.org/) 檢查 Python 代碼是否合乎規範
 
-### 安裝 Pythin 套件
-
-```shell
-$ pip install coverage nose pylint
-```
-
-為了讓 Jenkins 能夠執行 coverage, nose, pylint，以及使用 Python 3.5.1，必須也跟開發者一樣[設定環境](https://github.com/hugolu/learn-test/blob/master/environment.md#安裝-pyenv---python-版本管理程式)，設定前先以 jenkins 使用者身份登入
-
-```shell
-$ sudo su jenkins
-$
-$ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
-$ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-$ sudo pip install virtualenv
-...
-```
-
 ### 安裝 Jenkins 套件
 
 #### 安裝 Cobertura plugin
@@ -455,6 +438,8 @@ $ sudo pip install virtualenv
 - 選擇「Available」標籤，「filter」輸入 `Violations plugin`
 - 選取「Violations plugin」，按下「Install without restart」
 - 等候安裝完成
+
+[Setup Jenkins, and make it use virtualenv](http://iamnearlythere.com/jenkins-python-virtualenv/)
 
 -= TBC =-
 ----
