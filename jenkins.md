@@ -227,6 +227,44 @@ Finished: SUCCESS
 
 ## 實驗三：設定環境
 
+### 練習目標
+
+- 在 Jenkins Server 上
+    - 安裝 plugin (pyenv)
+    - 設定 Build environment
+
+### 設定 Jenkins Server
+
+安裝 pyenv plugin
+
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+    - 點選「Manage Plugins」，進入設定插件管理頁面
+        - 選擇「Available」標籤，「filter」輸入 `pyenv plugin`
+        - 選取「Git plugin」，按下「Install without restart」
+        - 等候安裝完成
+
+> 安裝 pvenv plugin 後重新啟動 jenkins，plugin 才會生效
+
+修改 Build Job
+
+- 到「myBuild」頁面，點選「Configure」
+    - 「Build Environment」內選取「pyenv build wrapper」，「The Python version」填寫 `3.5.1`
+    - 按下「Save」儲存離開
+
+因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行
+
+- 到「myBuild」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選最新的 Build result
+    - 點選「Console Output」，看到以下 Build process
+
+```
+Started by user anonymous
+...
+Python 3.5.1
+Hello World
+Finished: SUCCESS
+```
+
 ## 實驗四：自動化單元測試
 
 ## 實驗五：自動化測試工具
