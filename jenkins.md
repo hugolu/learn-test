@@ -539,11 +539,6 @@ OK
 Finished: SUCCESS
 ```
 
-## 第四個 Build Job - 自動化測試工具
-
-
-[Setup Jenkins, and make it use virtualenv](http://iamnearlythere.com/jenkins-python-virtualenv/)
-
 -= TBC =-
 ----
 ## 參考
@@ -555,3 +550,4 @@ Finished: SUCCESS
 - Automated python unit testing, code coverage and code quality analysis with Jenkins - [part 1](http://bhfsteve.blogspot.tw/2012/04/automated-python-unit-testing-code.html), [part 2](http://bhfsteve.blogspot.tw/2012/04/automated-python-unit-testing-code_20.html), [part 3](http://bhfsteve.blogspot.tw/2012/04/automated-python-unit-testing-code_27.html)
 - [基于 Jenkins 的 Python 代码集成整合](http://yumminhuang.github.io/blog/2015/04/17/%E5%9F%BA%E4%BA%8E-jenkins-%E7%9A%84-python-%E4%BB%A3%E7%A0%81%E9%9B%86%E6%88%90%E6%95%B4%E5%90%88/)
 - [jenkins集成python的单元测试](http://www.mamicode.com/info-detail-1383168.html)
+- [Setup Jenkins, and make it use virtualenv](http://iamnearlythere.com/jenkins-python-virtualenv/)
