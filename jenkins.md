@@ -128,6 +128,16 @@ $ sudo pip install virtualenv
 - 選取「Git plugin」，按下「Install without restart」
 - 等候安裝完成
 
+### 安裝 pyenv plugin
+
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `pyenv plugin`
+- 選取「Git plugin」，按下「Install without restart」
+- 等候安裝完成
+
+> 安裝 pvenv plugin 後重新啟動 jenkins，plugin 才會生效
+
 #### 安裝以下套件
 
 ```
@@ -191,12 +201,13 @@ $ git commit -m "add a python file"
 
 - 到 Jenkins 首頁，點選「New Item」
 - 「Item name」填入 `ProjectTwo`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
-- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test
-`
+- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test`
+- 「Build Environment」內選取「pyenv build wrapper」，「The Python version」填寫 `3.5.1`
 - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
 ```shell
 #!/bin/bash
+python --version
 python HelloWorld.py
 ```
 
@@ -210,23 +221,33 @@ python HelloWorld.py
 Started by user anonymous
 Building in workspace /var/lib/jenkins/jobs/ProjectTwo/workspace
 Cloning the remote Git repository
-Cloning repository file:///home/vagrant/jenkins-test
+Cloning repository file:///home/vagrant/myWorkspace/jenkins-test
  > git init /var/lib/jenkins/jobs/ProjectTwo/workspace # timeout=10
-Fetching upstream changes from file:///home/vagrant/jenkins-test
+Fetching upstream changes from file:///home/vagrant/myWorkspace/jenkins-test
  > git --version # timeout=10
- > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
- > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/myWorkspace/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url file:///home/vagrant/myWorkspace/jenkins-test # timeout=10
  > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
- > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
-Fetching upstream changes from file:///home/vagrant/jenkins-test
- > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url file:///home/vagrant/myWorkspace/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/myWorkspace/jenkins-test
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/myWorkspace/jenkins-test +refs/heads/*:refs/remotes/origin/*
  > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
  > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
-Checking out Revision 1efe2522977e2ae51be6a3fd8f249ac1a9e0a03c (refs/remotes/origin/master)
+Checking out Revision acfa335235ee8f4ef4f49e95fd3caafb071c1449 (refs/remotes/origin/master)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f 1efe2522977e2ae51be6a3fd8f249ac1a9e0a03c
+ > git checkout -f acfa335235ee8f4ef4f49e95fd3caafb071c1449
 First time build. Skipping changelog.
-[workspace] $ /bin/bash /tmp/hudson1698813741464662757.sh
+$ bash -c "[ -d \$HOME/.pyenv ]"
+$ bash -c "cd /var/lib/jenkins/jobs/ProjectTwo/workspace && env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv local 2>/dev/null || true"
+Use local Python version 3.5.1.
+$ bash -c "mkdir \$HOME/.pyenv.lock"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv versions --bare"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv rehash"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv exec pip list"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv rehash"
+$ bash -c "rm -rf \$HOME/.pyenv.lock"
+[workspace] $ /bin/bash /tmp/hudson1217886152095656784.sh
+Python 3.5.1
 Hello World
 Finished: SUCCESS
 ```
@@ -260,17 +281,27 @@ Started by an SCM change
 Building in workspace /var/lib/jenkins/jobs/ProjectTwo/workspace
  > git rev-parse --is-inside-work-tree # timeout=10
 Fetching changes from the remote Git repository
- > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
-Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git config remote.origin.url file:///home/vagrant/myWorkspace/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/myWorkspace/jenkins-test
  > git --version # timeout=10
- > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/myWorkspace/jenkins-test +refs/heads/*:refs/remotes/origin/*
  > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
  > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
-Checking out Revision 996523706ed38a101b9d979a38c1c6830fe4a9d0 (refs/remotes/origin/master)
+Checking out Revision 50f9d1de2d4cc8d7022e920566a12f8bea07ba94 (refs/remotes/origin/master)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f 996523706ed38a101b9d979a38c1c6830fe4a9d0
- > git rev-list 1efe2522977e2ae51be6a3fd8f249ac1a9e0a03c # timeout=10
-[workspace] $ /bin/bash /tmp/hudson4922745401393127731.sh
+ > git checkout -f 50f9d1de2d4cc8d7022e920566a12f8bea07ba94
+ > git rev-list acfa335235ee8f4ef4f49e95fd3caafb071c1449 # timeout=10
+$ bash -c "[ -d \$HOME/.pyenv ]"
+$ bash -c "cd /var/lib/jenkins/jobs/ProjectTwo/workspace && env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv local 2>/dev/null || true"
+Use local Python version 3.5.1.
+$ bash -c "mkdir \$HOME/.pyenv.lock"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv versions --bare"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv rehash"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv exec pip list"
+$ bash -c "env PYENV_ROOT\=\$HOME/.pyenv PYENV_VERSION\=3.5.1 \$HOME/.pyenv/bin/pyenv rehash"
+$ bash -c "rm -rf \$HOME/.pyenv.lock"
+[workspace] $ /bin/bash /tmp/hudson1725676311655619399.sh
+Python 3.5.1
 Hello World, Jenkins
 Finished: SUCCESS
 ```
