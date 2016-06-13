@@ -326,6 +326,47 @@ Finished: SUCCESS
 ### 練習目標
 
 
+
+### 安裝 Jenkins 套件
+
+#### 安裝 Cobertura plugin
+
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Cobertura plugin`
+- 選取「Cobertura plugin」，按下「Install without restart」
+- 等候安裝完成
+
+#### 安裝 Violations plugin
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Violations plugin`
+- 選取「Violations plugin」，按下「Install without restart」
+- 等候安裝完成
+
+### 安裝 Python 套件
+
+- 透過 [coverage](http://nedbatchelder.com/code/coverage/) 產生代碼覆蓋率的資料
+- 透過 [nose](https://nose.readthedocs.org/en/latest/) 運行單元測試
+- 透過 [pylint](https://www.pylint.org/) 檢查 Python 代碼是否合乎規範
+
+```shell
+$ pip install coverage nose pylint
+$ pip freeze > requirements.txt
+```
+
+匯出的 requirements.txt 內容:
+```
+astroid==1.4.6
+colorama==0.3.7
+coverage==4.1
+lazy-object-proxy==1.2.2
+nose==1.3.7
+pylint==1.5.6
+six==1.10.0
+wrapt==1.10.8
+```
+
 ### 修改 Git project
 
 #### 新增檔案 unittest.sh
@@ -347,15 +388,16 @@ $ git commit -m "add an unittest driver"
 
 - 到 Jenkins 首頁，點選「New Item」
 - 「Item name」填入 `ProjectThree`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
-- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
-`
+- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test`
 - 「Build Triggers」下點選「Poll SCM」，「Schedule」填入 `* * * * *` (表示每分鐘查詢 git repository 一次，如果 git repository 有更新則觸發 Build Job)
 - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
 
 ```shell
-#!/bin/bash
-./unittest.sh
+PYTHONPATH=''
+nosetests --with-xunit --all-modules --traverse-namespace --with-coverage --cover-package=jenkins-test --cover-inclusive
+python -m coverage xml --include=jenkins-test*
+pylint -f parseable -d I0011,R0801 jenkins-test | tee pylint.out
 ```
 
 - 到「ProjectThree」頁面
@@ -499,26 +541,6 @@ Finished: SUCCESS
 
 ## 第四個 Build Job - 自動化測試工具
 
-- 透過 [coverage](http://nedbatchelder.com/code/coverage/) 產生代碼覆蓋率的資料
-- 透過 [nose](https://nose.readthedocs.org/en/latest/) 運行單元測試
-- 透過 [pylint](https://www.pylint.org/) 檢查 Python 代碼是否合乎規範
-
-### 安裝 Jenkins 套件
-
-#### 安裝 Cobertura plugin
-
-- 到 Jenkins 首頁，選擇「Manage Jenkins」
-- 點選「Manage Plugins」，進入設定插件管理頁面
-- 選擇「Available」標籤，「filter」輸入 `Cobertura plugin`
-- 選取「Cobertura plugin」，按下「Install without restart」
-- 等候安裝完成
-
-#### 安裝 Violations plugin
-- 到 Jenkins 首頁，選擇「Manage Jenkins」
-- 點選「Manage Plugins」，進入設定插件管理頁面
-- 選擇「Available」標籤，「filter」輸入 `Violations plugin`
-- 選取「Violations plugin」，按下「Install without restart」
-- 等候安裝完成
 
 [Setup Jenkins, and make it use virtualenv](http://iamnearlythere.com/jenkins-python-virtualenv/)
 
