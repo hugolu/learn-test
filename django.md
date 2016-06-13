@@ -54,10 +54,12 @@ Python 3.5.1
 ```shell
 $ mkdir myProject
 $ cd myProject/
-$ virtualenv venv
+$ pyvenv venv
 $ source venv/bin/activate
 (venv) $ pip install --upgrade pip
 ```
+
+> 使用 `virtualenv` 安裝虛擬環境，跟使用 `pyvenv` 結果有點不同。`virtualenv` 似乎只會安裝系統預設的 python 版本，用 `pyvenv` 裝的 python 版本跟 `pyenv local 3.5.1` 才一致。
 
 ### 安裝 Django
 ```shell
