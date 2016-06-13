@@ -45,7 +45,7 @@ $ java -jar jenkins.war
 啟動 Jenkins 後，因為瀏覽器語系關係為顯示為中文操作介面，想改成與官網說明一樣的英文介面，依照下面步驟
 
 - 安裝插件：「管理 Jenkins」→「管理外掛程式」→「過濾條件」輸入 `locale` →「下載並於重新啟動後安裝」
-- 變更語系：「管理 Jenkins」→「設定系統」→「預設語言」輸入 `en_US`，並選取「Ignore browser preference and force this language to all users」
+- 變更語系：「管理 Jenkins」→「設定系統」→「預設語言」輸入 `en_US` →「Ignore browser preference and force this language to all users」
 
 ![Jenkins](jenkins.png)
 
@@ -66,11 +66,57 @@ Jenkins Home
 
 ## 實驗一：“Hello World”
 
+### 練習目標
+
+- 建立簡單的 Build Job
+- 手動執行 Build Job
+- 自動執行 Build Job
+
+### 建立專案
+
+- 到 Jenkins 首頁，點選「New Item」
+- 「Item name」填入 `myProject`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
+    - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
+    - 按下「Save」儲存離開
+
+```shell
+#!/bin/bash
+echo "Hello World"
+```
+
+### 手動執行
+
+- 到「myProject」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選 #1
+    - 點選「Console Output」，看到以下 Build process
+
+```
+Started by user anonymous
+Building in workspace /var/lib/jenkins/jobs/myProject/workspace
+[workspace] $ /bin/bash /tmp/hudson6372466822262253605.sh
+Hello World
+Finished: SUCCESS
+```
+
+### 自動執行 (週期)
+
+- 到「ProjectOne」頁面，點選「Configure」
+    - 「Build Triggers」下點選「Build periodically」，「Schedule」填入 `* * * * *` (表示每分鐘 build 一次)
+    - 按下「Save」儲存離開
+- 等待數分鐘，看到「Build History」出現多個 Build item
+
 ## 實驗二：配合 SCM 進行自動化建置
 
-## 實驗三：自動化單元測試
+## 實驗三：設定環境
 
-## 實驗四：自動化測試工具
+## 實驗四：自動化單元測試
+
+## 實驗五：自動化測試工具
+
+
+
+
+
 
 
 -= TBC =-
