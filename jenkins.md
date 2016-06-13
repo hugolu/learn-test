@@ -69,7 +69,7 @@ Jenkins Home
 
 ### 建立專案
 
-- 到 Jenkins 首頁，選擇「create new jobs」
+- 到 Jenkins 首頁，點選「New Item」
 - 「Item name」填入 `ProjectOne`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
 - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
@@ -177,7 +177,7 @@ $ git commit -m "add a python file"
 
 ### 建立專案
 
-- 到 Jenkins 首頁，選擇「create new jobs」
+- 到 Jenkins 首頁，點選「New Item」
 - 「Item name」填入 `ProjectTwo`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
 - 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test
 `
@@ -284,7 +284,7 @@ $ git commit -m "add an unittest driver"
 
 ### 建立專案
 
-- 到 Jenkins 首頁，選擇「create new jobs」
+- 到 Jenkins 首頁，點選「New Item」
 - 「Item name」填入 `ProjectThree`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
 - 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
 `
