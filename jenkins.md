@@ -108,6 +108,18 @@ Finished: SUCCESS
 
 ## 第二個 Build Job - 配合 Git 進行自動化建置
 
+### 設定 jenkins 環境
+
+- 以 jenkins 身份登入系統
+- 設定環境，[安裝 pyenv、virtualenv](environment.md#安裝-pyenvvirtualenv)
+
+```shell
+$ sudo su jenkins -l
+$ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+$ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+$ sudo pip install virtualenv
+```
+
 ### 安裝 Git plugin
 
 - 到 Jenkins 首頁，選擇「Manage Jenkins」
