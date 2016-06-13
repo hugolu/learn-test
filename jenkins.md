@@ -67,6 +67,12 @@ Jenkins Home
 
 ## 第一個 Build Job - “Hello World”
 
+### 練習目標
+
+- 建立一個最簡單的 Jenkins Build Job
+- 手動執行 Build Job
+- 自動執行 Build Job
+
 ### 建立專案
 
 - 到 Jenkins 首頁，點選「New Item」
@@ -107,6 +113,14 @@ Finished: SUCCESS
 - 專案已被刪除
 
 ## 第二個 Build Job - 配合 Git 進行自動化建置
+
+### 練習目標
+
+- 安裝 plugin (Git, pyenv)
+- 建立專案，設定 git repository
+- 建立一個類似使用者開發環境的 Jenkins Build Job
+    - 同步 git repository
+    - 設定 Build Environment
 
 ### 設定 jenkins 環境
 
@@ -205,6 +219,7 @@ $ git commit -m "add a python file"
 - 「Build Environment」內選取「pyenv build wrapper」，「The Python version」填寫 `3.5.1`
 - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
+
 ```shell
 #!/bin/bash
 python --version
@@ -307,6 +322,9 @@ Finished: SUCCESS
 ```
 
 ## 第三個 Build Job - 建置自動化測試
+
+### 練習目標
+
 
 ### 修改 Git project
 
