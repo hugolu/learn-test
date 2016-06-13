@@ -14,11 +14,11 @@ Let's 開始練功吧！
 
 如同 Python 生態環境之豐富，Django 也有很多如資料庫、表單、登入系統、管理界面等元件，大大縮短了後端開發的時間。
 
-## 安裝 Django
+## 設定環境
 
 安裝與管理套件版本是軟體開發頗讓人頭疼的一環，幸好靠著  pyenv 管理多個 Python 版本問題，與 virtualenv 創造虛擬（獨立）Python 環境的工具，Python 工程師的生活才能過得輕鬆點。
 
-安裝 pyenv 與 virtualenv
+### 安裝 pyenv 與 virtualenv
 ```shell
 $ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
@@ -37,7 +37,7 @@ eval "$(pyenv init -)"
 $ source ~/.bashrc
 ```
 
-安裝 Python 3.5.1
+### 安裝 Python 3.5.1
 ```shell
 $ pyenv install 3.5.1
 ```
@@ -49,19 +49,22 @@ $ python --version
 Python 3.5.1
 ```
 
-設定虛擬環境 (從此只要在 virtualenv 下面安裝的 package 都只會存在于這個 virtualenv 當中，安裝套件不需要 root 權限)
+### 設定虛擬環境
+建立工作目錄，設定虛擬環境，更新 pip (從此只要在 virtualenv 下面安裝的 package 都只會存在于這個 virtualenv 當中，安裝套件不需要 root 權限)
 ```shell
-$ pyvenv myvenv
-$ source myvenv/bin/activate
-(myvenv) vagrant@debian:~$
+$ mkdir myProject
+$ cd myProject/
+$ virtualenv venv
+$ source venv/bin/activate
+(venv) $ pip install --upgrade pip
 ```
 
-下載、安裝 Django
+### 安裝 Django
 ```shell
 $ pip install Django==1.9.7
 ```
 
-## Djando Project
+## Django Project
 
 建立 project
 ```shell
@@ -77,7 +80,7 @@ blog/
 ```
 - 內層的 `blog/` 放置 project 相關的設定
 
-進入 `blog/` 啟動服務
+進入外層 `blog/` (之後會在這裡開發應用程式)，啟動服務
 ```shell
 $ cd blog/
 $ python manage.py runserver 0.0.0.0:8000
