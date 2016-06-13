@@ -605,8 +605,11 @@ application = Cling(get_wsgi_application())
 ```
 - 將 dj_static 引入，並在 application 上使用它，以協助幫我們部署 static 檔案（例如圖片、CSS、JavaScript 檔案等等）
 
-不想把開發時使用的檔案，例如虛擬環境、本機資料庫、Python cache等等放到網路上。建立一個 .gitignore 檔案，排除這些資料
+不想把開發時使用的檔案，例如虛擬環境、本機資料庫、Python cache等等放到網路上。建立一個 myProject/.gitignore 檔案，排除這些資料 (注意不是在 blog/ 這層，因爲要要告訴 git 忽略 myProject/venv)
 ```
+# myProject/.gitignore
+
+venv
 *.pyc
 __pycache__
 staticfiles
