@@ -72,10 +72,10 @@ Jenkins Home
 - 手動執行 Build Job
 - 自動執行 Build Job
 
-### 建立專案
+### 建立 Build Job
 
 - 到 Jenkins 首頁，點選「New Item」
-- 「Item name」填入 `myProject`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
+- 「Item name」填入 `myBuild`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
     - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
     - 按下「Save」儲存離開
 
@@ -86,7 +86,7 @@ echo "Hello World"
 
 ### 手動執行
 
-- 到「myProject」頁面，點選「Build Now」
+- 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選 #1
     - 點選「Console Output」，看到以下 Build process
 
@@ -100,12 +100,130 @@ Finished: SUCCESS
 
 ### 自動執行 (週期)
 
-- 到「ProjectOne」頁面，點選「Configure」
+- 到「myBuild」頁面，點選「Configure」
     - 「Build Triggers」下點選「Build periodically」，「Schedule」填入 `* * * * *` (表示每分鐘 build 一次)
     - 按下「Save」儲存離開
 - 等待數分鐘，看到「Build History」出現多個 Build item
 
 ## 實驗二：配合 SCM 進行自動化建置
+
+### 練習目標
+
+- 在開發環境上
+    - 建立專案，設定 Git repository
+
+- 在 Jenkins Server 上
+    - 安裝 plugin (Git)
+    - 隨著 Git repository 更新，進行自動化建置
+
+### 建立專案
+
+在開發環境上，建立工作目錄
+```shell
+$ mkdir myWorkspace
+$ cd myWorkspace
+```
+
+設定 Python 版本
+```shell
+$ pyenv local 3.5.1
+$ python --version
+Python 3.5.1
+```
+
+建立虛擬環境
+```shell
+$ pyvenv venv
+```
+
+切換虛擬環境
+```shell
+$ pyvenv venv
+$ source venv/bin/activate
+(venv) $ pip install --upgrade pip
+```
+
+> 出現 (venv) 提示表示目前使用 Python virtualenv，往後範例省略顯示
+
+建立專案目錄
+```shell
+$ mkdir myProject
+$ cd myProject
+$ pwd
+/home/vagrant/myWorkspace/myProject
+```
+
+產生 HelloWorld.py
+```shell
+$ echo 'print("Hello World")' > HelloWorld.py
+$ python HelloWorld.py
+Hello World
+```
+
+初始化 Git repository
+```shell
+$ git init
+```
+
+將 HelloWorld.py 加入 Git repository
+```shell
+$ git add .
+$ git commit -m "add a python file"
+```
+
+### 設定 Jenkins Server
+
+安裝 Git plugin
+
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+    - 點選「Manage Plugins」，進入設定插件管理頁面
+        - 選擇「Available」標籤，「filter」輸入 `Git plugin`
+        - 選取「Git plugin」，按下「Install without restart」
+        - 等候安裝完成
+
+修改 Build Job
+
+- 到「myBuild」頁面，點選「Configure」
+    - 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/myProject`
+    - 「Build Triggers」，取消「Build periodically」，改選取「Poll SCM」，「Schedule」填入 `* * * * *` (表示每分鐘查詢 git repository 一次，如果 git repository 有更新則觸發 Build Job)
+    - 「Build」下「Execute shell」，「Command」改成下面 shell script
+    - 按下「Save」儲存離開
+
+```shell
+#!/bin/bash
+python --version
+python HelloWorld.py
+```
+
+如果 git repository 在 Jenkins Server 上未建置過、或有任何更新，會在一分鐘內看到自動執行的 Build result
+
+```shell
+Started by an SCM change
+Building in workspace /var/lib/jenkins/jobs/myProject/workspace
+Cloning the remote Git repository
+Cloning repository file:///home/vagrant/myWorkspace/myProject
+ > git init /var/lib/jenkins/jobs/myProject/workspace # timeout=10
+Fetching upstream changes from file:///home/vagrant/myWorkspace/myProject
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/myWorkspace/myProject +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url file:///home/vagrant/myWorkspace/myProject # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///home/vagrant/myWorkspace/myProject # timeout=10
+Fetching upstream changes from file:///home/vagrant/myWorkspace/myProject
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/myWorkspace/myProject +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 8e045c06247802b5d08f757c0a9fe467a3700424 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 8e045c06247802b5d08f757c0a9fe467a3700424
+First time build. Skipping changelog.
+[workspace] $ /bin/bash /tmp/hudson105525603757121577.sh
+Python 2.7.9
+Hello World
+Finished: SUCCESS
+```
+
+雖然建置成功，但是 `python --version` 顯示 Python 2.7.9，跟開發環境使用的版本 Python 3.5.1 不同。接下來要讓 Jenkins Server 的執行環境跟開發環境保持一致。
 
 ## 實驗三：設定環境
 
