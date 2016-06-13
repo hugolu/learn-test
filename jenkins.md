@@ -326,7 +326,6 @@ Finished: SUCCESS
 ### 練習目標
 
 
-
 ### 安裝 Jenkins 套件
 
 #### 安裝 Cobertura plugin
@@ -343,91 +342,6 @@ Finished: SUCCESS
 - 選擇「Available」標籤，「filter」輸入 `Violations plugin`
 - 選取「Violations plugin」，按下「Install without restart」
 - 等候安裝完成
-
-### 安裝 Python 套件
-
-- 透過 [coverage](http://nedbatchelder.com/code/coverage/) 產生代碼覆蓋率的資料
-- 透過 [nose](https://nose.readthedocs.org/en/latest/) 運行單元測試
-- 透過 [pylint](https://www.pylint.org/) 檢查 Python 代碼是否合乎規範
-
-```shell
-$ pip install coverage nose pylint
-$ pip freeze > requirements.txt
-```
-
-匯出的 requirements.txt 內容:
-```
-astroid==1.4.6
-colorama==0.3.7
-coverage==4.1
-lazy-object-proxy==1.2.2
-nose==1.3.7
-pylint==1.5.6
-six==1.10.0
-wrapt==1.10.8
-```
-
-### 修改 Git project
-
-#### 新增檔案 unittest.sh
-
-```shell
-#!/bin/bash
-python HelloWorld.py
-```
-
-#### 提交到 git repository
-
-```shell
-$ chmod +x unittest.sh
-$ git add unittest.sh
-$ git commit -m "add an unittest driver"
-```
-
-### 建立專案
-
-- 到 Jenkins 首頁，點選「New Item」
-- 「Item name」填入 `ProjectThree`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
-- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test`
-- 「Build Triggers」下點選「Poll SCM」，「Schedule」填入 `* * * * *` (表示每分鐘查詢 git repository 一次，如果 git repository 有更新則觸發 Build Job)
-- 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
-- 按下「Save」儲存離開
-
-```shell
-PYTHONPATH=''
-nosetests --with-xunit --all-modules --traverse-namespace --with-coverage --cover-package=jenkins-test --cover-inclusive
-python -m coverage xml --include=jenkins-test*
-pylint -f parseable -d I0011,R0801 jenkins-test | tee pylint.out
-```
-
-- 到「ProjectThree」頁面
-- 看到「Build History」出現 Build item，點選 #1
-- 點選「Console Output」，看到以下 Build process
-
-```
-Started by an SCM change
-Building in workspace /var/lib/jenkins/jobs/ProjectThree/workspace
-Cloning the remote Git repository
-Cloning repository file:///home/vagrant/jenkins-test
- > git init /var/lib/jenkins/jobs/ProjectThree/workspace # timeout=10
-Fetching upstream changes from file:///home/vagrant/jenkins-test
- > git --version # timeout=10
- > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
- > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
- > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
- > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
-Fetching upstream changes from file:///home/vagrant/jenkins-test
- > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
- > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
- > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
-Checking out Revision f1b215d4c9163d6bbf7f09520bee42ffde83b968 (refs/remotes/origin/master)
- > git config core.sparsecheckout # timeout=10
- > git checkout -f f1b215d4c9163d6bbf7f09520bee42ffde83b968
-First time build. Skipping changelog.
-[workspace] $ /bin/bash /tmp/hudson7637229310567895394.sh
-Hello World, Jenkins
-Finished: SUCCESS
-```
 
 ### 新增單元測試
 
@@ -465,6 +379,100 @@ class TestArithmetic(unittest.TestCase):
     def test_divide(self):
         self.assertEqual(divide(3.0, 2), 1.5)
 ```
+
+### 安裝 Python 套件
+
+- 透過 [coverage](http://nedbatchelder.com/code/coverage/) 產生代碼覆蓋率的資料
+- 透過 [nose](https://nose.readthedocs.org/en/latest/) 運行單元測試
+- 透過 [pylint](https://www.pylint.org/) 檢查 Python 代碼是否合乎規範
+
+```shell
+$ pip install coverage nose pylint
+```
+
+
+匯出 Python 套件相依列表
+```shell
+$ pip freeze > requirements.txt
+```
+
+匯出的 requirements.txt 內容:
+```
+astroid==1.4.6
+colorama==0.3.7
+coverage==4.1
+lazy-object-proxy==1.2.2
+nose==1.3.7
+pylint==1.5.6
+six==1.10.0
+wrapt==1.10.8
+```
+
+### 修改 Git project
+
+#### 提交到 git repository
+
+```shell
+$ chmod +x unittest.sh
+$ git add 
+$ git commit -m "add an unittest driver"
+```
+
+### 建立專案
+
+- 到 Jenkins 首頁，點選「New Item」
+- 「Item name」填入 `ProjectThree`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
+- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test`
+- 「Build Triggers」下點選「Poll SCM」，「Schedule」填入 `* * * * *` (表示每分鐘查詢 git repository 一次，如果 git repository 有更新則觸發 Build Job)
+- 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
+- 「Post-build Actions」下點選「Publish Cobertura Coverage Report」，「Cobertura xml report pattern」填入 `coverage.xml`
+- 「Post-build Actions」下點選「Publish JUnit test result report」，「Test report XMLs」填入 `nosetests.xml`
+- 「Post-build Actions」下點選「Report Violations」，「pylint」填入 `pylint.out`
+- 按下「Save」儲存離開
+
+```shell
+PATH=$WORKSPACE/venv/bin:/usr/local/bin:$PATH
+if [ ! -d "venv" ]; then
+        virtualenv venv
+fi
+. venv/bin/activate
+pip install -r requirements.txt
+
+PYTHONPATH=''
+nosetests --with-xunit --all-modules --traverse-namespace --with-coverage *.py
+python -m coverage xml --include=*
+pylint -f parseable -d I0011,R0801 * | tee pylint.out
+```
+
+- 到「ProjectThree」頁面
+- 看到「Build History」出現 Build item，點選 #1
+- 點選「Console Output」，看到以下 Build process
+
+```
+Started by an SCM change
+Building in workspace /var/lib/jenkins/jobs/ProjectThree/workspace
+Cloning the remote Git repository
+Cloning repository file:///home/vagrant/jenkins-test
+ > git init /var/lib/jenkins/jobs/ProjectThree/workspace # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///home/vagrant/jenkins-test # timeout=10
+Fetching upstream changes from file:///home/vagrant/jenkins-test
+ > git -c core.askpass=true fetch --tags --progress file:///home/vagrant/jenkins-test +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision f1b215d4c9163d6bbf7f09520bee42ffde83b968 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f f1b215d4c9163d6bbf7f09520bee42ffde83b968
+First time build. Skipping changelog.
+[workspace] $ /bin/bash /tmp/hudson7637229310567895394.sh
+Hello World, Jenkins
+Finished: SUCCESS
+```
+
 
 #### 修改檔案 unittest.sh
 
