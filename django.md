@@ -50,10 +50,12 @@ Python 3.5.1
 ```
 
 ### 設定虛擬環境
+
 建立工作目錄，設定虛擬環境，更新 pip (從此只要在 virtualenv 下面安裝的 package 都只會存在于這個 virtualenv 當中，安裝套件不需要 root 權限)
+
 ```shell
-$ mkdir myProject
-$ cd myProject/
+$ mkdir myWorkspace
+$ cd myWorkspace/
 $ pyvenv venv
 $ source venv/bin/activate
 (venv) $ pip install --upgrade pip
@@ -88,7 +90,7 @@ blog/
 - `mysite/wsgi.py`: 用來執行專案的 WSGI-compatible web servers 進入點 (將來上雲端才會用到)
 - `manage.py`: 命令列工具，用來操作專案
 
-進入外層 `blog/` (之後會在這裡開發應用程式)，啟動服務
+進入外層 `blog/` (之後都在這裡開發應用程式)，啟動服務
 ```shell
 $ cd blog/
 $ python manage.py runserver 0.0.0.0:8000
@@ -605,11 +607,8 @@ application = Cling(get_wsgi_application())
 ```
 - 將 dj_static 引入，並在 application 上使用它，以協助幫我們部署 static 檔案（例如圖片、CSS、JavaScript 檔案等等）
 
-不想把開發時使用的檔案，例如虛擬環境、本機資料庫、Python cache等等放到網路上。建立一個 myProject/.gitignore 檔案，排除這些資料 (注意不是在 blog/ 這層，因爲要要告訴 git 忽略 myProject/venv)
+不想把開發時使用的檔案，例如虛擬環境、本機資料庫、Python cache等等放到網路上。建立一個 .gitignore 檔案，排除這些資料
 ```
-# myProject/.gitignore
-
-venv
 *.pyc
 __pycache__
 staticfiles
