@@ -125,13 +125,33 @@ Git plugin	        Success
 
 ### 建立 Git project
 
+#### 工作環境
+
+建立工作目錄
+```shell
+$ mkdir myWorkspace
+$ cd myWorkspace
+```
+
+切換 Python 版本
+```shell
+$ pyenv local 3.5.1
+```
+
+切換虛擬環境
+```shell
+$ pyvenv venv
+$ source venv/bin/activate
+$ pip install --upgrade pip
+```
+
 #### 建立目錄
 
 ```shell
 $ mkdir jenkins-test
 $ cd jenkins-test
 $ pwd
-/home/vagrant/jenkins-test
+/home/vagrant/myWorkspace/jenkins-test
 ```
 
 #### 初始化 Git repository
@@ -159,7 +179,7 @@ $ git commit -m "add a python file"
 
 - 到 Jenkins 首頁，選擇「create new jobs」
 - 「Item name」填入 `ProjectTwo`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
-- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/jenkins-test
+- 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/jenkins-test
 `
 - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
 - 按下「Save」儲存離開
