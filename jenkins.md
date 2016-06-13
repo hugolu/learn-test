@@ -267,8 +267,95 @@ Finished: SUCCESS
 
 ## 實驗四：自動化單元測試
 
+### 練習目標
+
+- 在開發環境上
+    - 建立一個 Arithmetic 類別與單元測試
+
+- 在 Jenkins Server 上
+    - 設定自動化測試
+
+### 開發環境
+
+新增檔案 Arithmetic.py
+
+```python
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b
+
+##############################################
+# Unittest
+
+import unittest
+
+class TestArithmetic(unittest.TestCase):
+
+    def testAdd(self):
+        self.assertEqual(add(1, 1), 2)
+
+    def test_subtract(self):
+        self.assertEqual(subtract(5, 2), 3)
+
+    def test_multiply(self):
+        self.assertEqual(multiply(3, 2), 6)
+
+    def test_divide(self):
+        self.assertEqual(divide(3.0, 2), 1.5)
+```
+
+提交程式碼到 git repository
+
+```shell
+$ git add Arithmetic.py
+$ git commit -m "add Arithmetic"
+```
+
+### Jenkins Server
+
+修改 Build Job
+
+- 到「myBuild」頁面，點選「Configure」
+    - 「Build」下「Execute shell」，「Command」改成下面 shell script
+    - 按下「Save」儲存離開
+
+```shell
+#!/bin/bash
+python -m unittest -v *.py
+```
+
+因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行
+
+- 到「myBuild」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選最新的 Build result
+    - 點選「Console Output」，看到以下 Build process
+
+```
+...
+testAdd (Arithmetic.TestArithmetic) ... ok
+test_divide (Arithmetic.TestArithmetic) ... ok
+test_multiply (Arithmetic.TestArithmetic) ... ok
+test_subtract (Arithmetic.TestArithmetic) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+Hello World
+Finished: SUCCESS
+```
+
 ## 實驗五：自動化測試工具
 
+## 實驗六：圖形化測試結果
 
 
 
