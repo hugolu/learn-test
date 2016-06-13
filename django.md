@@ -78,7 +78,13 @@ blog/
 │   └── wsgi.py
 └── manage.py
 ```
-- 內層的 `blog/` 放置 project 相關的設定
+- 外層的 `blog/`: 包含整個專案的根目錄
+- 內層的 `blog/`: 放置專案相關的設定
+- `mysite/__init__.py`: 空檔，告訴 Python 把這個目錄當成 package
+- `mysite/settings.py`: 專案設定檔
+- `mysite/urls.py`: URL 定義檔，用來告訴 Django 怎麼發送 URL request
+- `mysite/wsgi.py`: 用來執行專案的 WSGI-compatible web servers 進入點 (將來上雲端才會用到)
+- `manage.py`: 命令列工具，用來操作專案
 
 進入外層 `blog/` (之後會在這裡開發應用程式)，啟動服務
 ```shell
