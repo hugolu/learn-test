@@ -283,6 +283,8 @@ Hello World
 Finished: SUCCESS
 ```
 
+除了執行程式，Jenkins 還可以將自動執行單元測試。接下來看看 Jenkins 怎麼將瑣碎的手動步驟變成自動化。
+
 ## 實驗四：自動化單元測試
 
 ### 練習目標
@@ -566,10 +568,45 @@ Jenkins Console Output 的內容就是手動執行的結果，雖然詳細但可
 
 ### 練習目標
 
+- 在 Jenkins Server 上
+    - 安裝 [Cobertura plugin](https://wiki.jenkins-ci.org/display/JENKINS/Cobertura+Plugin) (用来顯示程式碼覆蓋率)
+    - 安裝 [Violations plugin](https://wiki.jenkins-ci.org/display/JENKINS/Violations) (用來顯示程式碼是否合乎規範)
+    - 設定 Post-build Actions，產生圖形結果
 
+### 在 Jenkins Server 上
 
+#### 安裝 Cobertura plugin
 
--= TBC =-
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Cobertura plugin`
+- 選取「Cobertura plugin」，按下「Install without restart」
+- 等候安裝完成
+
+#### 安裝 Violations plugin
+
+- 到 Jenkins 首頁，選擇「Manage Jenkins」
+- 點選「Manage Plugins」，進入設定插件管理頁面
+- 選擇「Available」標籤，「filter」輸入 `Violations plugin`
+- 選取「Violations plugin」，按下「Install without restart」
+- 等候安裝完成
+
+#### 修改 Build Job
+
+- 到「myBuild」頁面，點選「Build Now」
+    - 「Post-build Actions」下點選「Publish Cobertura Coverage Report」，「Cobertura xml report pattern」填入 `coverage.xml`
+    - 「Post-build Actions」下點選「Publish JUnit test result report」，「Test report XMLs」填入 `nosetests.xml`
+    - 「Post-build Actions」下點選「Report Violations」，「pylint」填入 `pylint.out`
+    - 按下「Save」儲存離開
+
+修改 myBuild Configure，不會觸發 Build Job，手動執行後觀察結果
+
+- 到「myBuild」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選最新的 Build result
+    - 點選「Console Output」，看到以下 Build process
+- 到「myBuild」頁面，點選「Coverage Report」，觀察報告
+- 到「myBuild」頁面，點選「Violations」，觀察報告
+
 ----
 ## 參考
 - [Using Jenkins](https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins) - Jenkins 官網文件
