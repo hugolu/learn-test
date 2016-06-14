@@ -289,7 +289,7 @@ Finished: SUCCESS
 
 - 在開發環境上
     - 建立一個 Arithmetic 類別與單元測試
-    - 在開發環境，手動執行測試
+    - 手動執行測試
 
 - 在 Jenkins Server 上
     - 設定自動化測試
@@ -398,6 +398,117 @@ Finished: SUCCESS
 ```
 
 ## 實驗五：自動化測試工具
+
+使用 `python -m unittest *.py` 執行單元測試太過土砲，接下來改用正式的執行方式，順便導入一些靜態檢查的工具。
+
+- 在開發環境上
+    - 使用 pip 安裝 [coverage](http://nedbatchelder.com/code/coverage/), [nose](https://nose.readthedocs.org/), [pylint](http://www.pylint.org/) 套件
+    - 使用 coverage 產生程式碼覆蓋率的分析報告
+    - 使用 nosetest 運行單元測試
+    - 使用 pylint 產生程式碼質量的分析報告
+    - 提交 Python 套件相依清單到 git repository
+
+- 在 Jenkins Server 上
+    - 以 jenkins 使用者身份安裝 virtualenv
+    - 設定自動化測試工具
+
+### 在開發環境上
+
+#### 安裝套件
+
+```shell
+$ pip install coverage nose pylint
+```
+
+#### 運行單元測試
+
+```shell
+$ nosetests --with-xunit --all-modules --traverse-namespace --with-coverage --cover-package=. --cover-inclusive
+....
+Name            Stmts   Miss  Cover
+-----------------------------------
+Arithmetic.py      18      0   100%
+HelloWorld.py       1      0   100%
+-----------------------------------
+TOTAL              19      0   100%
+----------------------------------------------------------------------
+Ran 4 tests in 0.009s
+
+OK
+```
+- 產生分析報告 nosetests.xml
+
+#### 檢查程式碼覆蓋率
+
+```shell
+$ python -m coverage xml --include=*
+```
+- 產生分析報告 coverage.xml
+
+#### 檢查程式碼質量
+
+```shell
+$ pylint -f parseable *.py | tee pylint.out
+...(略)
+
+Report
+======
+19 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |2      |2          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |1          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |4      |4          |=          |0.00        |25.00    |
++---------+-------+-----------+-----------+------------+---------+
+|function |4      |4          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+
+...(略)
+```
+- 產生分析報告 pylint.out
+
+#### 匯出套件相依列表
+
+```shell
+$ pip freeze > requirements.txt
+```
+
+requirements.txt 內容:
+```
+astroid==1.4.6
+colorama==0.3.7
+coverage==4.1
+lazy-object-proxy==1.2.2
+nose==1.3.7
+pylint==1.5.6
+six==1.10.0
+wrapt==1.10.8
+```
+
+#### 修改 .gitignore
+
+```
+__pycache__
+.coverage
+coverage.xml
+nosetests.xml
+pylint.out
+```
+
+#### 提交相依列表
+
+```shell
+$ git add .
+$ git commit -m "add requirements for pip"
+```
+### 在 Jenkins Server 上
 
 ## 實驗六：圖形化測試結果
 
