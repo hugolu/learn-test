@@ -245,13 +245,16 @@ Finished: SUCCESS
 
 ### 練習目標
 
+- 在開發環境上
+    - 無
+
 - 在 Jenkins Server 上
     - 安裝 plugin (pyenv)
     - 設定 Build environment
 
-### 設定 Jenkins Server
+### 在 Jenkins Server 上
 
-安裝 pyenv plugin
+#### 安裝 pyenv plugin
 
 - 到 Jenkins 首頁，選擇「Manage Jenkins」
     - 點選「Manage Plugins」，進入設定插件管理頁面
@@ -259,23 +262,22 @@ Finished: SUCCESS
         - 選取「Git plugin」，按下「Install without restart」
         - 等候安裝完成
 
-> 安裝 pvenv plugin 後重新啟動 jenkins，plugin 才會生效
+> 我的經驗：安裝 pvenv plugin 後要重新啟動 jenkins，這個 plugin 才會生效
 
-修改 Build Job
+#### 修改 Build Job
 
 - 到「myBuild」頁面，點選「Configure」
     - 「Build Environment」內選取「pyenv build wrapper」，「The Python version」填寫 `3.5.1`
     - 按下「Save」儲存離開
 
-因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行
+因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行後觀察結果
 
 - 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選最新的 Build result
     - 點選「Console Output」，看到以下 Build process
 
 ```
-Started by user anonymous
-...
+... (略)
 Python 3.5.1
 Hello World
 Finished: SUCCESS
@@ -355,7 +357,7 @@ python -m unittest -v *.py
     - 點選「Console Output」，看到以下 Build process
 
 ```
-...
+... (略)
 testAdd (Arithmetic.TestArithmetic) ... ok
 test_divide (Arithmetic.TestArithmetic) ... ok
 test_multiply (Arithmetic.TestArithmetic) ... ok
