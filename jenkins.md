@@ -68,11 +68,17 @@ Jenkins Home
 
 ### 練習目標
 
-- 建立簡單的 Build Job
-- 手動執行 Build Job
-- 自動執行 Build Job
+- 在開發環境上
+    - 無
 
-### 建立 Build Job
+- 在 Jenkins Server 上
+    - 建立簡單的 Build Job
+    - 手動執行 Build Job
+    - 自動執行 Build Job (週期性)
+
+### 在 Jenkins Server 上
+
+#### 建立 Build Job
 
 - 到 Jenkins 首頁，點選「New Item」
 - 「Item name」填入 `myBuild`，選擇「Freestyle project」，接著進入設定 Build Job 細節頁面
@@ -84,7 +90,7 @@ Jenkins Home
 echo "Hello World"
 ```
 
-### 手動執行
+#### 手動執行
 
 - 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選 #1
@@ -98,7 +104,7 @@ Hello World
 Finished: SUCCESS
 ```
 
-### 自動執行 (週期)
+#### 自動執行
 
 - 到「myBuild」頁面，點選「Configure」
     - 「Build Triggers」下點選「Build periodically」，「Schedule」填入 `* * * * *` (表示每分鐘 build 一次)
