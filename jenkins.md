@@ -556,6 +556,8 @@ fi
 pip install -r requirements.txt
 ```
 
+> 上面這段 script 主要目的是設定 python 虛擬環境，並且安裝開發環境需要的 python 套件
+
 修改 myBuild Configure，不會觸發 Build Job，手動執行後觀察結果
 
 - 到「myBuild」頁面，點選「Build Now」
@@ -604,8 +606,10 @@ Jenkins Console Output 的內容就是手動執行的結果，雖然詳細但可
 - 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選最新的 Build result
     - 點選「Console Output」，看到以下 Build process
-- 到「myBuild」頁面，點選「Coverage Report」，觀察報告
-- 到「myBuild」頁面，點選「Violations」，觀察報告
+- 到「myBuild」頁面，點選「Coverage Report」，觀察圖形分析報告
+- 到「myBuild」頁面，點選「Violations」，觀察圖形分析報告
+
+![Jenkins myBuild](jenkins-myBuild.png)
 
 ----
 ## 參考
