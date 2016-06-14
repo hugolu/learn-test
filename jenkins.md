@@ -113,6 +113,8 @@ Finished: SUCCESS
 
 ## 實驗二：配合 SCM 進行自動化建置
 
+Jenkins 能根據 Source Code Management (SCM) 上程式碼的變化觸發建置與測試，除了預設的 CVS 還有許多 plugin 支援各式各樣的版本控制系統，如 Accurev, Bazaar, BitKeeper, ClearCase, CMVC, Dimensions, Git, CA Harvest, Mercurial, Perforce, PVCS, StarTeam, CM/Synergy, Microsoft Team Foundation Server, and even Visual SourceSafe。 (資料來源[Jenkins: The Definitive Guide](https://www.safaribooksonline.com/library/view/jenkins-the-definitive/9781449311155/ch05s04.html))
+
 ### 練習目標
 
 - 在開發環境上
@@ -122,27 +124,31 @@ Finished: SUCCESS
     - 安裝 plugin (Git)
     - 隨著 Git repository 更新，進行自動化建置
 
-### 建立專案
+### 在開發環境上
 
-在開發環境上，建立工作目錄
+#### 建立工作目錄
+
 ```shell
 $ mkdir myWorkspace
 $ cd myWorkspace
 ```
 
-設定 Python 版本
+#### 設定 Python 版本
+
 ```shell
 $ pyenv local 3.5.1
 $ python --version
 Python 3.5.1
 ```
 
-建立虛擬環境
+#### 建立虛擬環境
+
 ```shell
 $ pyvenv venv
 ```
 
-切換虛擬環境
+#### 切換虛擬環境
+
 ```shell
 $ pyvenv venv
 $ source venv/bin/activate
@@ -151,7 +157,8 @@ $ source venv/bin/activate
 
 > 出現 (venv) 提示表示目前使用 Python virtualenv，往後範例省略顯示
 
-建立專案目錄
+#### 建立專案目錄
+
 ```shell
 $ mkdir myProject
 $ cd myProject
@@ -159,27 +166,30 @@ $ pwd
 /home/vagrant/myWorkspace/myProject
 ```
 
-產生 HelloWorld.py
+#### 產生 HelloWorld.py
+
 ```shell
 $ echo 'print("Hello World")' > HelloWorld.py
 $ python HelloWorld.py
 Hello World
 ```
 
-初始化 Git repository
+#### 初始化 Git repository
+
 ```shell
 $ git init
 ```
 
-將 HelloWorld.py 加入 Git repository
+#### 將 HelloWorld.py 加入 Git repository
+
 ```shell
 $ git add .
 $ git commit -m "add a python file"
 ```
 
-### 設定 Jenkins Server
+### 在 Jenkins Server 上
 
-安裝 Git plugin
+#### 安裝 Git plugin
 
 - 到 Jenkins 首頁，選擇「Manage Jenkins」
     - 點選「Manage Plugins」，進入設定插件管理頁面
@@ -187,7 +197,7 @@ $ git commit -m "add a python file"
         - 選取「Git plugin」，按下「Install without restart」
         - 等候安裝完成
 
-修改 Build Job
+#### 修改 Build Job
 
 - 到「myBuild」頁面，點選「Configure」
     - 「Source Code Management」下選擇「Git」，「Repository URL」填入 `file:///home/vagrant/myWorkspace/myProject`
@@ -201,7 +211,7 @@ python --version
 python HelloWorld.py
 ```
 
-如果 git repository 在 Jenkins Server 上未建置過、或有任何更新，會在一分鐘內看到自動執行的 Build result
+如果 git repository 在 Jenkins Server 上從未建置過、或有任何更新產生，會在一分鐘內看到自動執行的 Build result
 
 ```shell
 Started by an SCM change
@@ -376,6 +386,7 @@ Finished: SUCCESS
 - [持續整合與自動化測試 - 使用 Jenkins 與 Docker 進行課程實作](https://www.gitbook.com/book/smlsunxie/jenkins-workshop/details) - 內容較完整
 - [Jenkins CI 實戰手冊](http://jenkins.readbook.tw/) - 內容不完整
 - [Jenkins CI 從入門到實戰講座](http://trunk-studio.kktix.cc/events/jenkins-2016001) - 送電子書，內有詳盡的實作步驟說明
+- [Python Projects](https://wiki.jenkins-ci.org/display/JENKINS/Python+Projects) - Using Jenkins for Python Projects
 - Automated python unit testing, code coverage and code quality analysis with Jenkins - [part 1](http://bhfsteve.blogspot.tw/2012/04/automated-python-unit-testing-code.html), [part 2](http://bhfsteve.blogspot.tw/2012/04/automated-python-unit-testing-code_20.html), [part 3](http://bhfsteve.blogspot.tw/2012/04/automated-python-unit-testing-code_27.html)
 - [基于 Jenkins 的 Python 代码集成整合](http://yumminhuang.github.io/blog/2015/04/17/%E5%9F%BA%E4%BA%8E-jenkins-%E7%9A%84-python-%E4%BB%A3%E7%A0%81%E9%9B%86%E6%88%90%E6%95%B4%E5%90%88/)
 - [jenkins集成python的单元测试](http://www.mamicode.com/info-detail-1383168.html)
