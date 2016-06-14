@@ -289,13 +289,14 @@ Finished: SUCCESS
 
 - 在開發環境上
     - 建立一個 Arithmetic 類別與單元測試
+    - 在開發環境，手動執行測試
 
 - 在 Jenkins Server 上
     - 設定自動化測試
 
-### 開發環境
+### 在開發環境上
 
-新增檔案 Arithmetic.py
+#### 新增檔案 Arithmetic.py
 
 ```python
 def add(a, b):
@@ -330,16 +331,41 @@ class TestArithmetic(unittest.TestCase):
         self.assertEqual(divide(3.0, 2), 1.5)
 ```
 
-提交程式碼到 git repository
+#### 手動測試
 
 ```shell
-$ git add Arithmetic.py
-$ git commit -m "add Arithmetic"
+$ python -m unittest -v Arithmetic.py
+testAdd (Arithmetic.TestArithmetic) ... ok
+test_divide (Arithmetic.TestArithmetic) ... ok
+test_multiply (Arithmetic.TestArithmetic) ... ok
+test_subtract (Arithmetic.TestArithmetic) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.003s
+
+OK
 ```
 
-### Jenkins Server
+> 非常重要的原則：檔案進 SCM 前，一定要確定程式碼可以編譯成功，單元測試可以順利通過
 
-修改 Build Job
+#### 新增檔案 .gitignore
+
+.gitignore 可以避免不必要的資料提交到 git repository，例如編譯中間檔、資料庫、密碼等等。目前先略過 Python cache data
+
+```
+__pycache__
+```
+
+#### 提交程式碼
+
+```shell
+$ git add .
+$ git commit -m "add Arithmetic with unittest"
+```
+
+### 在 Jenkins Server 上
+
+#### 修改 Build Job
 
 - 到「myBuild」頁面，點選「Configure」
     - 「Build」下「Execute shell」，「Command」改成下面 shell script
@@ -350,7 +376,7 @@ $ git commit -m "add Arithmetic"
 python -m unittest -v *.py
 ```
 
-因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行
+因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行後觀察結果
 
 - 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選最新的 Build result
