@@ -270,7 +270,7 @@ Finished: SUCCESS
     - 「Build Environment」內選取「pyenv build wrapper」，「The Python version」填寫 `3.5.1`
     - 按下「Save」儲存離開
 
-因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行後觀察結果
+修改 myBuild Configure，不會觸發 Build Job，手動執行後觀察結果
 
 - 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選最新的 Build result
@@ -376,7 +376,7 @@ $ git commit -m "add Arithmetic with unittest"
 python -m unittest -v *.py
 ```
 
-因為修改 myBuild Configure，不會觸發 Build Job，所以手動執行後觀察結果
+修改 myBuild Configure，不會觸發 Build Job，手動執行後觀察結果
 
 - 到「myBuild」頁面，點選「Build Now」
 - 看到「Build History」出現 Build item，點選最新的 Build result
@@ -397,9 +397,11 @@ Hello World
 Finished: SUCCESS
 ```
 
+使用 `python -m unittest *.py` 執行單元測試太過土砲，接下來改用正式的執行方式，順便導入一些靜態檢查的工具。
+
 ## 實驗五：自動化測試工具
 
-使用 `python -m unittest *.py` 執行單元測試太過土砲，接下來改用正式的執行方式，順便導入一些靜態檢查的工具。
+### 練習目標
 
 - 在開發環境上
     - 使用 pip 安裝 [coverage](http://nedbatchelder.com/code/coverage/), [nose](https://nose.readthedocs.org/), [pylint](http://www.pylint.org/) 套件
@@ -510,9 +512,59 @@ $ git commit -m "add requirements for pip"
 ```
 ### 在 Jenkins Server 上
 
+要在 Jenkins Server 執行開發環境相同的任務 ([coverage](http://nedbatchelder.com/code/coverage/), [nose](https://nose.readthedocs.org/), [pylint](http://www.pylint.org/))，也要安裝相同的虛擬環境。
+
+#### 設定 jenkins 環境
+
+- 以 jenkins 身份登入系統
+- 設定環境，[安裝 pyenv、virtualenv](environment.md#安裝-pyenvvirtualenv)
+
+```shell
+$ sudo su jenkins -l
+$ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+$ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+```
+
+#### 修改 Build Job
+
+- 到「myBuild」頁面，點選「Configure」
+    - 「Build」下「Execute shell」，「Command」改成下面 shell script
+    - 按下「Save」儲存離開
+
+```shell
+PATH=$WORKSPACE/venv/bin:/usr/local/bin:$PATH
+
+nosetests --with-xunit --all-modules --traverse-namespace --with-coverage --cover-package=. --cover-inclusive
+python -m coverage xml --include=*
+pylint -f parseable *.py | tee pylint.out
+```
+
+- 到「myBuild」頁面，點選「Configure」
+    - 「Build」內按下「Add build step」，選擇「Execute shell」，「Command」填入下面 shell script
+    - 將這個 「Execute shell」移動到「Build」區塊最上面
+    - 按下「Save」儲存離開
+
+```shell
+PATH=$WORKSPACE/venv/bin:/usr/local/bin:$PATH
+
+if [ ! -d "venv" ]; then
+        virtualenv venv
+fi
+. venv/bin/activate
+pip install -r requirements.txt
+```
+
+修改 myBuild Configure，不會觸發 Build Job，手動執行後觀察結果
+
+- 到「myBuild」頁面，點選「Build Now」
+- 看到「Build History」出現 Build item，點選最新的 Build result
+    - 點選「Console Output」，看到以下 Build process
+
+Jenkins Console Output 的內容就是手動執行的結果，雖然詳細但可讀性非常差。接下來在 Jenkins Server 上加入一些 plugin，讓結果可以用圖形方式呈現。
+
 ## 實驗六：圖形化測試結果
 
-
+### 練習目標
 
 
 
