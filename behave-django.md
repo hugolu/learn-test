@@ -133,7 +133,6 @@ context.get_url('view-name', 'with args', and='kwargs')
 context.get_url(model_instance)
 ```
 
-
 #### 網頁自動化測試
 
 透過瀏覽器打開 `http://192.168.33.10:8000/`，得到下面內容
@@ -189,6 +188,23 @@ Took 0m0.009s
 Destroying test database for alias 'default'...
 ```
 
+### 測試用客戶端 (Django’s testing client)
+
+`context` 包含 TestCase 的實例。`context.test` 提供 Django 測試客戶端程式，驗證透過 URL 讀取網頁內容是否合乎預期。
+
+修改 features/steps/live_test_server.py
+```python
+@when(u'I visit "{url}"')
+def visit(context, url):
+    context.response = context.test.client.get(url)
+
+@then(u'I should see "{text}"')
+def i_should_see(context, text):
+    context.test.assertContains(context.response, text)
+```
+- `context.text` 提供一堆類似 unittest 的函式，例如 `assertRedirects`, `assertContains`, `assertNotContains`, `assertFormError`, `assertFormsetError`, `assertTemplateUsed`, `assertTemplateNotUsed`, `assertRaisesMessage`, `assertFieldOutput`, `assertHTMLEqual`, `assertHTMLNotEqual`, `assertInHTML`, `assertJSONEqual`, `assertJSONNotEqual`, `assertXMLEqual`, `assertXMLNotEqual`, `assertQuerysetEqual`, `assertNumQueries`
+
+### 資料庫事務 (Database transactions per scenario)
 
 ----
 ## 參考
