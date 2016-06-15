@@ -205,6 +205,85 @@ def i_should_see(context, text):
 - `context.text` 提供一堆類似 unittest 的函式，例如 `assertRedirects`, `assertContains`, `assertNotContains`, `assertFormError`, `assertFormsetError`, `assertTemplateUsed`, `assertTemplateNotUsed`, `assertRaisesMessage`, `assertFieldOutput`, `assertHTMLEqual`, `assertHTMLNotEqual`, `assertInHTML`, `assertJSONEqual`, `assertJSONNotEqual`, `assertXMLEqual`, `assertXMLNotEqual`, `assertQuerysetEqual`, `assertNumQueries`
 
 ### 資料庫事務 (Database transactions per scenario)
+(看不懂)
+
+### 載入基礎設施 (Fixture loading)
+
+我的理解是，可以事先使用 json (例如，fixtures/behave-fixtures.json) 設定一些物件，在環境 (environment.py) 設定時載入成為 Model 的內容。
+
+features/environment.py
+```python
+def before_feature(context, feature):
+    if feature.name == 'Fixture loading':
+        context.fixtures = ['behave-fixtures.json']
+
+def before_scenario(context, scenario):
+    if scenario.name == 'Load fixtures for this scenario and feature':
+        context.fixtures.append('behave-second-fixture.json')
+```
+- 如果 feature 是 'Fixture loading'，載入 'behave-fixtures.json' >> BehaveTestModel 內有一個物件
+- 如果 feature 是 'Load fixtures for this scenario and feature'，附加 'behave-second-fixture.json' >> BehaveTestModel 內有兩個物件
+
+test_app/fixtures/behave-fixtures.json
+```json
+[{
+    "fields": {
+        "name": "fixture loading test",
+        "number": 42
+    },
+    "model": "test_app.behavetestmodel",
+    "pk": 1
+}]
+```
+
+test_app/fixtures/behave-second-fixture.json
+```
+[{
+    "fields": {
+        "name": "second fixture",
+        "number": 7
+    },
+    "model": "test_app.behavetestmodel",
+    "pk": 2
+}]
+```
+
+features/fixture-loading.feature
+```
+Feature: Fixture loading
+    In order to have sample data during my behave tests
+    As the Maintainer
+    I want to load fixtures
+
+    Scenario: Load fixtures
+        Then the fixture should be loaded
+
+    Scenario: Load fixtures for this scenario and feature
+        Then the fixture for the second scenario should be loaded
+```
+
+test_app/models.py
+```python
+class BehaveTestModel(models.Model):
+    name = models.CharField(max_length=255)
+    number = models.IntegerField()
+
+    def get_absolute_url(self):
+        return '/behave/test/%i/%s' % (self.number, self.name)
+```
+
+features/steps/fixture-loading.py
+```python
+from test_app.models import BehaveTestModel
+
+@then(u'the fixture should be loaded')
+def check_fixtures(context):
+    context.test.assertEqual(BehaveTestModel.objects.count(), 1)
+
+@then(u'the fixture for the second scenario should be loaded')
+def check_second_fixtures(context):
+    context.test.assertEqual(BehaveTestModel.objects.count(), 2)
+```
 
 ----
 ## 參考
