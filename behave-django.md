@@ -294,6 +294,24 @@ def check_second_fixtures(context):
 
 ## Behave 配置檔 (Behave configuration file)
 
+專案根目錄下的 behave.ini, .behaverc, or setup.cfg 檔案。
+
+例如，setup.cfg
+```
+[behave]
+paths = features/
+        test_app/features/
+show_skipped = no
+
+[flake8]
+exclude = docs/*
+
+[pytest]
+testpaths = tests/
+```
+
+更多資料在 [Behave Configuration Files](https://pythonhosted.org/behave/behave.html#configuration-files)
+
 ----
 ## 參考
 
