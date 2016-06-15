@@ -1,7 +1,5 @@
 # behave-django
 
-參考: https://pythonhosted.org/behave-django/index.html
-
 ## 安裝
 
 behave-django 要安裝在 Django project 中，在這之前要先設定虛擬環境、安裝 Django、產生 Django project
@@ -113,3 +111,10 @@ Destroying test database for alias 'default'...
 ```
 
 > 附註：從 0.2.0 開始，不再需要在 environment.py 中插入 `environment.before_scenario()` 與 `environment.after_scenario()`。
+
+-= TBC =-
+----
+## 參考
+
+- https://pythonhosted.org/behave-django/index.html (文件)
+- https://github.com/behave/behave-django/tree/master/features (範例)
