@@ -133,12 +133,17 @@ context.get_url('view-name', 'with args', and='kwargs')
 context.get_url(model_instance)
 ```
 
-透過瀏覽器打開 http://192.168.33.10:8000/，得到內容
+
+#### 網頁自動化測試
+
+透過瀏覽器打開 `http://192.168.33.10:8000/`，得到下面內容
 ```
 Behave Django works
 ```
 
-網頁自動化測試 feature: features/live-test-server.feature
+以下驗證透過瀏覽器看到的內容合乎預期。
+
+features/live-test-server.feature
 ```
 Feature: Live server
     In order to prove that the live server works
@@ -150,7 +155,7 @@ Feature: Live server
         Then I should see "Behave Django works"
 ```
 
-網頁自動化測試 steps: features/steps/live_test_server.py
+features/steps/live_test_server.py
 ```python
 @when(u'I visit "{url}"')
 def visit(context, url):
@@ -183,6 +188,7 @@ Feature: Live server # features/live-test-server.feature:1
 Took 0m0.009s
 Destroying test database for alias 'default'...
 ```
+
 
 ----
 ## 參考
