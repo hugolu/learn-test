@@ -248,6 +248,17 @@ test_app/fixtures/behave-second-fixture.json
 }]
 ```
 
+test_app/models.py
+```python
+class BehaveTestModel(models.Model):
+    name = models.CharField(max_length=255)
+    number = models.IntegerField()
+
+    def get_absolute_url(self):
+        return '/behave/test/%i/%s' % (self.number, self.name)
+```
+- `BehaveTestModel` 有兩個屬性: name, number
+
 features/fixture-loading.feature
 ```
 Feature: Fixture loading
@@ -262,16 +273,6 @@ Feature: Fixture loading
         Then the fixture for the second scenario should be loaded
 ```
 
-test_app/models.py
-```python
-class BehaveTestModel(models.Model):
-    name = models.CharField(max_length=255)
-    number = models.IntegerField()
-
-    def get_absolute_url(self):
-        return '/behave/test/%i/%s' % (self.number, self.name)
-```
-
 features/steps/fixture-loading.py
 ```python
 from test_app.models import BehaveTestModel
@@ -284,6 +285,14 @@ def check_fixtures(context):
 def check_second_fixtures(context):
     context.test.assertEqual(BehaveTestModel.objects.count(), 2)
 ```
+- 搭配 features/environment.py 閱讀，就能理解 assert 為何合乎預期
+
+## 命令列選項 (Command line options)
+
+- `--use-existing-database`: 不產生測試用資料庫，使用 runserver 時使用的資料庫。(除非必須這樣做，不然不要冒險)
+- `--keepdb`: 測試使用已有的資料庫而不是每次都重新產生，得到比較快的測試速度。(Django 1.8 之後已經把 --keepdb 加到 manage.py 了)
+
+## Behave 配置檔 (Behave configuration file)
 
 ----
 ## 參考
