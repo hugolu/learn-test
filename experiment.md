@@ -101,7 +101,7 @@ def step_impl(context):
     pass
 ```
 
-在執行 behave 得到下面結果
+執行 behave，得到下面結果
 ```shell
 $ behave
 Feature: User account # features/account.feature:1
@@ -148,12 +148,34 @@ Took 0m0.001s
 def step_impl(context, username, password):
     pass
 
-@then(u'I get the register result: "username or password too short"')
-def step_impl(context):
-    pass
-
-@then(u'I get the register result: "the account is created"')
-def step_impl(context):
+@then(u'I get the register result: {result}')
+def step_impl(context, result):
     pass
 ```
-- 使用 `{username}`, `{password}`, `{result}` 
+- 使用 `{username}`, `{password}`, `{result}` 變數，不需要囉囉唆唆的針對每個場景寫 steps
+
+執行 behave，得到下面結果有關註冊邏輯的驗證結果
+```shell
+$ behave
+...(略)
+  Scenario Outline: username and password must be large than 5 characters -- @1.1 some usernames and passwords  # features/account.feature:22
+    When try to register a name abc with a password 123456                                                      # features/steps/account.py:21 0.000s
+    Then I get the register result: "username or password too short"                                            # features/steps/account.py:25 0.000s
+
+  Scenario Outline: username and password must be large than 5 characters -- @1.2 some usernames and passwords  # features/account.feature:23
+    When try to register a name abcedf with a password 123                                                      # features/steps/account.py:21 0.000s
+    Then I get the register result: "username or password too short"                                            # features/steps/account.py:25 0.000s
+
+  Scenario Outline: username and password must be large than 5 characters -- @1.3 some usernames and passwords  # features/account.feature:24
+    When try to register a name abc with a password 123                                                         # features/steps/account.py:21 0.000s
+    Then I get the register result: "username or password too short"                                            # features/steps/account.py:25 0.000s
+
+  Scenario Outline: username and password must be large than 5 characters -- @1.4 some usernames and passwords  # features/account.feature:25
+    When try to register a name abcdef with a password 123456                                                   # features/steps/account.py:21 0.000s
+    Then I get the register result: "the account is created"                                                    # features/steps/account.py:25 0.000s
+
+1 feature passed, 0 failed, 0 skipped
+6 scenarios passed, 0 failed, 0 skipped
+14 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 0m0.002s
+```
