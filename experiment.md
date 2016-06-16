@@ -126,3 +126,34 @@ Took 0m0.001s
 - 測試一個 feature，其中包含兩個 scenario、六個 step
 - 測試通過
 
+### 註冊邏輯
+
+在 features/account.feature 描述帳號登入的場景，這次使用 `Scenario Outline` 描述多個測試場景
+```
+    Scenario Outline: username and password must be large than 5 characters
+         When try to register a name <username> with a password <password>
+         Then I get the register result: <result>
+
+        Examples: some usernames and passwords
+            | username  | password  | result                            |
+            | abc       | 123456    | "username or password too short"  |
+            | abcedf    | 123       | "username or password too short"  |
+            | abc       | 123       | "username or password too short"  |
+            | abcdef    | 123456    | "the account is created"          |
+```
+
+在 features/steps/account.py 中，相對應的步驟如下
+```python
+@when(u'try to register a name {username} with a password {password}')
+def step_impl(context, username, password):
+    pass
+
+@then(u'I get the register result: "username or password too short"')
+def step_impl(context):
+    pass
+
+@then(u'I get the register result: "the account is created"')
+def step_impl(context):
+    pass
+```
+- 使用 `{username}`, `{password}`, `{result}` 
