@@ -126,6 +126,44 @@ Took 0m0.001s
 - 測試一個 feature，其中包含兩個 scenario、六個 step
 - 測試通過
 
+### 驗收測試 (Acceptance Test) 的意義
+
+function.feature
+```
+Feature: function description
+    As a <role>, I want <desire> so that <benefit>.
+    
+    Scenario:
+        Given statement #1
+         When statement #2
+         Then statement #3
+```
+
+steps.py
+```python
+@given(u'statement #1')
+def step_impl(context, ...):
+    function1(...)
+
+@when(u'statement #2')
+def step_impl(context, ...):
+    function2(...)
+
+@then(u'statement #3')
+def step_impl(context):
+    assert(...)
+```
+- 在 steps 裡面的函數只是將服務呼叫派送 (delegate) 到真正的函數
+
+function.py
+```
+def function1(...):
+    # 真正做事情的地方
+
+def function2(...):
+    # 真正做事情的地方
+```
+
 ### 註冊邏輯
 
 在 features/account.feature 描述帳號登入的場景，這次使用 `Scenario Outline` 描述多個測試場景
