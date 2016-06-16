@@ -179,3 +179,58 @@ $ behave
 14 steps passed, 0 failed, 0 skipped, 0 undefined
 Took 0m0.002s
 ```
+
+### 中文化
+
+behave 支援許多語系
+```shell
+$ behave --lang-list
+Languages available:
+ar: العربية / Arabic
+bg: български / Bulgarian
+ca: català / Catalan
+cs: Česky / Czech
+cy-GB: Cymraeg / Welsh
+da: dansk / Danish
+de: Deutsch / German
+en: English / English
+en-Scouse: Scouse / Scouse
+en-au: Australian / Australian
+en-lol: LOLCAT / LOLCAT
+en-pirate: Pirate / Pirate
+en-tx: Texan / Texan
+eo: Esperanto / Esperanto
+es: español / Spanish
+et: eesti keel / Estonian
+fi: suomi / Finnish
+fr: français / French
+he: עברית / Hebrew
+hr: hrvatski / Croatian
+hu: magyar / Hungarian
+id: Bahasa Indonesia / Indonesian
+is: Íslenska / Icelandic
+it: italiano / Italian
+ja: 日本語 / Japanese
+ko: 한국어 / Korean
+lt: lietuvių kalba / Lithuanian
+lu: Lëtzebuergesch / Luxemburgish
+lv: latviešu / Latvian
+nl: Nederlands / Dutch
+no: norsk / Norwegian
+pl: polski / Polish
+pt: português / Portuguese
+ro: română / Romanian
+ru: русский / Russian
+sk: Slovensky / Slovak
+sr-Cyrl: Српски / Serbian
+sr-Latn: Srpski (Latinica) / Serbian (Latin)
+sv: Svenska / Swedish
+tr: Türkçe / Turkish
+uk: Українська / Ukrainian
+uz: Узбекча / Uzbek
+vi: Tiếng Việt / Vietnamese
+zh-CN: 简体中文 / Chinese simplified
+zh-TW: 繁體中文 / Chinese traditional
+```
+
+> python3.5 不支援 dict.sort()，要修改 /lib/python3.5/site-packages/behave/__main__.py:65: `iso_codes = sorted(iso_codes)#iso_codes.sort()`
