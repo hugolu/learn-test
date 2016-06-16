@@ -154,7 +154,7 @@ def step_impl(context, result):
 ```
 - 使用 `{username}`, `{password}`, `{result}` 變數，不需要囉囉唆唆的針對每個場景寫 steps
 
-執行 behave，得到下面結果有關註冊邏輯的驗證結果
+執行 behave，得到下面有關註冊邏輯的驗證結果
 ```shell
 $ behave
 ...(略)
@@ -234,3 +234,113 @@ zh-TW: 繁體中文 / Chinese traditional
 ```
 
 > python3.5 不支援 dict.sort()，要修改 /lib/python3.5/site-packages/behave/__main__.py:65: `iso_codes = sorted(iso_codes)#iso_codes.sort()`
+
+feature 可以寫成中文，只要文件第一行註記使用什麼語言，在 features/帳號.feature
+```
+# language: zh-TW
+
+功能: 用戶帳號
+    為了買賣商品
+    身為買家或賣家
+    我想要有一個網站帳號
+
+    場景: 用正確的帳號跟密碼登入
+        假設< 帳號"django"與密碼"django123"被註冊
+          當< 我用"django"與密碼"django123"登入
+        那麼< 我得到登入結果"成功"
+
+    場景: 用不正確的帳號跟密碼登入
+        假設< 帳號"django"與密碼"django123"被註冊
+          當< 我用"django"與密碼"abcdef123"登入
+        那麼< 我得到登入結果"失敗"
+
+    場景大綱: 帳號與密碼必須大於5個字元
+        當< 嘗試用帳號<帳號>與密碼<密碼>註冊
+        那麼< 我得到註冊結果<結果>
+
+        例子: 一些帳號與密碼
+            | 帳號      | 密碼      | 結果              |
+            | abc       | 123456    | "帳號或密碼太短"  |
+            | abcedf    | 123       | "帳號或密碼太短"  |
+            | abc       | 123       | "帳號或密碼太短"  |
+            | abcdef    | 123456    | "帳號建立"        |
+```
+
+步驟也可以用中文編寫，在 features/steps/帳號.py
+```python
+@given(u'< 帳號"django"與密碼"django123"被註冊')
+def step_impl(context):
+    pass
+
+@when(u'< 我用"django"與密碼"django123"登入')
+def step_impl(context):
+    pass
+
+@then(u'< 我得到註冊結果"成功"')
+def step_impl(context):
+    pass
+
+@when(u'< 我用"django"與密碼"abcdef123"登入')
+def step_impl(context):
+    pass
+
+@then(u'< 我得到註冊結果"失敗"')
+def step_impl(context):
+    pass
+
+@then(u'< 我得到登入結果"成功"')
+def step_impl(context):
+    pass
+
+@then(u'< 我得到登入結果"失敗"')
+def step_impl(context):
+    pass
+
+@when(u'< 嘗試用帳號{username}與密碼{password}註冊')
+def step_impl(context, username, password):
+    pass
+
+@then(u'< 我得到註冊結果{result}')
+def step_impl(context, result):
+    pass
+```
+
+執行 behave，得到下面驗證結果
+```shell
+$ behave --include 帳號
+功能: 用戶帳號 # features/帳號.feature:3
+  為了買賣商品
+  身為買家或賣家
+  我想要有一個網站帳號
+  場景: 用正確的帳號跟密碼登入                    # features/帳號.feature:8
+    假設 < 帳號"django"與密碼"django123"被註冊 # features/steps/帳號.py:1 0.000s
+    當 < 我用"django"與密碼"django123"登入   # features/steps/帳號.py:5 0.000s
+    那麼 < 我得到登入結果"成功"                 # features/steps/帳號.py:21 0.000s
+
+  場景: 用不正確的帳號跟密碼登入                   # features/帳號.feature:13
+    假設 < 帳號"django"與密碼"django123"被註冊 # features/steps/帳號.py:1 0.000s
+    當 < 我用"django"與密碼"abcdef123"登入   # features/steps/帳號.py:13 0.000s
+    那麼 < 我得到登入結果"失敗"                 # features/steps/帳號.py:25 0.000s
+
+  場景大綱: 帳號與密碼必須大於5個字元 -- @1.1 一些帳號與密碼  # features/帳號.feature:24
+    當 < 嘗試用帳號abc與密碼123456註冊            # features/steps/帳號.py:29 0.000s
+    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+
+  場景大綱: 帳號與密碼必須大於5個字元 -- @1.2 一些帳號與密碼  # features/帳號.feature:25
+    當 < 嘗試用帳號abcedf與密碼123註冊            # features/steps/帳號.py:29 0.000s
+    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+
+  場景大綱: 帳號與密碼必須大於5個字元 -- @1.3 一些帳號與密碼  # features/帳號.feature:26
+    當 < 嘗試用帳號abc與密碼123註冊               # features/steps/帳號.py:29 0.000s
+    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+
+  場景大綱: 帳號與密碼必須大於5個字元 -- @1.4 一些帳號與密碼  # features/帳號.feature:27
+    當 < 嘗試用帳號abcdef與密碼123456註冊         # features/steps/帳號.py:29 0.000s
+    那麼 < 我得到註冊結果"帳號建立"                 # features/steps/帳號.py:33 0.000s
+
+1 feature passed, 0 failed, 0 skipped
+6 scenarios passed, 0 failed, 0 skipped
+14 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 0m0.002s
+```
+> 說實在，除非必要，不然使用中文寫規格只是炫技而已
