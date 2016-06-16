@@ -324,15 +324,15 @@ $ behave --include 帳號
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.1 一些帳號與密碼  # features/帳號.feature:24
     當 < 嘗試用帳號abc與密碼123456註冊            # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.2 一些帳號與密碼  # features/帳號.feature:25
     當 < 嘗試用帳號abcedf與密碼123註冊            # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.3 一些帳號與密碼  # features/帳號.feature:26
     當 < 嘗試用帳號abc與密碼123註冊               # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.4 一些帳號與密碼  # features/帳號.feature:27
     當 < 嘗試用帳號abcdef與密碼123456註冊         # features/steps/帳號.py:29 0.000s
