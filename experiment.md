@@ -164,6 +164,8 @@ def function2(...):
     # 真正做事情的地方
 ```
 
+![Connecting the steps with the interface](connecting-the-steps-with-the-interface.png)
+
 ### 註冊邏輯
 
 在 features/account.feature 描述帳號登入的場景，這次使用 `Scenario Outline` 描述多個測試場景
