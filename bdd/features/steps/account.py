@@ -22,10 +22,6 @@ def step_impl(context):
 def step_impl(context, username, password):
     pass
 
-@then(u'I get the register result: "username or password too short"')
-def step_impl(context):
-    pass
-
-@then(u'I get the register result: "the account is created"')
-def step_impl(context):
+@then(u'I get the register result: {result}')
+def step_impl(context, result):
     pass
