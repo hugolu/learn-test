@@ -384,3 +384,28 @@ $ behave --include 帳號
 Took 0m0.002s
 ```
 > 說實在，除非必要，不然使用中文寫規格只是炫技而已
+
+## TDD
+
+目標：**實作**帳號註冊與登入的邏輯
+
+設定 mysql 環境
+```mysql
+CREATE DATABASE `test`;
+USE `test`;
+
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO `account` VALUES (1,'abcdef','123456');
+```
+- `account` 表格內有一筆帳號: {username=abcdef, password=123456}
+
+----
+## 參考
+- https://insights.sei.cmu.edu/sei_blog/2013/11/using-v-models-for-testing.html
+- 
