@@ -44,24 +44,7 @@ Feature: User account
 在什麼事情都沒做的情形下，執行 behave 會得到錯誤訊息，還有一些貼心的 snippet
 ```shell
 $ behave
-Feature: User account # features/account.feature:1
-  In order to buy or sell commodities
-  As a buyer or seller
-  I want to have a account in the Ecommerce website
-  Scenario: Login as correct username and password                     # features/account.feature:6
-    Given an username django with the password django123 is registered # None
-    When I login as django and give the password django123             # None
-    Then I get the login result: successful                            # None
-
-  Scenario: Login as incorrect username and password                   # features/account.feature:11
-    Given an username django with the password django123 is registered # None
-    When I login as django and give the password abcdef123             # None
-    Then I get the login result: failed                                # None
-
-
-Failing scenarios:
-  features/account.feature:6  Login as correct username and password
-  features/account.feature:11  Login as incorrect username and password
+...(略)
 
 0 features passed, 1 failed, 0 skipped
 0 scenarios passed, 2 failed, 0 skipped
@@ -89,7 +72,6 @@ def step_impl(context):
 @then(u'I get the login result: failed')
 def step_impl(context):
     raise NotImplementedError(u'STEP: Then I get the login result: failed')
-
 ```
 
 修改上面的 snippet 產生跟應用程式介接的 steps，儲存在 features/steps/account.py
@@ -107,7 +89,7 @@ def step_impl(context, result):
     raise NotImplementedError(u'STEP: Then I get the login result: {result}')
 ```
 
-執行 behave，得到下面結果
+再次執行 behave，得到下面結果
 ```shell
 Feature: User account # features/account.feature:1
   In order to buy or sell commodities
