@@ -126,14 +126,11 @@ Took 0m0.001s
 - regular expression 解析 `{username}`, `{password}`, `{result}` 的部分ok，
 - 但因為功能尚未實作，得到測試錯誤的結果 (符合預期)
 
-
-
-
-
-
-
-
 ### 驗收測試 (Acceptance Test) 的意義
+
+![Connecting the steps with the interface](connecting-the-steps-with-the-interface.png)
+
+參考上圖 (請搭配下面的程式用力想像)，steps.py 將 function.feature 裡面定義的 Given-When-Then 變成可執行的程式，但不是在這裡把功能做出來，而只是把上層的請求派送 (delegate) 到真正做事的地方 function.py。
 
 function.feature
 ```
@@ -160,7 +157,6 @@ def step_impl(context, ...):
 def step_impl(context):
     assert(...)
 ```
-- 在 steps 裡面的函數只是將服務呼叫派送 (delegate) 到真正的函數
 
 function.py
 ```
@@ -171,7 +167,16 @@ def function2(...):
     # 真正做事情的地方
 ```
 
-![Connecting the steps with the interface](connecting-the-steps-with-the-interface.png)
+接下來，我們透過 TDD 的方式把底層功能實作出來。
+
+## TDD (Test-Driven Development) 
+
+
+
+
+
+
+
 
 ### 註冊邏輯
 
