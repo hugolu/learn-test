@@ -41,17 +41,24 @@ Feature: User account
          Then I get the login result: failed
 ```
 
-
-
-
-
-
-
-
-在什麼事情都沒做的情形下，先看看執行 behave 會發生什麼
+在什麼事情都沒做的情形下，執行 behave 會得到錯誤訊息，還有一些貼心的 snippet
 ```shell
 $ behave
-...(略)
+Feature: User account # features/account.feature:1
+  In order to buy or sell commodities
+  As a buyer or seller
+  I want to have a account in the Ecommerce website
+  Scenario: Login as correct username and password                     # features/account.feature:6
+    Given an username django with the password django123 is registered # None
+    When I login as django and give the password django123             # None
+    Then I get the login result: successful                            # None
+
+  Scenario: Login as incorrect username and password                   # features/account.feature:11
+    Given an username django with the password django123 is registered # None
+    When I login as django and give the password abcdef123             # None
+    Then I get the login result: failed                                # None
+
+
 Failing scenarios:
   features/account.feature:6  Login as correct username and password
   features/account.feature:11  Login as incorrect username and password
@@ -63,30 +70,29 @@ Took 0m0.000s
 
 You can implement step definitions for undefined steps with these snippets:
 
-@given(u'an username "django" with the password "django123" is registered')
+@given(u'an username django with the password django123 is registered')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Given an username "django" with the password "django123" is registered')
+    raise NotImplementedError(u'STEP: Given an username django with the password django123 is registered')
 
-@when(u'I login as "django" and give the password "django123"')
+@when(u'I login as django and give the password django123')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When I login as "django" and give the password "django123"')
+    raise NotImplementedError(u'STEP: When I login as django and give the password django123')
 
-@then(u'I get the login result: "successful"')
+@then(u'I get the login result: successful')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I get the login result: "successful"')
+    raise NotImplementedError(u'STEP: Then I get the login result: successful')
 
-@when(u'I login as "django" and give the password "abcdef123"')
+@when(u'I login as django and give the password abcdef123')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When I login as "django" and give the password "abcdef123"')
+    raise NotImplementedError(u'STEP: When I login as django and give the password abcdef123')
 
-@then(u'I get the login result: "failed"')
+@then(u'I get the login result: failed')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I get the login result: "failed"')
+    raise NotImplementedError(u'STEP: Then I get the login result: failed')
+
 ```
-- 沒有實作 steps，得到兩個 Failing scenarios
-- behave 很貼心的幫我們產生一些 snippet
 
-接下用這些 snippet 產生 features/steps/account.py (暫時把 raise 改成 pass，假裝我們已經把真正的功能實作出來)
+用這些 snippet 產生跟應用程式介接的 steps，儲存在 features/steps/account.py
 ```python
 @given(u'an username "django" with the password "django123" is registered')
 def step_impl(context):
