@@ -92,53 +92,64 @@ def step_impl(context):
 
 ```
 
-用這些 snippet 產生跟應用程式介接的 steps，儲存在 features/steps/account.py
+修改上面的 snippet 產生跟應用程式介接的 steps，儲存在 features/steps/account.py
 ```python
-@given(u'an username "django" with the password "django123" is registered')
-def step_impl(context):
-    pass
+@given(u'an username {username} with the password {password} is registered')
+def step_impl(context, username, password):
+    raise NotImplementedError(u'STEP: Given an username {username} with the password {password} is registered')
 
-@when(u'I login as "django" and give the password "django123"')
-def step_impl(context):
-    pass
+@when(u'I login as {username} and give the password {password}')
+def step_impl(context, username, password):
+    raise NotImplementedError(u'STEP: When I login as {username} and give the password {password}')
 
-@then(u'I get the login result: "successful"')
-def step_impl(context):
-    pass
-
-@when(u'I login as "django" and give the password "abcdef123"')
-def step_impl(context):
-    pass
-
-@then(u'I get the login result: "failed"')
-def step_impl(context):
-    pass
+@then(u'I get the login result: {result}')
+def step_impl(context, result):
+    raise NotImplementedError(u'STEP: Then I get the login result: {result}')
 ```
 
 執行 behave，得到下面結果
 ```shell
-$ behave
 Feature: User account # features/account.feature:1
   In order to buy or sell commodities
   As a buyer or seller
-  I want to have a account in the web site
-  Scenario: Login as correct username and password                         # features/account.feature:6
-    Given an username "django" with the password "django123" is registered # features/steps/account.py:1 0.000s
-    When I login as "django" and give the password "django123"             # features/steps/account.py:5 0.000s
-    Then I get the login result: "successful"                              # features/steps/account.py:9 0.000s
+  I want to have a account in the Ecommerce website
+  Scenario: Login as correct username and password                     # features/account.feature:6
+    Given an username django with the password django123 is registered # features/steps/steps.py:1 0.000s
+      Traceback (most recent call last):
+        ...(略)
+      NotImplementedError: STEP: Given an username {username} with the password {password} is registered
 
-  Scenario: Login as incorrect username and password                       # features/account.feature:11
-    Given an username "django" with the password "django123" is registered # features/steps/account.py:1 0.000s
-    When I login as "django" and give the password "abcdef123"             # features/steps/account.py:13 0.000s
-    Then I get the login result: "failed"                                  # features/steps/account.py:17 0.000s
+    When I login as django and give the password django123             # None
+    Then I get the login result: successful                            # None
 
-1 feature passed, 0 failed, 0 skipped
-2 scenarios passed, 0 failed, 0 skipped
-6 steps passed, 0 failed, 0 skipped, 0 undefined
+  Scenario: Login as incorrect username and password                   # features/account.feature:11
+    Given an username django with the password django123 is registered # features/steps/steps.py:1 0.000s
+      Traceback (most recent call last):
+        ...(略)
+      NotImplementedError: STEP: Given an username {username} with the password {password} is registered
+
+    When I login as django and give the password abcdef123             # None
+    Then I get the login result: failed                                # None
+
+
+Failing scenarios:
+  features/account.feature:6  Login as correct username and password
+  features/account.feature:11  Login as incorrect username and password
+
+0 features passed, 1 failed, 0 skipped
+0 scenarios passed, 2 failed, 0 skipped
+0 steps passed, 2 failed, 4 skipped, 0 undefined
 Took 0m0.001s
 ```
-- 測試一個 feature，其中包含兩個 scenario、六個 step
-- 測試通過
+- regular expression 解析 `{username}`, `{password}`, `{result}` 的部分ok，
+- 但因為功能尚未實作，得到測試錯誤的結果 (符合預期)
+
+
+
+
+
+
+
 
 ### 驗收測試 (Acceptance Test) 的意義
 
