@@ -1,13 +1,13 @@
 # 實驗
 
-## BDD
+## BDD (Behavior-Driven Development) 
 
 目標：**溝通**帳號註冊與登入的邏輯
 
-先產生專案目錄，再建立 features 與 steps 目錄
+準備工作：產生專案目錄，建立 features 與 steps 目錄
 ```shell
-$ mkdir bdd
-$ cd bdd
+$ mkdir test
+$ cd test
 $ mkdir -p features/steps
 $ tree
 .
@@ -17,12 +17,13 @@ $ tree
 
 ### 描述功能 (Feature)
 
-在 features/account.feature 檔案一開頭，使用文字描述功能特性，讓創建規格的**產品經理**與實作功能的**工程師**在相同的 context 下進行溝通。
+在 features/account.feature 檔案一開頭，使用文字描述功能特性，讓創建規格的**產品經理**與實作功能的**程式設計師**在相同的 context 下進行溝通。
+
 ```
 Feature: User account
     In order to buy or sell commodities
     As a buyer or seller
-    I want to have a account in the web site
+    I want to have a account in the Ecommerce website
 ```
 
 ### 登入邏輯
@@ -30,15 +31,22 @@ Feature: User account
 在 features/account.feature 描述帳號登入的場景
 ```
     Scenario: Login as correct username and password
-        Given an username "django" with the password "django123" is registered
-         When I login as "django" and give the password "django123"
-         Then I get the login result: "successful"
-    
+        Given an username django with the password django123 is registered
+         When I login as django and give the password django123
+         Then I get the login result: successful
+
     Scenario: Login as incorrect username and password
-        Given an username "django" with the password "django123" is registered
-         When I login as "django" and give the password "abcdef123"
-         Then I get the login result: "failed"
+        Given an username django with the password django123 is registered
+         When I login as django and give the password abcdef123
+         Then I get the login result: failed
 ```
+
+
+
+
+
+
+
 
 在什麼事情都沒做的情形下，先看看執行 behave 會發生什麼
 ```shell
