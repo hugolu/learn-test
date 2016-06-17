@@ -34,10 +34,10 @@ import unittest
 class TestAccount(unittest.TestCase):
 
     def test_login_with_correct_username_password(self):
-        self.assertEqual(account_login("abcdef", "123456"), "successful")
+        self.assertEqual(account_login("abcdef", "123456"), True)
 
     def test_login_with_invalid_username(self):
-        self.assertEqual(account_login("ABCEDF", "123456"), "failed")
+        self.assertEqual(account_login("ABCEDF", "123456"), False)
 
     def test_login_with_invalid_password(self):
-        self.assertEqual(account_login("abcedf", "000000"), "failed")
+        self.assertEqual(account_login("abcedf", "000000"), False)
