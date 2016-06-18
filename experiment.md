@@ -273,58 +273,67 @@ Took 0m0.001s
 
 ## TDD (Test-Driven Development) 
 
-雖然先有 interface，但接下來不是要實作功能，把單元測試先補上
+雖然先有 interface，但接下來不是要實作功能，而是把單元測試補上
 
 修改 features/steps/account.py，增加以下測試
 ```python
 import unittest
 class TestAccount(unittest.TestCase):
 
+    @unittest.skip("need database mock")
+    def test_account_insert(self):
+        pass
+
+    @unittest.skip("need database mock")
     def test_login_with_correct_username_password(self):
-        self.assertEqual(account_login("abcdef", "123456"), True)
+        pass
 
+    @unittest.skip("need database mock")
     def test_login_with_invalid_username(self):
-        self.assertEqual(account_login("ABCEDF", "123456"), False)
+        pass
 
+    @unittest.skip("need database mock")
     def test_login_with_invalid_password(self):
-        self.assertEqual(account_login("abcedf", "000000"), False)
+        pass
+
+    @unittest.skip("need database mock")
+    def test_register_with_valid_username_password(self):
+        pass
+
+    @unittest.skip("need database mock")
+    def test_reigster_with_invalid_username(self):
+        pass
+
+    @unittest.skip("need database mock")
+    def test_register_with_invalid_password(self):
+        pass
 ```
 
-這次不是用 behave 進行測試，改用 `python -m unittest`
+account 需要跟資料庫互動才能完成 `account_insert`, `account_login`, `account_register` 的功能，但我想把這個依賴關係切開，先把測試標記為 skip
+
+接下來不用 behave 進行測試，改用 `python -m unittest`
 ```shell
-$ python -m unittest account.py
-FFF
-======================================================================
-FAIL: test_login_with_correct_username_password (account.TestAccount)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/vagrant/learn-test/test/features/steps/account.py", line 14, in test_login_with_correct_username_password
-    self.assertEqual(account_login("abcdef", "123456"), True)
-AssertionError: None != True
-
-======================================================================
-FAIL: test_login_with_invalid_password (account.TestAccount)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/vagrant/learn-test/test/features/steps/account.py", line 20, in test_login_with_invalid_password
-    self.assertEqual(account_login("abcedf", "000000"), False)
-AssertionError: None != False
-
-======================================================================
-FAIL: test_login_with_invalid_username (account.TestAccount)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/vagrant/learn-test/test/features/steps/account.py", line 17, in test_login_with_invalid_username
-    self.assertEqual(account_login("ABCEDF", "123456"), False)
-AssertionError: None != False
+$ python -m unittest -v account
+test_account_insert (account.TestAccount) ... skipped 'need database mock'
+test_login_with_correct_username_password (account.TestAccount) ... skipped 'need database mock'
+test_login_with_invalid_password (account.TestAccount) ... skipped 'need database mock'
+test_login_with_invalid_username (account.TestAccount) ... skipped 'need database mock'
+test_register_with_invalid_password (account.TestAccount) ... skipped 'need database mock'
+test_register_with_valid_username_password (account.TestAccount) ... skipped 'need database mock'
+test_reigster_with_invalid_username (account.TestAccount) ... skipped 'need database mock'
 
 ----------------------------------------------------------------------
-Ran 3 tests in 0.001s
+Ran 7 tests in 0.005s
 
-FAILED (failures=3)
+OK (skipped=7)
 ```
 
-發生三個錯誤，亮起紅燈。接著開始實現功能，從修改 `account_insert` 函數滿足 
+
+
+
+
+
+
 
 
 
