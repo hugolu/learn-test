@@ -273,8 +273,58 @@ Took 0m0.001s
 
 ## TDD (Test-Driven Development) 
 
+雖然先有 interface，但接下來不是要實作功能，把單元測試先補上
 
+修改 features/steps/account.py，增加以下測試
+```python
+import unittest
+class TestAccount(unittest.TestCase):
 
+    def test_login_with_correct_username_password(self):
+        self.assertEqual(account_login("abcdef", "123456"), True)
+
+    def test_login_with_invalid_username(self):
+        self.assertEqual(account_login("ABCEDF", "123456"), False)
+
+    def test_login_with_invalid_password(self):
+        self.assertEqual(account_login("abcedf", "000000"), False)
+```
+
+這次不是用 behave 進行測試，改用 `python -m unittest`
+```shell
+$ python -m unittest account.py
+FFF
+======================================================================
+FAIL: test_login_with_correct_username_password (account.TestAccount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/learn-test/test/features/steps/account.py", line 14, in test_login_with_correct_username_password
+    self.assertEqual(account_login("abcdef", "123456"), True)
+AssertionError: None != True
+
+======================================================================
+FAIL: test_login_with_invalid_password (account.TestAccount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/learn-test/test/features/steps/account.py", line 20, in test_login_with_invalid_password
+    self.assertEqual(account_login("abcedf", "000000"), False)
+AssertionError: None != False
+
+======================================================================
+FAIL: test_login_with_invalid_username (account.TestAccount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/learn-test/test/features/steps/account.py", line 17, in test_login_with_invalid_username
+    self.assertEqual(account_login("ABCEDF", "123456"), False)
+AssertionError: None != False
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (failures=3)
+```
+
+發生三個錯誤，亮起紅燈。接著開始實現功能，從修改 `account_insert` 函數滿足 
 
 
 
