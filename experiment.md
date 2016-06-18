@@ -328,6 +328,40 @@ Ran 7 tests in 0.005s
 OK (skipped=7)
 ```
 
+要切開與底層資料庫的依賴關係，要借用 unittest.mock 偽裝 database connector。先看看正常網路 MySQL-Connector 運作的方式，再決定如何偽造
+```python
+import mysql.connector
+
+cnx = mysql.connector.connect(user='root', password='000000', host='127.0.0.1', database='test')
+cursor = cnx.cursor()
+
+query = "TRUNCATE TABLE account"
+cursor.execute(query)
+cnx.commit()
+
+query = "INSERT INTO account (username, password) VALUES ('abcdef', '123456')"
+cursor.execute(query)
+cnx.commit()
+
+query = "SELECT * FROM account WHERE username='%s'" % 'abcdef'
+cursor.execute(query)
+result = cursor.fetchall()
+print(result)
+cursor.close()
+cnx.close()
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
