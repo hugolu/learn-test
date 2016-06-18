@@ -74,7 +74,7 @@ def step_impl(context):
     raise NotImplementedError(u'STEP: Then I get the login result: failed')
 ```
 
-修改上面的 snippet 產生跟應用程式介接的 steps，儲存在 features/steps/account.py
+修改上面的 snippet 產生跟應用程式介接的 steps，儲存在 features/steps/steps.py
 ```python
 @given(u'an username {username} with the password {password} is registered')
 def step_impl(context, username, password):
@@ -159,7 +159,7 @@ def step_impl(context):
 ```
 
 function.py
-```
+```python
 def function1(...):
     # 真正做事情的地方
 
@@ -167,7 +167,109 @@ def function2(...):
     # 真正做事情的地方
 ```
 
-接下來，我們透過 TDD 的方式把底層功能實作出來。
+接下來，我們會透過 TDD 的方式把底層功能實作出來。但真正開始實作功能之前，先思考介面(或是服務接口)如何設計。
+
+回頭修改 features/steps/steps.py 
+```python
+@given(u'an username {username} with the password {password} is registered')
+def step_impl(context, username, password):
+    account_insert(username, password)
+
+@when(u'I login as {username} and give the password {password}')
+def step_impl(context, username, password):
+    context.result = "successful" if account_login(username, password) == True else "failed"
+
+@then(u'I get the login result: {result}')
+def step_impl(context, result):
+    assert(context.result == result)
+```
+
+執行 behave
+```shell
+$ behave
+Feature: User account # features/account.feature:1
+  In order to buy or sell commodities
+  As a buyer or seller
+  I want to have a account in the Ecommerce website
+  Scenario: Login as correct username and password                     # features/account.feature:6
+    Given an username django with the password django123 is registered # features/steps/steps.py:1 0.000s
+      Traceback (most recent call last):
+        ...(略)
+      NameError: name 'account_insert' is not defined
+
+    When I login as django and give the password django123             # None
+    Then I get the login result: successful                            # None
+
+  Scenario: Login as incorrect username and password                   # features/account.feature:11
+    Given an username django with the password django123 is registered # features/steps/steps.py:1 0.000s
+      Traceback (most recent call last):
+        ...(略)
+      NameError: name 'account_insert' is not defined
+
+    When I login as django and give the password abcdef123             # None
+    Then I get the login result: failed                                # None
+
+
+Failing scenarios:
+  features/account.feature:6  Login as correct username and password
+  features/account.feature:11  Login as incorrect username and password
+
+0 features passed, 1 failed, 0 skipped
+0 scenarios passed, 2 failed, 0 skipped
+0 steps passed, 2 failed, 4 skipped, 0 undefined
+Took 0m0.000s
+```
+
+還是執行失敗，但不同的是，錯誤訊息告訴我們 "NameError: name 'account_insert' is not defined" 有個函數沒有定義，接著就把它定義出來吧。
+
+產生 features/steps/account.py，負責帳號管理
+```python
+def account_insert(username, password):
+    pass
+
+def account_login(username, password):
+    pass
+
+def account_register(username, password):
+    pass
+```
+
+修改修改 features/steps/steps.py ，把 `form account import *` 加在最上面
+
+執行 behave
+```shell
+$ behave
+Feature: User account # features/account.feature:1
+  In order to buy or sell commodities
+  As a buyer or seller
+  I want to have a account in the Ecommerce website
+  Scenario: Login as correct username and password                     # features/account.feature:6
+    Given an username django with the password django123 is registered # features/steps/steps.py:3 0.000s
+    When I login as django and give the password django123             # features/steps/steps.py:7 0.000s
+    Then I get the login result: successful                            # features/steps/steps.py:11 0.000s
+      Traceback (most recent call last):
+        ...(略)
+      AssertionError
+
+
+  Scenario: Login as incorrect username and password                   # features/account.feature:11
+    Given an username django with the password django123 is registered # features/steps/steps.py:3 0.000s
+    When I login as django and give the password abcdef123             # features/steps/steps.py:7 0.000s
+    Then I get the login result: failed                                # features/steps/steps.py:11 0.000s
+
+
+Failing scenarios:
+  features/account.feature:6  Login as correct username and password
+
+0 features passed, 1 failed, 0 skipped
+1 scenario passed, 1 failed, 0 skipped
+5 steps passed, 1 failed, 0 skipped, 0 undefined
+Took 0m0.001s
+```
+
+因為串接了底層的功能，場景 (Scenario) 的 `Given`, `When` 可以順利執行，但又因為沒有真的做什麼，所以 `Then` 驗證結果時發生錯誤 (第二個場景通過測試只是剛好條件符合而已，不是真的因為底層提供功能而通過)。
+
+至此介面算是串接完成，我們先放下 BDD，來看看如何用 TDD 開發下層。
 
 ## TDD (Test-Driven Development) 
 
