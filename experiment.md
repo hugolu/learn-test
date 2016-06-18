@@ -345,13 +345,15 @@ cnx.commit()
 
 query = "SELECT * FROM account WHERE username='%s'" % 'abcdef'
 cursor.execute(query)
-result = cursor.fetchall()
+result = cursor.fetchone()
 print(result)
+
 cursor.close()
 cnx.close()
 ```
-
-
+- 先不管 `mysql.connector.connect()`, `cnx.cursor()`, `cursor.close()`, `cnx.close()`，這些在 setup, tearDown 才會用到
+- `INSERT` 需要 `cursor.execute()` 與 `cnx.commit()`
+- `SELECT` 需要 `cursor.execute()` 與 `cursor.fetchone()`
 
 
 
