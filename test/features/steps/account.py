@@ -1,43 +1,90 @@
-import pymysql.cursors
+import mysql.connector
 
-cnx = pymysql.Connect(user='root', password='000000', host='127.0.0.1', db='test')
+cnx = mysql.connector.connect(user='root', password='000000', host='127.0.0.1', database='test')
 cursor = cnx.cursor()
 
 def account_insert(username, password):
-    query = "SELECT username, password FROM account WHERE username='%s' AND password='%s'" % (username, password)
+    query = "INSERT INTO account (username, password) VALUES ('%s', '%s')" % (username, password)
     cursor.execute(query)
-    row = cursor.fetchone()
-    if row is None:
-        query = "INSERT INTO account (username, password) VALUES ('%s', '%s')" % (username, password)
-        cursor.execute(query)
-        cnx.commit()
+    cnx.commit()
 
 def account_login(username, password):
-    query = "SELECT password FROM account WHERE username='%s'" % username
+    query = "SELECT id FROM account WHERE username='%s' AND password='%s'" % (username, password)
     cursor.execute(query)
     row = cursor.fetchone()
-    if row is not None:
-        (pw,) = row
-        return True if pw == password else False
-    else:
-        return False
+    return (row is not None)
 
 def account_register(username, password):
-    print(username, password)
-    if len(str(username)) < 6 or len(str(password)) < 6:
+    if len(username) < 6 or len(password) < 6:
         return False
-    else:
-        account_insert(username, password)
-        return True
+    account_insert(username, password)
+    return True
 
 import unittest
+from unittest.mock import Mock, patch
 class TestAccount(unittest.TestCase):
 
+    def setUp(self):
+        self.result = None
+
+    def test_account_insert(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                account_insert('abcdef', '123456')
+
+        mock_execute.assert_called_with("INSERT INTO account (username, password) VALUES ('abcdef', '123456')")
+        mock_commit.assert_called_with()
+
     def test_login_with_correct_username_password(self):
-        self.assertEqual(account_login("abcdef", "123456"), True)
+        def mock_execute(_, query):
+            self.result = ('1',) if query == "SELECT id FROM account WHERE username='abcdef' AND password='123456'" else None
+        def mock_fetchone(_):
+            return self.result
+
+        with patch('mysql.connector.cursor.MySQLCursor.execute', mock_execute):
+            with patch('mysql.connector.cursor.MySQLCursor.fetchone', mock_fetchone):
+                self.assertTrue(account_login('abcdef', '123456'))
 
     def test_login_with_invalid_username(self):
-        self.assertEqual(account_login("ABCEDF", "123456"), False)
+        def mock_execute(_, query):
+            self.result = ('1',) if query == "SELECT id FROM account WHERE username='abcdef' AND password='123456'" else None
+        def mock_fetchone(_):
+            return self.result
+
+        with patch('mysql.connector.cursor.MySQLCursor.execute', mock_execute):
+            with patch('mysql.connector.cursor.MySQLCursor.fetchone', mock_fetchone):
+                self.assertFalse(account_login('abc', '123456'))
 
     def test_login_with_invalid_password(self):
-        self.assertEqual(account_login("abcedf", "000000"), False)
+        def mock_execute(_, query):
+            self.result = ('1',) if query == "SELECT id FROM account WHERE username='abcdef' AND password='123456'" else None
+        def mock_fetchone(_):
+            return self.result
+
+        with patch('mysql.connector.cursor.MySQLCursor.execute', mock_execute):
+            with patch('mysql.connector.cursor.MySQLCursor.fetchone', mock_fetchone):
+                self.assertFalse(account_login('abcdef', '123'))
+
+    def test_register_with_valid_username_password(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                self.assertTrue(account_register('abcdef', '123456'))
+
+        self.assertTrue(mock_execute.called)
+        self.assertTrue(mock_commit.called)
+
+    def test_reigster_with_invalid_username(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                self.assertFalse(account_register('abc', '123456'))
+
+        self.assertFalse(mock_execute.called)
+        self.assertFalse(mock_commit.called)
+
+    def test_register_with_invalid_password(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                self.assertFalse(account_register('abcdef', '123'))
+
+        self.assertFalse(mock_execute.called)
+        self.assertFalse(mock_commit.called)
