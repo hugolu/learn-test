@@ -234,7 +234,7 @@ def account_register(username, password):
     pass
 ```
 
-修改修改 features/steps/steps.py ，把 `form account import *` 加在最上面
+修改 features/steps/steps.py ，把 `form account import *` 加在最上面
 
 執行 behave
 ```shell
@@ -355,14 +355,81 @@ cnx.close()
 - `INSERT` 需要 `cursor.execute()` 與 `cnx.commit()`
 - `SELECT` 需要 `cursor.execute()` 與 `cursor.fetchone()`
 
+藉由上面的範例，可以預期 `account_insert` 會呼叫到 `cursor.execute()` 與 `cnx.commit()`；而 `account_login` 會呼叫到 `cursor.execute()` 與 `cursor.fetchone()`。
 
+加入 `from unittest.mock import Mock, patch`，移除 `@unittest.skip` 標記，修改單元測試
+```python
+import unittest
+from unittest.mock import Mock, patch
+class TestAccount(unittest.TestCase):
 
+    def setUp(self):
+        self.result = None
 
+    def test_account_insert(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                account_insert('abcdef', '123456')
 
+        mock_execute.assert_called_with("INSERT INTO account (username, password) VALUES ('abcdef', '123456')")
+        mock_commit.assert_called_with()
 
+    def test_login_with_correct_username_password(self):
+        def mock_execute(_, query):
+            self.result = ('1',) if query == "SELECT id FROM account WHERE username='abcdef' AND password='123456'" else None
+        def mock_fetchone(_):
+            return self.result
 
+        with patch('mysql.connector.cursor.MySQLCursor.execute', mock_execute):
+            with patch('mysql.connector.cursor.MySQLCursor.fetchone', mock_fetchone):
+                self.assertTrue(account_login('abcdef', '123456'))
 
+    def test_login_with_invalid_username(self):
+        def mock_execute(_, query):
+            self.result = ('1',) if query == "SELECT id FROM account WHERE username='abcdef' AND password='123456'" else None
+        def mock_fetchone(_):
+            return self.result
 
+        with patch('mysql.connector.cursor.MySQLCursor.execute', mock_execute):
+            with patch('mysql.connector.cursor.MySQLCursor.fetchone', mock_fetchone):
+                self.assertFalse(account_login('abc', '123456'))
+
+    def test_login_with_invalid_password(self):
+        def mock_execute(_, query):
+            self.result = ('1',) if query == "SELECT id FROM account WHERE username='abcdef' AND password='123456'" else None
+        def mock_fetchone(_):
+            return self.result
+
+        with patch('mysql.connector.cursor.MySQLCursor.execute', mock_execute):
+            with patch('mysql.connector.cursor.MySQLCursor.fetchone', mock_fetchone):
+                self.assertFalse(account_login('abcdef', '123'))
+
+    def test_register_with_valid_username_password(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                self.assertTrue(account_register('abcdef', '123456'))
+
+        self.assertTrue(mock_execute.called)
+        self.assertTrue(mock_commit.called)
+
+    def test_reigster_with_invalid_username(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                self.assertFalse(account_register('abc', '123456'))
+
+        self.assertFalse(mock_execute.called)
+        self.assertFalse(mock_commit.called)
+
+    def test_register_with_invalid_password(self):
+        with patch('mysql.connector.cursor.MySQLCursor.execute') as mock_execute:
+            with patch('mysql.connector.connection.MySQLConnection.commit') as mock_commit:
+                self.assertFalse(account_register('abcdef', '123'))
+```
+
+很辛苦的單元測試...
+- `test_account_insert` patch 兩個 mysql.connector 的方法，呼叫 `account_insert('abcdef', '123456')`後，檢查
+    - `cursor.execute()` 是否傳入 `"INSERT INTO account (username, password) VALUES ('abcdef', '123456')"` 
+    - `cnx.commit()` 是否被呼叫
 
 
 
