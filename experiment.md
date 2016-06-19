@@ -1,5 +1,20 @@
 # 實驗
 
+### 準備工作
+
+設定 mysql 環境
+```mysql
+CREATE DATABASE `test`;
+USE `test`;
+
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+```
+
 ## BDD (Behavior-Driven Development) 
 
 目標：**溝通**帳號註冊與登入的邏輯
@@ -626,130 +641,113 @@ feature 可以寫成中文，只要文件第一行註記使用什麼語言，在
 功能: 用戶帳號
     為了買賣商品
     身為買家或賣家
-    我想要有一個網站帳號
+    我想要有一個電子商務網站帳號
 
     場景: 用正確的帳號跟密碼登入
-        假設< 帳號"django"與密碼"django123"被註冊
-          當< 我用"django"與密碼"django123"登入
-        那麼< 我得到登入結果"成功"
+        假設< 帳號django與密碼django123已註冊
+          當< 我用django與密碼django123登入
+        那麼< 我得到登入結果：成功
 
     場景: 用不正確的帳號跟密碼登入
-        假設< 帳號"django"與密碼"django123"被註冊
-          當< 我用"django"與密碼"abcdef123"登入
-        那麼< 我得到登入結果"失敗"
+        假設< 帳號django與密碼django123已註冊
+          當< 我用django與密碼abcdef123登入
+        那麼< 我得到登入結果：失敗
 
     場景大綱: 帳號與密碼必須大於5個字元
-        當< 嘗試用帳號<帳號>與密碼<密碼>註冊
-        那麼< 我得到註冊結果<結果>
+        當< 嘗試用帳號<username>與密碼<password>註冊
+        那麼< 我得到註冊結果：<result>
 
         例子: 一些帳號與密碼
-            | 帳號      | 密碼      | 結果              |
-            | abc       | 123456    | "帳號或密碼太短"  |
-            | abcedf    | 123       | "帳號或密碼太短"  |
-            | abc       | 123       | "帳號或密碼太短"  |
-            | abcdef    | 123456    | "帳號建立"        |
+            | username  | password  | result            |
+            | abc       | 123456    | 無效的帳號或密碼  |
+            | abcedf    | 123       | 無效的帳號或密碼  |
+            | abc       | 123       | 無效的帳號或密碼  |
+            | abcdef    | 123456    | 帳號建立          |
 ```
 
-步驟也可以用中文編寫，在 features/steps/帳號.py
+步驟也可以用中文編寫，在 features/steps/步驟.py
 ```python
-@given(u'< 帳號"django"與密碼"django123"被註冊')
-def step_impl(context):
-    pass
+from account import *
 
-@when(u'< 我用"django"與密碼"django123"登入')
-def step_impl(context):
-    pass
+@given(u'< 帳號{username}與密碼{password}已註冊')
+def step_impl(context, username, password):
+    account_insert(username, password)
 
-@then(u'< 我得到註冊結果"成功"')
-def step_impl(context):
-    pass
+@when(u'< 我用{username}與密碼{password}登入')
+def step_impl(context, username, password):
+    if account_login(username, password) == True:
+        context.result = "成功"
+    else:
+        context.result = "失敗"
 
-@when(u'< 我用"django"與密碼"abcdef123"登入')
-def step_impl(context):
-    pass
-
-@then(u'< 我得到註冊結果"失敗"')
-def step_impl(context):
-    pass
-
-@then(u'< 我得到登入結果"成功"')
-def step_impl(context):
-    pass
-
-@then(u'< 我得到登入結果"失敗"')
-def step_impl(context):
-    pass
+@then(u'< 我得到登入結果：{result}')
+def step_impl(context, result):
+    assert(context.result == result)
 
 @when(u'< 嘗試用帳號{username}與密碼{password}註冊')
 def step_impl(context, username, password):
-    pass
+    if account_register(username, password) == True:
+        context.result = "帳號建立"
+    else:
+        context.result = "無效的帳號或密碼"
 
-@then(u'< 我得到註冊結果{result}')
+@then(u'< 我得到註冊結果：{result}')
 def step_impl(context, result):
-    pass
+    assert(context.result == result)
 ```
+
+- features/account.feature 與 features/帳號.feature 做一樣的檢查
+- features/steps/step.py 與 features/steps/步驟.py 做一樣的事情
 
 執行 behave，得到下面驗證結果
 ```shell
+$ mysql -uroot -p000000 -e 'truncate table account' test
 $ behave --include 帳號
 功能: 用戶帳號 # features/帳號.feature:3
   為了買賣商品
   身為買家或賣家
-  我想要有一個網站帳號
-  場景: 用正確的帳號跟密碼登入                    # features/帳號.feature:8
-    假設 < 帳號"django"與密碼"django123"被註冊 # features/steps/帳號.py:1 0.000s
-    當 < 我用"django"與密碼"django123"登入   # features/steps/帳號.py:5 0.000s
-    那麼 < 我得到登入結果"成功"                 # features/steps/帳號.py:21 0.000s
+  我想要有一個電子商務網站帳號
+  場景: 用正確的帳號跟密碼登入                # features/帳號.feature:8
+    假設 < 帳號django與密碼django123已註冊 # features/steps/步驟.py:3 0.001s
+    當 < 我用django與密碼django123登入   # features/steps/步驟.py:7 0.001s
+    那麼 < 我得到登入結果：成功              # features/steps/步驟.py:14 0.000s
 
-  場景: 用不正確的帳號跟密碼登入                   # features/帳號.feature:13
-    假設 < 帳號"django"與密碼"django123"被註冊 # features/steps/帳號.py:1 0.000s
-    當 < 我用"django"與密碼"abcdef123"登入   # features/steps/帳號.py:13 0.000s
-    那麼 < 我得到登入結果"失敗"                 # features/steps/帳號.py:25 0.000s
+  場景: 用不正確的帳號跟密碼登入               # features/帳號.feature:13
+    假設 < 帳號django與密碼django123已註冊 # features/steps/步驟.py:3 0.010s
+    當 < 我用django與密碼abcdef123登入   # features/steps/步驟.py:7 0.001s
+    那麼 < 我得到登入結果：失敗              # features/steps/步驟.py:14 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.1 一些帳號與密碼  # features/帳號.feature:24
-    當 < 嘗試用帳號abc與密碼123456註冊            # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+    當 < 嘗試用帳號abc與密碼123456註冊            # features/steps/步驟.py:18 0.000s
+    那麼 < 我得到註冊結果：無效的帳號或密碼              # features/steps/步驟.py:25 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.2 一些帳號與密碼  # features/帳號.feature:25
-    當 < 嘗試用帳號abcedf與密碼123註冊            # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+    當 < 嘗試用帳號abcedf與密碼123註冊            # features/steps/步驟.py:18 0.000s
+    那麼 < 我得到註冊結果：無效的帳號或密碼              # features/steps/步驟.py:25 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.3 一些帳號與密碼  # features/帳號.feature:26
-    當 < 嘗試用帳號abc與密碼123註冊               # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號或密碼太短"              # features/steps/帳號.py:33 0.000s
+    當 < 嘗試用帳號abc與密碼123註冊               # features/steps/步驟.py:18 0.000s
+    那麼 < 我得到註冊結果：無效的帳號或密碼              # features/steps/步驟.py:25 0.000s
 
   場景大綱: 帳號與密碼必須大於5個字元 -- @1.4 一些帳號與密碼  # features/帳號.feature:27
-    當 < 嘗試用帳號abcdef與密碼123456註冊         # features/steps/帳號.py:29 0.000s
-    那麼 < 我得到註冊結果"帳號建立"                 # features/steps/帳號.py:33 0.000s
+    當 < 嘗試用帳號abcdef與密碼123456註冊         # features/steps/步驟.py:18 0.002s
+    那麼 < 我得到註冊結果：帳號建立                  # features/steps/步驟.py:25 0.000s
 
 1 feature passed, 0 failed, 0 skipped
 6 scenarios passed, 0 failed, 0 skipped
 14 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 0m0.002s
+Took 0m0.016s
 ```
-> 說實在，除非必要，不然使用中文寫規格只是炫技而已
 
-## TDD
+> 這邊有個環境的設定問題：因為測試註冊功能會在資料庫插入一筆資料，數次實驗後會有多筆，如果每次測試前沒有清空資料庫，就會測試失敗... 每次測試，環境都要獨立、要獨立、要獨立，獨立很重要所以說三次！這部分先欠著，等使用 behave-django 再交代清楚。
 
-目標：**實作**帳號註冊與登入的邏輯
+## Using V Models for Testing
 
-設定 mysql 環境
-```mysql
-CREATE DATABASE `test`;
-USE `test`;
+![V Model](Systems_Engineering_Process_II.png)
 
-CREATE TABLE `account` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+(圖片來源 https://en.wikipedia.org/wiki/V-Model)
 
-INSERT INTO `account` VALUES (1,'abcdef','123456');
-```
-- `account` 表格內有一筆帳號: {username=abcdef, password=123456}
-
-----
-## 參考
-- https://insights.sei.cmu.edu/sei_blog/2013/11/using-v-models-for-testing.html
-- 
+- 軟體開發從定義需求開始，透過文字 PM 與 QC 共同定義 features
+- QC 將 features 轉成可執行的 steps
+- RD 透過 TDD 方式實作 functions，滿足 features
+- PM 與 QC 確認功能正常
