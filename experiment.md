@@ -430,43 +430,113 @@ class TestAccount(unittest.TestCase):
 - `test_account_insert` patch 兩個 mysql.connector 的方法，呼叫 `account_insert('abcdef', '123456')`後，檢查
     - `cursor.execute()` 是否傳入 `"INSERT INTO account (username, password) VALUES ('abcdef', '123456')"` 
     - `cnx.commit()` 是否被呼叫
+- `test_login_with_correct_username_password`, `test_login_with_invalid_username`, `test_login_with_invalid_password` patch 兩個 mysql.connector 的方法，然後呼叫 `account_login()`
+    - `cursor.execute()` 接收 query，如果 query 是預期的則儲存 `('1',)` 否則儲存 `None`
+    - `cursor.fetchone()` 回傳之前 query 儲存的結果
+- `test_register_with_valid_username_password`, `test_reigster_with_invalid_username`, `test_register_with_invalid_password` patch 兩個 mysql.connector 的方法
+    - 如果 `username`, `password` 合法，回傳 `True`，否則回傳 `False`
+    - 如果 `username`, `password` 合法，則 `cursor.execute()` 與 `cursor.fetchone()` 會被呼叫
 
+有了單元測試，開時實作功能
+```python
+import mysql.connector
 
+cnx = mysql.connector.connect(user='root', password='000000', host='127.0.0.1', database='test')
+cursor = cnx.cursor()
 
+def account_insert(username, password):
+    query = "INSERT INTO account (username, password) VALUES ('%s', '%s')" % (username, password)
+    cursor.execute(query)
+    cnx.commit()
 
+def account_login(username, password):
+    query = "SELECT id FROM account WHERE username='%s' AND password='%s'" % (username, password)
+    cursor.execute(query)
+    row = cursor.fetchone()
+    return (row is not None)
 
+def account_register(username, password):
+    if len(username) < 6 or len(password) < 6:
+        return False
+    account_insert(username, password)
+    return True
+```
 
+然後測試進行單元測試
+```shell
+$ python -m unittest -v account
+test_account_insert (account.TestAccount) ... ok
+test_login_with_correct_username_password (account.TestAccount) ... ok
+test_login_with_invalid_password (account.TestAccount) ... ok
+test_login_with_invalid_username (account.TestAccount) ... ok
+test_register_with_invalid_password (account.TestAccount) ... ok
+test_register_with_valid_username_password (account.TestAccount) ... ok
+test_reigster_with_invalid_username (account.TestAccount) ... ok
 
+----------------------------------------------------------------------
+Ran 7 tests in 0.008s
 
+OK
+```
 
+天呀～ 寫到這裡，發現這樣 TDD 真是太辛苦了！好在實務上 [django](https://www.djangoproject.com/) 藉由 Model 切開與資料庫的依賴關係，加上 [behave-django](https://pythonhosted.org/behave-django/) 提供更優良的 mock 技術，才能讓 Python 程式設計師的生活輕鬆點...
 
+抱怨歸抱怨，既然頭已經洗下去，就繼續把它洗乾淨吧 XD
 
+## 業務邏輯
 
-### 註冊邏輯
+### 驗證登入功能
 
-在 features/account.feature 描述帳號登入的場景，這次使用 `Scenario Outline` 描述多個測試場景
+```python
+$ behave
+Feature: User account # ../account.feature:1
+  In order to buy or sell commodities
+  As a buyer or seller
+  I want to have a account in the Ecommerce website
+  Scenario: Login as correct username and password                     # ../account.feature:6
+    Given an username django with the password django123 is registered # steps.py:3 0.006s
+    When I login as django and give the password django123             # steps.py:7 0.001s
+    Then I get the login result: successful                            # steps.py:11 0.000s
+
+  Scenario: Login as incorrect username and password                   # ../account.feature:11
+    Given an username django with the password django123 is registered # steps.py:3 0.002s
+    When I login as django and give the password abcdef123             # steps.py:7 0.001s
+    Then I get the login result: failed                                # steps.py:11 0.000s
+
+1 feature passed, 0 failed, 0 skipped
+2 scenarios passed, 0 failed, 0 skipped
+6 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 0m0.010s
+```
+
+### 新增註冊邏輯
+
+在 features/account.feature 增加描述帳號登入的場景，這次使用 `Scenario Outline` 描述多個測試場景
 ```
     Scenario Outline: username and password must be large than 5 characters
          When try to register a name <username> with a password <password>
          Then I get the register result: <result>
 
         Examples: some usernames and passwords
-            | username  | password  | result                            |
-            | abc       | 123456    | "username or password too short"  |
-            | abcedf    | 123       | "username or password too short"  |
-            | abc       | 123       | "username or password too short"  |
-            | abcdef    | 123456    | "the account is created"          |
+            | username  | password  | result                        |
+            | abc       | 123456    | invalid username or password  |
+            | abcedf    | 123       | invalid username or password  |
+            | abc       | 123       | invalid username or password  |
+            | abcdef    | 123456    | successful                    |
 ```
 
 在 features/steps/account.py 中，相對應的步驟如下
 ```python
 @when(u'try to register a name {username} with a password {password}')
 def step_impl(context, username, password):
-    pass
+    if account_register(username, password) == True:
+        context.result = "successful"
+    else:
+        context.result = "invalid username or password"
 
 @then(u'I get the register result: {result}')
 def step_impl(context, result):
-    pass
+    assert(context.result == result)
 ```
 - 使用 `{username}`, `{password}`, `{result}` 變數，不需要囉囉唆唆的針對每個場景寫 steps
 
@@ -474,26 +544,24 @@ def step_impl(context, result):
 ```shell
 $ behave
 ...(略)
-  Scenario Outline: username and password must be large than 5 characters -- @1.1 some usernames and passwords  # features/account.feature:22
-    When try to register a name abc with a password 123456                                                      # features/steps/account.py:21 0.000s
-    Then I get the register result: "username or password too short"                                            # features/steps/account.py:25 0.000s
 
-  Scenario Outline: username and password must be large than 5 characters -- @1.2 some usernames and passwords  # features/account.feature:23
-    When try to register a name abcedf with a password 123                                                      # features/steps/account.py:21 0.000s
-    Then I get the register result: "username or password too short"                                            # features/steps/account.py:25 0.000s
+  Scenario Outline: username and password must be large than 5 characters -- @1.1 some usernames and passwords  # account.feature:22
+    When try to register a name abc with a password 123456                                                      # steps/steps.py:18 0.000s
+    Then I get the register result: invalid username or password                                                # steps/steps.py:25 0.000s
 
-  Scenario Outline: username and password must be large than 5 characters -- @1.3 some usernames and passwords  # features/account.feature:24
-    When try to register a name abc with a password 123                                                         # features/steps/account.py:21 0.000s
-    Then I get the register result: "username or password too short"                                            # features/steps/account.py:25 0.000s
+  Scenario Outline: username and password must be large than 5 characters -- @1.2 some usernames and passwords  # account.feature:23
+    When try to register a name abcedf with a password 123                                                      # steps/steps.py:18 0.001s
+    Then I get the register result: invalid username or password                                                # steps/steps.py:25 0.000s
 
-  Scenario Outline: username and password must be large than 5 characters -- @1.4 some usernames and passwords  # features/account.feature:25
-    When try to register a name abcdef with a password 123456                                                   # features/steps/account.py:21 0.000s
-    Then I get the register result: "the account is created"                                                    # features/steps/account.py:25 0.000s
+  Scenario Outline: username and password must be large than 5 characters -- @1.3 some usernames and passwords  # account.feature:24
+    When try to register a name abc with a password 123                                                         # steps/steps.py:18 0.000s
+    Then I get the register result: invalid username or password                                                # steps/steps.py:25 0.000s
 
-1 feature passed, 0 failed, 0 skipped
-6 scenarios passed, 0 failed, 0 skipped
-14 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 0m0.002s
+  Scenario Outline: username and password must be large than 5 characters -- @1.4 some usernames and passwords  # account.feature:25
+    When try to register a name abcdef with a password 123456                                                   # steps/steps.py:18 0.001s
+    Then I get the register result: successful                                                                  # steps/steps.py:25 0.000s
+
+...(略)
 ```
 
 ### 中文化
