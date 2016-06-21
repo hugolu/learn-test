@@ -6,7 +6,7 @@ def step_impl(context, username, password):
 
 @when(u'I login as {username} and give the password {password}')
 def step_impl(context, username, password):
-    context.result = "successful" if Account.objects.login(username, password) else "failed"
+    context.result = "successful" if Account.objects.verify(username, password) else "failed"
 
 @then(u'I get the login result: {result}')
 def step_impl(context, result):

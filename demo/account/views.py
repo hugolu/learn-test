@@ -26,7 +26,7 @@ def login(request):
 class RegisterForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['username', 'password', 'email', 'phone']
+        fields = ['username', 'password']
 
 def register(request):
     if request.method == 'POST':

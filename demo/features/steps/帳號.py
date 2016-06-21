@@ -6,7 +6,7 @@ def step_impl(context, username, password):
 
 @when(u'< 我用帳號{username}與密碼{password}登入')
 def step_impl(context, username, password):
-    context.result = "成功" if Account.objects.login(username, password) else "失敗"
+    context.result = "成功" if Account.objects.verify(username, password) else "失敗"
 
 @then(u'< 我得到登入結果：{result}')
 def step_impl(context, result):
