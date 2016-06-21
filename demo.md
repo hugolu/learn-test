@@ -6,7 +6,7 @@
 - 帳號檢查的邏輯太簡單，很難示範 TDD
 - Behave-django 做得太好了，Model 根本不需要 mock
 
-幾經考量，轉而想使用解析字串的計算機(類似工程用計算機)做範例。
+要找出一個範例會複雜到需要拆成 features, steps, interfaces, implementation of [SUT](http://xunitpatterns.com/SUT.html), 還有要切割依賴的 [DOC](http://xunitpatterns.com/DOC.html)，同時又必須簡單到範例可以塞進一張投影片。幾經考量，轉而想使用解析字串的計算機(類似工程用計算機)做範例。
 
 計算機須滿足幾個規則
 - [四則運算規則](https://zh.wikipedia.org/wiki/%E5%9B%9B%E5%88%99%E8%BF%90%E7%AE%97): 先乘除、後加減
