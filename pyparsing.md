@@ -28,6 +28,107 @@ The pyparsing module works best when you can describe the exact syntactic struct
 4. 在 python script 中寫出能匹配 BNF 的 parser
 5. 準備要分析的文本
 6. 如果用 p 表示 parser，用 s 表示文本，執行的程式碼就像 `p.parseString(s)`
+7. 從解析結果得到需要的訊息
+
+## 一個小型完整的範例
+
+python 識別符號包含一個或多的字元，第一個字元是 字母或 `_`，接著可能是 字母、數字、或 `_`。用 BNF 方式寫成
+
+```
+first       ::=  letter | "_"
+letter      ::=  "a" | "b" | ... "z" | "A" | "B" | ... | "Z"
+digit       ::=  "0" | "1" | ... | "9"
+rest        ::=  first | digit
+identifier  ::=  first rest*
+```
+
+最終產出物可讀作：一個識別符號包含一個 `first`，接著可能有零個或多個 `rest`。
+
+以下程式碼
+```python
+#!/usr/bin/env python
+#================================================================
+# trivex: Trivial example
+#----------------------------------------------------------------
+
+# - - - - -   I m p o r t s
+
+import sys
+
+import pyparsing as pp
+
+# - - - - -   M a n i f e s t   c o n s t a n t s
+
+first = pp.Word(pp.alphas+"_", exact=1)
+rest = pp.Word(pp.alphanums+"_")
+identifier = first+pp.Optional(rest)
+
+testList = [ # List of test strings    
+    # Valid identifiers
+    "a", "foo", "_", "Z04", "_bride_of_mothra",
+    # Not valid
+    "", "1", "$*", "a_#" ]
+
+# - - - - -   m a i n
+
+def main():
+    """
+    """
+    for text in testList:
+        test(text)
+
+# - - -   t e s t
+
+def test(s):
+    '''See if s matches identifier.
+    '''
+    print ("---Test for '{0}'".format(s))
+
+    try:
+        result = identifier.parseString(s)
+        print "  Matches: {0}".format(result)
+    except pp.ParseException as x:
+        print "  No match: {0}".format(str(x))
+
+# - - - - -   E p i l o g u e
+
+if __name__ == "__main__":
+    main()
+```
+```
+$ python trivex.py
+---Test for 'a'
+  Matches: ['a']
+---Test for 'foo'
+  Matches: ['f', 'oo']
+---Test for '_'
+  Matches: ['_']
+---Test for 'Z04'
+  Matches: ['Z', '04']
+---Test for '_bride_of_mothra'
+  Matches: ['_', 'bride_of_mothra']
+---Test for ''
+  No match: Expected W:(ABCD...) (at char 0), (line:1, col:1)
+---Test for '1'
+  No match: Expected W:(ABCD...) (at char 0), (line:1, col:1)
+---Test for '$*'
+  No match: Expected W:(ABCD...) (at char 0), (line:1, col:1)
+---Test for 'a_#'
+  Matches: ['a', '_']
+```
+
+回傳值是 `pp.ParseResults class` 的實例。當列印出來，會像個 list。單一字母的測試字串只有一個元素，多字母字串有兩個元素，一個是 `first` 接著是 `rest`。
+
+如果想讓回傳值合併匹配的元素，使用 
+```python
+identifier = pp.Combine(first+pp.Optional(rest))
+```
+
+結果會像這樣
+```
+---Test for '_bride_of_mothra'
+  Matches: ['_bride_of_mothra']
+```
 
 ----
 ## 參考
