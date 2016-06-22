@@ -219,6 +219,26 @@ for t in tests:
 abc def 123 456  >>>  ['abc', 'def', '123', '456']
 ```
 
+## `Suppress`: Omit matched text from the result
+```python
+from pyparsing import Word, Literal, Suppress
+from pyparsing import nums, alphas, alphanums
+
+name = Word(alphas)
+lb = Literal('[')
+rb = Literal(']')
+
+pat1 = lb + name + rb
+print(pat1.parseString('[Pewty]'))
+
+pat2 = Suppress(lb) + name + Suppress(rb)
+print(pat2.parseString('[Pewty]'))
+```
+```
+['[', 'Pewty', ']']
+['Pewty']
+```
+
 ## `Forward()`
 
 Forward declaration of an expression to be defined later - used for recursive grammars, such as algebraic infix notation. When the expression is known, it is assigned to the Forward variable using the '<<' operator.
