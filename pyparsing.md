@@ -363,6 +363,21 @@ def hollerith():
 if __name__ == "__main__":
     main()
 ```
+
+`hollerith()` 怎麼運作的，故事倒著說
+- `(Suppress(intExpr) + stringExpr)` 先對字串執行 `intExptr`，處理過的字串忽略結果，然後執行 `stringExpr`
+    - `stringExptr` 是個 `Forward()` 生出來的 placeholder
+    - `intExpr = Word(nums).setParseAction(lambda t: int(t[0]))`，匹配字串成數字，將數字解析成 `int`
+        - `intExpr.addParseAction(countedParseAction)` 剛剛解析處來的 `int` 傳入 `countedParseAction()`
+        - `countedParseAction()` 組合 `(Suppress(CaselessLiteral('H')) + contents)` 存到 `stringExpr`
+            - `Suppress(CaselessLiteral('H'))` 匹配不分大小寫字母 `H`，但忽略結果
+            - `contents = CharsNotIn('', exact=n)` 匹配n個任意字元
+
+輸入 `10H0123456789`：
+- `10` 會被 `intExpr` 解釋成整數 10 (忽略結果)
+- `H` 會被 `Suppress(CaselessLiteral('H'))` 匹配到 (忽略結果)
+- `0123456789` 會被 `contents` 匹配到，取出字串
+
 ```
 --- Test for '1HX'
   Matches: 'X'
@@ -373,6 +388,7 @@ if __name__ == "__main__":
 --- Test for '999Hoops'
   No match: 'Expected !W:() (at char 8), (line:1, col:9)'
 ```
+
 ----
 ## 參考
 
