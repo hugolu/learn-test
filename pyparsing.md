@@ -130,6 +130,40 @@ identifier = pp.Combine(first+pp.Optional(rest))
   Matches: ['_bride_of_mothra']
 ```
 
+## 如何組織回傳結果 ParseResults
+
+當輸入與建立的解析器匹配，`.parseString()` 回傳 `class ParseResults` 的實例。
+
+對於一個複雜的結構，這個實例可能有很多訊息在裡面。`ParseResults` 實例的結構跟你如何建立解析器有關。
+
+存取 `ParserResults` 有幾種方式：
+- 當作一個 list
+```python
+>>> import pyparsing as pp
+>>> number = pp.Word(pp.nums)
+>>> result = number.parseString('17')
+>>> print result
+['17']
+>>> type(result)
+<class 'pyparsing.ParseResults'>
+>>> result[0]
+'17'
+>>> list(result)
+['17']
+>>> numberList = pp.OneOrMore(number)
+>>> print numberList.parseString('17 33 88')
+['17', '33', '88']
+```
+- 當作一個 dictionary
+```python
+>>> number = pp.Word(pp.nums).setResultsName('nVache')
+>>> result = number.parseString('17')
+>>> print result
+['17']
+>>> result['nVache']
+'17'
+```
+
 ----
 ## 參考
 
