@@ -166,7 +166,7 @@ identifier = pp.Combine(first+pp.Optional(rest))
 
 ### 使用 `pp.Group()` 分而治之
 
-像是任何顯而易見的程式，如果採取分而治之的原則 (分段精練)，解析器的組織會更容易追蹤理解。
+如果採取分而治之的原則 (分段精練)，解析器的組織會更容易追蹤理解。
 
 實例上，這個意指頂層的 `ParseResults` 應該包含更多子部分。
 如果這一層有太多子部分，查看輸入把它拆解成兩個或更多的子解析器。
@@ -178,5 +178,5 @@ identifier = pp.Combine(first+pp.Optional(rest))
 ## 參考
 
 - [Pyparsing Wiki Home](http://pyparsing.wikispaces.com/)
-- [pyparsing quick reference](http://infohost.nmt.edu/tcc/help/pubs/pyparsing/web/index.html)
+- [pyparsing quick reference](http://infohost.nmt.edu/tcc/help/pubs/pyparsing/web/index.html) - 說明＆範例
 - [Module pyparsing](https://pythonhosted.org/pyparsing/)
