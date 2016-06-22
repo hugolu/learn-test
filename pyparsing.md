@@ -240,6 +240,7 @@ print(pat2.parseString('[Pewty]'))
 ```
 
 ## `CharsNotIn`: Match characters not in a given set
+
 ```python
 from pyparsing import CharsNotIn
 from pyparsing import nums
@@ -253,6 +254,25 @@ print(fourNonDigits.parseString('a$_/#'))
 ```
 ['zoot']
 ['a$_/']
+```
+
+## `CaselessLiteral`: Case-insensitive string match
+
+```python
+from pyparsing import CaselessLiteral
+
+ni = CaselessLiteral('Ni')
+
+print(ni.parseString('Ni'))
+print(ni.parseString('NI'))
+print(ni.parseString('nI'))
+print(ni.parseString('ni'))
+```
+```
+['Ni']
+['Ni']
+['Ni']
+['Ni']
 ```
 
 ## `Forward()`
