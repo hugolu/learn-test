@@ -239,6 +239,22 @@ print(pat2.parseString('[Pewty]'))
 ['Pewty']
 ```
 
+## `CharsNotIn`: Match characters not in a given set
+```python
+from pyparsing import CharsNotIn
+from pyparsing import nums
+
+nonDigits = CharsNotIn(nums)
+print(nonDigits.parseString('zoot86'))
+
+fourNonDigits = CharsNotIn(nums, exact=4)
+print(fourNonDigits.parseString('a$_/#'))
+```
+```
+['zoot']
+['a$_/']
+```
+
 ## `Forward()`
 
 Forward declaration of an expression to be defined later - used for recursive grammars, such as algebraic infix notation. When the expression is known, it is assigned to the Forward variable using the '<<' operator.
