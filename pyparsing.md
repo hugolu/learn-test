@@ -173,6 +173,56 @@ identifier = pp.Combine(first+pp.Optional(rest))
 然後組織頂層，它只會包含這些。
 如果需要，拆解小解析器成為更小的，直到每個解析器都能用內建的基礎功能清楚定義。
 
+----
+## `Word`: Match characters from a specified set
+
+```python
+from pyparsing import Word
+from pyparsing import nums, alphas, alphanums
+
+name = Word('abcdef')
+print(name.parseString('fadedglory'))
+
+pyName = Word(alphas + '_', bodyChars = alphanums + '_')
+print(pyName.parseString('_crunchyFrog13'))
+
+name4 = Word(alphas, exact=4)
+print(name4.parseString('Whizzo'))
+
+noXY = Word(alphas, excludeChars='xy')
+print(noXY.parseString('Sussex'))
+```
+```
+['faded']
+['_crunchyFrog13']
+['Whiz']
+['Susse']
+```
+## `ZeroOrMore`: Match any number of repetitions including none
+
+```python
+from pyparsing import Word, ZeroOrMore
+from pyparsing import nums, alphas
+
+item = Word(nums) | Word(alphas)
+expr = ZeroOrMore(item)
+bnf = expr
+
+tests = ("123abc456def", "123 abc 456 def", "abc def 123 456")
+
+for t in tests:
+    print(t, " >>> ", bnf.parseString(t))
+```
+```
+123abc456def  >>>  ['123', 'abc', '456', 'def']
+123 abc 456 def  >>>  ['123', 'abc', '456', 'def']
+abc def 123 456  >>>  ['abc', 'def', '123', '456']
+```
+
+## `Forward()`
+
+Forward declaration of an expression to be defined later - used for recursive grammars, such as algebraic infix notation. When the expression is known, it is assigned to the Forward variable using the '<<' operator.
+
 
 ----
 ## 參考
