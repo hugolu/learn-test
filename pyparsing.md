@@ -279,7 +279,100 @@ print(ni.parseString('ni'))
 
 Forward declaration of an expression to be defined later - used for recursive grammars, such as algebraic infix notation. When the expression is known, it is assigned to the Forward variable using the '<<' operator.
 
+```python
+#!/usr/bin/env python
+#================================================================
+# hollerith:  Demonstrate Forward class
+#----------------------------------------------------------------
+import sys
+from pyparsing import Word, Forward, Suppress, CaselessLiteral
+from pyparsing import ParseException, CharsNotIn
+from pyparsing import nums
 
+# - - - - -   M a n i f e s t   c o n s t a n t s
+
+TEST_STRINGS = [ '1HX', '2h$#', '10H0123456789', '999Hoops']
+
+# - - - - -   m a i n
+
+def main():
+    holler = hollerith()
+    for text in TEST_STRINGS:
+        test(holler, text)
+
+# - - -   t e s t
+
+def test(pat, text):
+    '''Test to see if text matches parser (pat).
+    '''
+    print ("--- Test for '{0}'".format(text))
+    try:
+        result = pat.parseString(text)
+        print ("  Matches: '{0}'".format(result[0]))
+    except ParseException as x:
+        print ("  No match: '{0}'".format(str(x)))
+
+# - - -   h o l l e r i t h
+
+def hollerith():
+    '''Returns a parser for a FORTRAN Hollerith character constant.
+    '''
+
+    #--
+    # Define a recognizer for the character count.
+    #--
+    intExpr = Word(nums).setParseAction(lambda t: int(t[0]))
+    
+    #--
+    # Allocate a placeholder for the rest of the parsing logic.
+    #--
+    stringExpr = Forward()
+
+    #--
+    # Define a closure that transfers the character count from
+    # the intExpr to the stringExpr.
+    #--
+    def countedParseAction(toks):
+        '''Closure to define the content of stringExpr.
+        '''
+        n = toks[0]
+
+        #--
+        # Create a parser for any (n) characters.
+        #--
+        contents = CharsNotIn('', exact=n)
+
+        #--
+        # Store a recognizer for 'H' + contents into stringExpr.
+        #--
+        stringExpr << (Suppress(CaselessLiteral('H')) + contents)
+
+        return None
+    #--
+    # Add the above closure as a parse action for intExpr.
+    #--
+    intExpr.addParseAction(countedParseAction)
+
+    #--
+    # Return the completed pattern.
+    #--
+    return (Suppress(intExpr) + stringExpr)
+
+# - - - - -   E p i l o g u e
+
+if __name__ == "__main__":
+    main()
+```
+```
+--- Test for '1HX'
+  Matches: 'X'
+--- Test for '2h$#'
+  Matches: '$#'
+--- Test for '10H0123456789'
+  Matches: '0123456789'
+--- Test for '999Hoops'
+  No match: 'Expected !W:() (at char 8), (line:1, col:9)'
+```
 ----
 ## 參考
 
