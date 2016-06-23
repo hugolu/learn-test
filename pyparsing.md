@@ -389,7 +389,7 @@ if __name__ == "__main__":
   No match: 'Expected !W:() (at char 8), (line:1, col:9)'
 ```
 ----
-## 練習一
+## 練習一：熟悉 `Forward()`, `<<`, `setParseAction()`, `Suppress()`
 ```python
 from pyparsing import Word, nums, alphas, Forward, Suppress, ZeroOrMore
 
@@ -407,6 +407,181 @@ print(intStack)
 - 解析字串 "123abc456def789ghi0"，取出數字放入 `intStack`，忽略字母
 ```
 ['12', '34', '56', '78', '90']
+```
+
+## 練習二：簡單算數
+
+### step1 解析數字與運算符號
+
+```python
+from pyparsing import Word, Literal, nums
+
+"""
+op      :: '+' | '-' | '*' | '/'
+num     :: '0'...'9'+
+expr    :: num + op + num
+"""
+
+add = Literal('+')
+sub = Literal('-')
+mul = Literal('*')
+div = Literal('/')
+op = add | sub | mul | div
+
+num = Word(nums)
+
+expr = num + op + num
+
+tests = ('3+2', '3-2', '3*2', '3/2')
+for t in tests:
+    print(t, expr.parseString(t))
+```
+```
+3+2 ['3', '+', '2']
+3-2 ['3', '-', '2']
+3*2 ['3', '*', '2']
+3/2 ['3', '/', '2']
+```
+
+### step2 加入 exprStack
+```python
+from pyparsing import Word, Literal, nums
+
+"""
+op      :: '+' | '-' | '*' | '/'
+num     :: '0'...'9'+
+expr    :: num + op + num
+"""
+
+add = Literal('+')
+sub = Literal('-')
+mul = Literal('*')
+div = Literal('/')
+op = add | sub | mul | div
+
+exprStack = []
+def pushStack(s, l, t):
+    exprStack.append(t[0])
+
+num = Word(nums).addParseAction(pushStack)
+
+expr = num + (op + num).addParseAction(pushStack)
+
+tests = ('3+2', '3-2', '3*2', '3/2')
+for t in tests:
+    exprStack = []
+    expr.parseString(t)
+    print(t, exprStack)
+```
+```
+3+2 ['3', '2', '+']
+3-2 ['3', '2', '-']
+3*2 ['3', '2', '*']
+3/2 ['3', '2', '/']
+```
+
+### step3 處理 exprStack
+```python
+from pyparsing import Word, Literal, nums
+
+"""
+op      :: '+' | '-' | '*' | '/'
+num     :: '0'...'9'+
+expr    :: num + op + num
+"""
+
+add = Literal('+')
+sub = Literal('-')
+mul = Literal('*')
+div = Literal('/')
+op = add | sub | mul | div
+
+exprStack = []
+def pushStack(s, l, t):
+    exprStack.append(t[0])
+
+def evalStack(stack):
+    op = stack.pop()
+    if op in '+-*/':
+        op2 = evalStack(stack)
+        op1 = evalStack(stack)
+        if op == '+':
+            return op1 + op2
+        if op == '-':
+            return op1 - op2
+        if op == '*':
+            return op1 * op2
+        if op == '/':
+            return op1 / op2
+    else:
+        return float(op)
+
+num = Word(nums).addParseAction(pushStack)
+
+expr = num + (op + num).addParseAction(pushStack)
+
+tests = ('3+2', '3-2', '3*2', '3/2')
+for t in tests:
+    exprStack = []
+    expr.parseString(t)
+    print(t, exprStack, evalStack(exprStack[:]))
+```
+```
+3+2 ['3', '2', '+'] 5.0
+3-2 ['3', '2', '-'] 1.0
+3*2 ['3', '2', '*'] 6.0
+3/2 ['3', '2', '/'] 1.5
+```
+
+### step4 將 'op' 與對應的函式做成 dictionary
+```python
+from pyparsing import Word, Literal, nums
+
+"""
+op      :: '+' | '-' | '*' | '/'
+num     :: '0'...'9'+
+expr    :: num + op + num
+"""
+
+add = Literal('+')
+sub = Literal('-')
+mul = Literal('*')
+div = Literal('/')
+op = add | sub | mul | div
+
+opf = { '+' : (lambda a, b: a+b),
+        '-' : (lambda a, b: a-b),
+        '*' : (lambda a, b: a*b),
+        '/' : (lambda a, b: a/b) }
+
+exprStack = []
+def pushStack(s, l, t):
+    exprStack.append(t[0])
+
+def evalStack(stack):
+    op = stack.pop()
+    if op in '+-*/':
+        op2 = evalStack(stack)
+        op1 = evalStack(stack)
+        return opf[op](op1, op2)
+    else:
+        return float(op)
+
+num = Word(nums).addParseAction(pushStack)
+
+expr = num + (op + num).addParseAction(pushStack)
+
+tests = ('3+2', '3-2', '3*2', '3/2')
+for t in tests:
+    exprStack = []
+    expr.parseString(t)
+    print(t, exprStack, evalStack(exprStack[:]))
+```
+```
+3+2 ['3', '2', '+'] 5.0
+3-2 ['3', '2', '-'] 1.0
+3*2 ['3', '2', '*'] 6.0
+3/2 ['3', '2', '/'] 1.5
 ```
 
 ----
