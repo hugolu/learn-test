@@ -49,17 +49,15 @@ def before_scenario(context, scenario):
 
 features/running-tests.feature:
 ```python
-"""
-behave environment module for testing behave-django
-"""
+Feature: Running tests
+    In order to prove that behave-django works
+    As the Maintainer
+    I want to test running behave against this features directory
 
-def before_feature(context, feature):
-    if feature.name == 'Fixture loading':
-        context.fixtures = ['behave-fixtures.json']
-
-def before_scenario(context, scenario):
-    if scenario.name == 'Load fixtures for this scenario and feature':
-        context.fixtures.append('behave-second-fixture.json')
+    Scenario: The Test
+        Given this step exists
+        When I run "python manage.py behave"
+        Then I should see the behave tests run
 ```
 
 features/steps/running_tests.py:
