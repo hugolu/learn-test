@@ -107,3 +107,37 @@ expr = term + ZeroOrMore((addop + term).addParseAction(pushFirst))
 ```
 - `expr` 先處理 `term`，再處理加減運算
 - `term` 先處理 `atom`，再處理乘除運算
+
+## 練習四：括號優先權大於加減乘除
+
+完整程式碼: [ex4.py](pyparsing/ex4.py)
+```python
+"""
+op      :: '+' | '-' | '*' | '/'
+integer :: '0'...'9'+
+atom    :: integer | '(' expr ')'
+term    :: atom [mulop atom]*
+expr    :: term [addop term]*
+"""
+
+exprStack = []
+def pushFirst(s, l, t):
+    exprStack.append(t[0])
+
+add = Literal('+')
+sub = Literal('-')
+mul = Literal('*')
+div = Literal('/')
+lpar = Literal('(')
+rpar = Literal(')')
+addop = add | sub
+mulop = mul | div
+
+expr = Forward()
+atom = Word(nums).addParseAction(pushFirst) | (lpar + expr + rpar)
+term = atom + ZeroOrMore((mulop + atom).addParseAction(pushFirst))
+expr << term + ZeroOrMore((addop + term).addParseAction(pushFirst))
+```
+- 最基本的運算單位可能是"整數"或是"有括號的運算式"
+    - 如果是整數，處理後推入 exprStack
+    - 如果是括號運算式，進行遞迴求出括號裡面的值
