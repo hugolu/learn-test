@@ -411,10 +411,11 @@ print(intStack)
 
 ## 練習二：簡單算數
 
-### step1 解析數字與運算符號
-
+### step1 解析數字與運算符號，使用 unittest
+ex2-1.py:
 ```python
-from pyparsing import Word, Literal, nums
+from pyparsing import Word, Literal, nums, ParseResults
+import unittest
 
 """
 op      :: '+' | '-' | '*' | '/'
@@ -432,15 +433,26 @@ num = Word(nums)
 
 expr = num + op + num
 
-tests = ('3+2', '3-2', '3*2', '3/2')
-for t in tests:
-    print(t, expr.parseString(t))
+def evalString(s):
+    result = expr.parseString(s)
+    return result.asList()
+
+class MyTest(unittest.TestCase):
+
+    def test_extract_symbol(self):
+        self.assertEqual(evalString('3+2'), ['3', '+', '2'])
+        self.assertEqual(evalString('3-2'), ['3', '-', '2'])
+        self.assertEqual(evalString('3+2'), ['3', '+', '2'])
+        self.assertEqual(evalString('3/2'), ['3', '/', '2'])
 ```
-```
-3+2 ['3', '+', '2']
-3-2 ['3', '-', '2']
-3*2 ['3', '*', '2']
-3/2 ['3', '/', '2']
+```shell
+$ python -m unittest -v ex2-1
+test_extract_symbol (ex2-1.MyTest) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
 ```
 
 ### step2 加入 exprStack
@@ -584,6 +596,76 @@ for t in tests:
 3/2 = 1
 ```
 
+### step5 加入 unittest
+ex2-5.py:
+```python
+from pyparsing import Word, Literal, ZeroOrMore, nums
+import unittest
+
+"""
+op      :: '+' | '-' | '*' | '/'
+num     :: '0'...'9'+
+expr    :: num + op + num
+"""
+
+add = Literal('+')
+sub = Literal('-')
+mul = Literal('*')
+div = Literal('/')
+op = add | sub | mul | div
+
+exprStack = []
+def pushStack(s, l, t):
+    exprStack.append(t[0])
+
+num = Word(nums).addParseAction(pushStack)
+
+expr = num + ZeroOrMore((op + num).addParseAction(pushStack))
+
+opf = { '+' : (lambda a, b: a+b),
+        '-' : (lambda a, b: a-b),
+        '*' : (lambda a, b: a*b),
+        '/' : (lambda a, b: a/b) }
+
+def evalStack(stack):
+    op = stack.pop()
+    if op in '+-*/':
+        op2 = evalStack(stack)
+        op1 = evalStack(stack)
+        return opf[op](op1, op2)
+    else:
+        return float(op)
+
+def evalString(string):
+    global exprStack, expr
+    exprStack = []
+    expr.parseString(string)
+    return evalStack(exprStack)
+
+class MyTest(unittest.TestCase):
+
+    def test_simple_op(self):
+        self.assertEqual(evalString('6+3'), 9.0)
+        self.assertEqual(evalString('6-3'), 3.0)
+        self.assertEqual(evalString('6*3'), 18.0)
+        self.assertEqual(evalString('6/3'), 2.0)
+
+    def test_multi_op(self):
+        self.assertEqual(evalString('6+3+2'), 11.0)
+        self.assertEqual(evalString('6-3-2'), 1.0)
+        self.assertEqual(evalString('6*3*2'), 36.0)
+        self.assertEqual(evalString('6/3/2'), 1.0)
+```
+```shell
+$ python -m unittest -v ex2-5
+test_multi_op (ex2-5.MyTest) ... ok
+test_simple_op (ex2-5.MyTest) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+OK
+```
 ----
 ## 參考
 
