@@ -141,3 +141,33 @@ expr << term + ZeroOrMore((addop + term).addParseAction(pushFirst))
 - 最基本的運算單位可能是"整數"或是"有括號的運算式"
     - 如果是整數，處理後推入 exprStack
     - 如果是括號運算式，進行遞迴求出括號裡面的值
+
+## 練習五：驗證四則運算規則
+
+完整程式碼: [ex5.py](pyparsing/ex5.py)
+```python
+    def test_order_of_operations(self):
+        self.assertEqual(evalString('2+3*4'), 14.0)
+        self.assertEqual(evalString('5+4*3-2/1'), 15.0)
+
+    def test_parentheses(self):
+        self.assertEqual(evalString('(2+3)*4'), 20.0)
+        self.assertEqual(evalString('(5+4)*((3-2)-1)'), 0.0)
+
+    def test_commutative_property`
+    `(self):
+        self.assertEqual(evalString('3+4'), evalString('4+3'))
+        self.assertEqual(evalString('2*5'), evalString('5*2'))
+
+    def test_associative_property(self):
+        self.assertEqual(evalString('(5+2) + 1'), evalString('5 + (2+1)'))
+        self.assertEqual(evalString('(5*2) * 3'), evalString('5 * (2*3)'))
+
+    def test_distributive_property(self):
+        self.assertEqual(evalString('2 * (1+3)'), evalString('(2*1) + (2*3)'))
+```
+- `test_order_of_operations` 驗證[運算次序](https://zh.wikipedia.org/wiki/%E9%81%8B%E7%AE%97%E6%AC%A1%E5%BA%8F)
+- `test_parentheses` 驗證括號優先權
+- `test_commutative_property` 驗證[交換律](https://zh.wikipedia.org/wiki/%E4%BA%A4%E6%8F%9B%E5%BE%8B)
+- `test_associative_property` 驗證[結合律](https://zh.wikipedia.org/wiki/%E7%BB%93%E5%90%88%E5%BE%8B)
+- `test_distributive_property` 驗證[分配律](https://zh.wikipedia.org/wiki/%E5%88%86%E9%85%8D%E5%BE%8B)
