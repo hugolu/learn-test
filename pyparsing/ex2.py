@@ -1,4 +1,4 @@
-from pyparsing import Word, Literal, nums
+from pyparsing import Word, Literal, nums, ZeroOrMore
 import unittest
 
 """
@@ -18,7 +18,7 @@ div = Literal('/')
 op = add | sub | mul | div
 
 atom = Word(nums).addParseAction(pushFirst)
-expr = atom + (op + atom).addParseAction(pushFirst)
+expr = atom + ZeroOrMore((op + atom).addParseAction(pushFirst))
 
 def evalString(s):
     global exprStack
@@ -33,3 +33,10 @@ class TestEx2(unittest.TestCase):
         self.assertEqual(evalString('6-3'), ['6', '3', '-'])
         self.assertEqual(evalString('6*3'), ['6', '3', '*'])
         self.assertEqual(evalString('6/3'), ['6', '3', '/'])
+
+    def test_multiple_op(self):
+        self.assertEqual(evalString('6+3+2'), ['6', '3', '+', '2', '+'])
+        self.assertEqual(evalString('6-3-2'), ['6', '3', '-', '2', '-'])
+        self.assertEqual(evalString('6*3*2'), ['6', '3', '*', '2', '*'])
+        self.assertEqual(evalString('6/3/2'), ['6', '3', '/', '2', '/'])
+
