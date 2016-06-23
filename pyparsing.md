@@ -388,6 +388,26 @@ if __name__ == "__main__":
 --- Test for '999Hoops'
   No match: 'Expected !W:() (at char 8), (line:1, col:9)'
 ```
+----
+## 練習一
+```python
+from pyparsing import Word, nums, alphas, Forward, Suppress, ZeroOrMore
+
+intStack = []
+def pushStack(s, l, t):
+    intStack.append(t[0])
+
+atom = Word(nums).setParseAction(pushStack) | Suppress(Word(alphas))
+expr = Forward()
+expr << atom + ZeroOrMore(expr)
+
+expr.parseString("12ab34cd56ef78gh90ij")
+print(intStack)
+```
+- 解析字串 "123abc456def789ghi0"，取出數字放入 `intStack`，忽略字母
+```
+['12', '34', '56', '78', '90']
+```
 
 ----
 ## 參考
