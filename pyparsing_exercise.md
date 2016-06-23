@@ -41,96 +41,20 @@ OK
 
 ## 練習二：簡單算數
 
-### step1 解析數字與運算符號，使用 unittest
-ex2-1.py:
+ex2.py:
 ```python
-from pyparsing import Word, Literal, nums, ParseResults
+from pyparsing import Word, Literal, nums, ZeroOrMore
 import unittest
 
 """
 op      :: '+' | '-' | '*' | '/'
 num     :: '0'...'9'+
-expr    :: num + op + num
+expr    :: num + [op + num]*
 """
-
-add = Literal('+')
-sub = Literal('-')
-mul = Literal('*')
-div = Literal('/')
-op = add | sub | mul | div
-
-num = Word(nums)
-
-expr = num + op + num
-
-def evalString(s):
-    result = expr.parseString(s)
-    return result.asList()
-
-class MyTest(unittest.TestCase):
-
-    def test_extract_symbol(self):
-        self.assertEqual(evalString('3+2'), ['3', '+', '2'])
-        self.assertEqual(evalString('3-2'), ['3', '-', '2'])
-        self.assertEqual(evalString('3+2'), ['3', '+', '2'])
-        self.assertEqual(evalString('3/2'), ['3', '/', '2'])
-```
-```shell
-$ python -m unittest -v ex2-1
-test_extract_symbol (ex2-1.MyTest) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.001s
-
-OK
-```
-
-### step2 加入 exprStack
-```python
-from pyparsing import Word, Literal, nums
-
-"""
-op      :: '+' | '-' | '*' | '/'
-num     :: '0'...'9'+
-expr    :: num + op + num
-"""
-
-add = Literal('+')
-sub = Literal('-')
-mul = Literal('*')
-div = Literal('/')
-op = add | sub | mul | div
 
 exprStack = []
-def pushStack(s, l, t):
+def pushFirst(s, l, t):
     exprStack.append(t[0])
-
-num = Word(nums).addParseAction(pushStack)
-
-expr = num + (op + num).addParseAction(pushStack)
-
-tests = ('3+2', '3-2', '3*2', '3/2')
-for t in tests:
-    exprStack = []
-    expr.parseString(t)
-    print(t, exprStack)
-```
-```
-3+2 ['3', '2', '+']
-3-2 ['3', '2', '-']
-3*2 ['3', '2', '*']
-3/2 ['3', '2', '/']
-```
-
-### step3 處理 exprStack
-```python
-from pyparsing import Word, Literal, nums
-
-"""
-op      :: '+' | '-' | '*' | '/'
-num     :: '0'...'9'+
-expr    :: num + op + num
-"""
 
 add = Literal('+')
 sub = Literal('-')
@@ -138,161 +62,72 @@ mul = Literal('*')
 div = Literal('/')
 op = add | sub | mul | div
 
-exprStack = []
-def pushStack(s, l, t):
-    exprStack.append(t[0])
+atom = Word(nums).addParseAction(pushFirst)
+expr = atom + ZeroOrMore((op + atom).addParseAction(pushFirst))
 
-def evalStack(stack):
-    op = stack.pop()
-    if op in '+-*/':
-        op2 = evalStack(stack)
-        op1 = evalStack(stack)
-        if op == '+':
-            return op1 + op2
-        if op == '-':
-            return op1 - op2
-        if op == '*':
-            return op1 * op2
-        if op == '/':
-            return op1 / op2
-    else:
-        return float(op)
-
-num = Word(nums).addParseAction(pushStack)
-
-expr = num + (op + num).addParseAction(pushStack)
-
-tests = ('3+2', '3-2', '3*2', '3/2')
-for t in tests:
-    exprStack = []
-    expr.parseString(t)
-    print(t, exprStack, evalStack(exprStack[:]))
-```
-```
-3+2 ['3', '2', '+'] 5.0
-3-2 ['3', '2', '-'] 1.0
-3*2 ['3', '2', '*'] 6.0
-3/2 ['3', '2', '/'] 1.5
-```
-
-### step4 將 'op' 與對應的函式做成 dictionary
-```python
-from pyparsing import Word, Literal, nums
-
-"""
-op      :: '+' | '-' | '*' | '/'
-num     :: '0'...'9'+
-expr    :: num + op + num
-"""
-
-add = Literal('+')
-sub = Literal('-')
-mul = Literal('*')
-div = Literal('/')
-op = add | sub | mul | div
-
-opf = { '+' : (lambda a, b: a+b),
-        '-' : (lambda a, b: a-b),
-        '*' : (lambda a, b: a*b),
-        '/' : (lambda a, b: a/b) }
-
-exprStack = []
-def pushStack(s, l, t):
-    exprStack.append(t[0])
-
-def evalStack(stack):
-    op = stack.pop()
-    if op in '+-*/':
-        op2 = evalStack(stack)
-        op1 = evalStack(stack)
-        return opf[op](op1, op2)
-    else:
-        return float(op)
-
-num = Word(nums).addParseAction(pushStack)
-
-expr = num + (op + num).addParseAction(pushStack)
-
-tests = ('3+2', '3-2', '3*2', '3/2')
-for t in tests:
-    exprStack = []
-    expr.parseString(t)
-    print("%s = %d" % (t, evalStack(exprStack[:])))
-```
-```
-3+2 = 5
-3-2 = 1
-3*2 = 6
-3/2 = 1
-```
-
-### step5 加入 unittest
-ex2-5.py:
-```python
-from pyparsing import Word, Literal, ZeroOrMore, nums
-import unittest
-
-"""
-op      :: '+' | '-' | '*' | '/'
-num     :: '0'...'9'+
-expr    :: num + op + num
-"""
-
-add = Literal('+')
-sub = Literal('-')
-mul = Literal('*')
-div = Literal('/')
-op = add | sub | mul | div
-
-exprStack = []
-def pushStack(s, l, t):
-    exprStack.append(t[0])
-
-num = Word(nums).addParseAction(pushStack)
-
-expr = num + ZeroOrMore((op + num).addParseAction(pushStack))
-
-opf = { '+' : (lambda a, b: a+b),
-        '-' : (lambda a, b: a-b),
-        '*' : (lambda a, b: a*b),
-        '/' : (lambda a, b: a/b) }
-
-def evalStack(stack):
-    op = stack.pop()
-    if op in '+-*/':
-        op2 = evalStack(stack)
-        op1 = evalStack(stack)
-        return opf[op](op1, op2)
-    else:
-        return float(op)
-
-def evalString(string):
-    global exprStack, expr
+def parseString(string):
+    global exprStack
     exprStack = []
     expr.parseString(string)
-    return evalStack(exprStack)
+    return exprStack
 
-class MyTest(unittest.TestCase):
+opf = { '+' : (lambda a, b: a + b),
+        '-' : (lambda a, b: a - b),
+        '*' : (lambda a, b: a * b),
+        '/' : (lambda a, b: a / b) }
 
-    def test_simple_op(self):
+def evalStack(stack):
+    op = stack.pop()
+    if op in '+-*/':
+        op2 = evalStack(stack)
+        op1 = evalStack(stack)
+        return opf[op](op1, op2)
+    else:
+        return float(op)
+
+
+def evalString(string):
+    stack = parseString(string)
+    result = evalStack(stack)
+    return result
+
+class TestEx2(unittest.TestCase):
+
+    def test_parseString(self):
+        self.assertEqual(parseString('6+3'), ['6', '3', '+'])
+        self.assertEqual(parseString('6-3'), ['6', '3', '-'])
+        self.assertEqual(parseString('6*3'), ['6', '3', '*'])
+        self.assertEqual(parseString('6/3'), ['6', '3', '/'])
+
+    def test_evalStack(self):
+        self.assertEqual(evalStack(['6', '3', '+']), 9.0)
+        self.assertEqual(evalStack(['6', '3', '-']), 3.0)
+        self.assertEqual(evalStack(['6', '3', '*']), 18.0)
+        self.assertEqual(evalStack(['6', '3', '/']), 2.0)
+
+    def test_evalString(self):
         self.assertEqual(evalString('6+3'), 9.0)
         self.assertEqual(evalString('6-3'), 3.0)
         self.assertEqual(evalString('6*3'), 18.0)
         self.assertEqual(evalString('6/3'), 2.0)
 
-    def test_multi_op(self):
+    def test_multiple_op(self):
         self.assertEqual(evalString('6+3+2'), 11.0)
         self.assertEqual(evalString('6-3-2'), 1.0)
         self.assertEqual(evalString('6*3*2'), 36.0)
         self.assertEqual(evalString('6/3/2'), 1.0)
 ```
+- 解析數字與運算符號
+
 ```shell
-$ python -m unittest -v ex2-5
-test_multi_op (ex2-5.MyTest) ... ok
-test_simple_op (ex2-5.MyTest) ... ok
+$ python -m unittest -v ex2
+test_evalStack (ex2.TestEx2) ... ok
+test_evalString (ex2.TestEx2) ... ok
+test_multiple_op (ex2.TestEx2) ... ok
+test_parseString (ex2.TestEx2) ... ok
 
 ----------------------------------------------------------------------
-Ran 2 tests in 0.003s
+Ran 4 tests in 0.005s
 
 OK
 ```
