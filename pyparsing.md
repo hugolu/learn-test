@@ -575,13 +575,13 @@ tests = ('3+2', '3-2', '3*2', '3/2')
 for t in tests:
     exprStack = []
     expr.parseString(t)
-    print(t, exprStack, evalStack(exprStack[:]))
+    print("%s = %d" % (t, evalStack(exprStack[:])))
 ```
 ```
-3+2 ['3', '2', '+'] 5.0
-3-2 ['3', '2', '-'] 1.0
-3*2 ['3', '2', '*'] 6.0
-3/2 ['3', '2', '/'] 1.5
+3+2 = 5
+3-2 = 1
+3*2 = 6
+3/2 = 1
 ```
 
 ----
