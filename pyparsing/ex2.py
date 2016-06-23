@@ -4,7 +4,7 @@ import unittest
 """
 op      :: '+' | '-' | '*' | '/'
 num     :: '0'...'9'+
-expr    :: num + op + num
+expr    :: num + [op + num]*
 """
 
 exprStack = []
@@ -65,3 +65,8 @@ class TestEx2(unittest.TestCase):
         self.assertEqual(evalString('6*3'), 18.0)
         self.assertEqual(evalString('6/3'), 2.0)
 
+    def test_multiple_op(self):
+        self.assertEqual(evalString('6+3+2'), 11.0)
+        self.assertEqual(evalString('6-3-2'), 1.0)
+        self.assertEqual(evalString('6*3*2'), 36.0)
+        self.assertEqual(evalString('6/3/2'), 1.0)
