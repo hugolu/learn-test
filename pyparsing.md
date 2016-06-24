@@ -215,6 +215,20 @@ for t in tests:
 abc def 123 456  >>>  ['abc', 'def', '123', '456']
 ```
 
+## `StringEnd`: Match the end of the text
+
+```python
+>>> from pyparsing import Word, StringEnd, alphas
+>>> noEnd = Word(alphas)
+>>> noEnd.parseString('Dorking...')
+(['Dorking'], {})
+>>> withEnd = Word(alphas) + StringEnd()
+>>> withEnd.parseString('Dorking...')
+Traceback (most recent call last):
+  ...(skipped)
+pyparsing.ParseException: Expected end of text (at char 7), (line:1, col:8)
+```
+
 ## `Suppress`: Omit matched text from the result
 ```python
 from pyparsing import Word, Literal, Suppress
