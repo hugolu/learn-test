@@ -93,7 +93,180 @@ Creating test database for alias 'default'...
 ConfigError: No feature files in "/home/vagrant/myWorkspace/demo/features"
 Destroying test database for alias 'default'...
 ```
-- 溫馨提示: 沒有 feature 定義檔案
+- 溫馨提示: 還沒有定義特徵 (features)
 
-## 建立 calc.feature
+## 建立 calc 的特徵描述檔
 
+產生檔案 features/calc.feature:
+```python
+#file: features/calc.feature
+
+Feature: Web calculator
+
+    As a student
+    In order to finish my homework
+    I want to do arithmatical operations
+
+    Scenario: add two numbers
+        Given I enter "1+1"
+         When I press "=" button
+         Then I get the answer "2"
+```
+
+## 第三次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario: add two numbers   # features/calc.feature:9
+    Given I enter "3+2"       # None
+    When I press "=" button   # None
+    Then I get the answer "5" # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 1 untested
+0 steps passed, 0 failed, 0 skipped, 3 undefined
+Took 0m0.000s
+
+You can implement step definitions for undefined steps with these snippets:
+
+@given(u'I enter "3+2"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Given I enter "3+2"')
+
+@when(u'I press "=" button')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I press "=" button')
+
+@then(u'I get the answer "5"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I get the answer "5"')
+```
+- 溫馨提示: 還沒有定義步驟 (steps)，這些 snippets 可以拿去用
+
+## 建立 calc 的步驟定義檔
+
+產生檔案 features/steps/calc.py:
+```python
+@given(u'I enter "3+2"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Given I enter "1+1"')
+
+@when(u'I press "=" button')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I press "=" button')
+
+@then(u'I get the answer "5"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I get the answer "2"')
+```
+
+## 第四次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario: add two numbers   # features/calc.feature:9
+    Given I enter "3+2"       # None
+    When I press "=" button   # None
+    Then I get the answer "5" # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 1 untested
+0 steps passed, 0 failed, 0 skipped, 0 undefined, 3 untested
+Took 0m0.000s
+```
+- 溫馨提示: 一個 feature、一個 scenario、三個 steps 沒有測試
+
+## 再增加一個 scenario
+
+修改 features/calc.feature，增加以下程式片段:
+```python
+    Scenario: subtract two numbers
+        Given I enter "3-2"
+         When I press "=" button
+         Then I get the answer "1"
+```
+
+## 第五次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario: add two numbers   # features/calc.feature:9
+    Given I enter "3+2"       # None
+    When I press "=" button   # None
+    Then I get the answer "5" # None
+
+  Scenario: subtract two numbers  # features/calc.feature:14
+    Given I enter "3-2"           # None
+    When I press "=" button       # None
+    Then I get the answer "1"     # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 2 untested
+0 steps passed, 0 failed, 0 skipped, 2 undefined, 4 untested
+Took 0m0.000s
+
+You can implement step definitions for undefined steps with these snippets:
+
+@given(u'I enter "3-2"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Given I enter "3-2"')
+
+@then(u'I get the answer "1"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I get the answer "1"')
+```
+- 溫馨提示: 有些 features, scenarios, steps 沒有測試；有 steps 沒定義，可使用提供的 snippets
+
+## 修改 calc 的步驟定義檔
+
+修改檔案 features/steps/calc.py，增加以下程式片段:
+```python
+@given(u'I enter "3-2"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Given I enter "3-2"')
+
+@then(u'I get the answer "1"')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I get the answer "1"')
+```
+
+## 第六次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario: add two numbers   # features/calc.feature:9
+    Given I enter "3+2"       # None
+    When I press "=" button   # None
+    Then I get the answer "5" # None
+
+  Scenario: subtract two numbers  # features/calc.feature:14
+    Given I enter "3-2"           # None
+    When I press "=" button       # None
+    Then I get the answer "1"     # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 2 untested
+0 steps passed, 0 failed, 0 skipped, 0 undefined, 6 untested
+Took 0m0.000s
+```
+- 溫馨提示: 有些 features, scenarios, steps 沒有測試
