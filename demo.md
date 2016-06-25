@@ -697,3 +697,22 @@ Destroying test database for alias 'default'...
 - 可以開始實作 `Calculator` 了
 
 ## 藉由 TDD 引導，實作底層功能
+
+開始開發 `Calculator` 功能之前，先把剛剛的程式碼放到 git repository
+```shell
+$ git init
+```
+
+新增 .gitignore 檔案，避免某些檔案加入 git repository
+```
+__pycache__
+db.sqlite3
+.python-version
+*.pyc
+.*.swp
+```
+
+```shell
+$ git add .
+$ git commit -m "init project"
+```
