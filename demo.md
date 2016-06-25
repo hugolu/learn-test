@@ -270,3 +270,100 @@ Feature: Web calculator # features/calc.feature:3
 Took 0m0.000s
 ```
 - 溫馨提示: 有些 features, scenarios, steps 沒有測試
+
+## 重構步驟定義檔 - 使用變數
+
+修改檔案 features/steps/calc.py
+```python
+@given(u'I enter {expr}')
+def step_impl(context, expr):
+    raise NotImplementedError(u'STEP: Given I enter {expr}')
+
+@when(u'I press "=" button')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I press "=" button')
+
+@then(u'I get the answer {answer}')
+def step_impl(context, answer):
+    raise NotImplementedError(u'STEP: Then I get the answer {answer}')
+```
+
+## 第七次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario: add two numbers   # features/calc.feature:9
+    Given I enter "3+2"       # None
+    When I press "=" button   # None
+    Then I get the answer "5" # None
+
+  Scenario: subtract two numbers  # features/calc.feature:14
+    Given I enter "3-2"           # None
+    When I press "=" button       # None
+    Then I get the answer "1"     # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 2 untested
+0 steps passed, 0 failed, 0 skipped, 0 undefined, 6 untested
+Took 0m0.000s
+```
+- 步驟檔使用變數，定義一個 step 能適用多個 scenarios
+
+## 重構特徵描述檔 - 合併場景
+
+修改 features/calc.feature，使用 `Scenario Outline` 合併加法、減法場景，並增加更多場景
+```python
+    Scenario Outline: do simple operations
+        Given I enter <expression>
+         When I press "=" button
+         Then I get the answer <answer>
+
+        Examples:
+            | expression    | answer    |
+            | 3 + 2         | 5         |
+            | 3 - 2         | 1         |
+            | 3 * 2         | 6         |
+            | 3 / 2         | 1.5       |
+```
+
+## 第八次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario Outline: do simple operations -- @1.1   # features/calc.feature:16
+    Given I enter 3 + 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 5                        # None
+
+  Scenario Outline: do simple operations -- @1.2   # features/calc.feature:17
+    Given I enter 3 - 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 1                        # None
+
+  Scenario Outline: do simple operations -- @1.3   # features/calc.feature:18
+    Given I enter 3 * 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 6                        # None
+
+  Scenario Outline: do simple operations -- @1.4   # features/calc.feature:19
+    Given I enter 3 / 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 1.5                      # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 4 untested
+0 steps passed, 0 failed, 0 skipped, 0 undefined, 12 untested
+Took 0m0.000s
+```
+- 溫馨提示: 更多 features, scenarios, steps 沒有測試
+
