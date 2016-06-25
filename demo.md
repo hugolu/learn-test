@@ -28,7 +28,7 @@ $ source venv/bin/activate
 ```
 - 以下範例省略提示符號`$`前所有文字
 
-## 安裝 Djando 專案
+### 安裝 Djando 專案
 
 ```shell
 $ django-admin startproject demo
@@ -43,7 +43,7 @@ demo/
 $ cd demo
 ```
 
-## 建立 Calculator App
+### 建立 Calculator App
 
 ```shell
 $ python manage.py startapp calc
@@ -59,7 +59,7 @@ calc
 └── views.py
 ```
 
-## 新增 Calculator App
+### 新增 Calculator App
 
 修改 demo/settings.py
 ```python
@@ -69,8 +69,13 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 第一次執行 behave
+## 藉由 BDD 引導，定義特徵與步驟
 
+### 一開始什麼都沒有
+
+先什麼都不做，跑一下 behave 看看發生什麼事情
+
+第一次執行 behave
 ```shell
 $ python manage.py behave
 Creating test database for alias 'default'...
@@ -79,14 +84,13 @@ Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 缺少 features/steps 目錄
 
-## 建立 features/steps 目錄
+### 建立 features/steps 目錄
 
 ```shell
 $ mkdir -p features/steps
 ```
 
-## 第二次執行 behave
-
+第二次執行 behave
 ```shell
 $ python manage.py behave
 Creating test database for alias 'default'...
@@ -95,7 +99,7 @@ Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 還沒有定義特徵 (features)
 
-## 建立 calc 的特徵描述檔
+### 建立 calc 的特徵描述檔
 
 產生檔案 features/calc.feature:
 ```python
@@ -113,8 +117,7 @@ Feature: Web calculator
          Then I get the answer "2"
 ```
 
-## 第三次執行 behave
-
+第三次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -148,7 +151,7 @@ def step_impl(context):
 ```
 - 溫馨提示: 還沒有定義步驟 (steps)，這些 snippets 可以拿去用
 
-## 建立 calc 的步驟定義檔
+### 建立 calc 的步驟定義檔
 
 產生檔案 features/steps/calc.py:
 ```python
@@ -165,8 +168,7 @@ def step_impl(context):
     raise NotImplementedError(u'STEP: Then I get the answer "2"')
 ```
 
-## 第四次執行 behave
-
+第四次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -186,7 +188,7 @@ Took 0m0.000s
 ```
 - 溫馨提示: 一個 feature、一個 scenario、三個 steps 沒有測試
 
-## 再增加一個 scenario
+### 再增加一個 scenario
 
 修改 features/calc.feature，增加以下程式片段:
 ```python
@@ -196,8 +198,7 @@ Took 0m0.000s
          Then I get the answer "1"
 ```
 
-## 第五次執行 behave
-
+第五次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -232,7 +233,7 @@ def step_impl(context):
 ```
 - 溫馨提示: 有些 features, scenarios, steps 沒有測試；有 steps 沒定義，可使用提供的 snippets
 
-## 修改 calc 的步驟定義檔
+### 修改 calc 的步驟定義檔
 
 修改檔案 features/steps/calc.py，增加以下程式片段:
 ```python
@@ -245,8 +246,7 @@ def step_impl(context):
     raise NotImplementedError(u'STEP: Then I get the answer "1"')
 ```
 
-## 第六次執行 behave
-
+第六次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -271,7 +271,7 @@ Took 0m0.000s
 ```
 - 溫馨提示: 有些 features, scenarios, steps 沒有測試
 
-## 重構步驟定義檔 - 使用變數
+### 重構步驟定義檔 - 使用變數
 
 修改檔案 features/steps/calc.py
 ```python
@@ -288,8 +288,7 @@ def step_impl(context, answer):
     raise NotImplementedError(u'STEP: Then I get the answer {answer}')
 ```
 
-## 第七次執行 behave
-
+第七次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -314,7 +313,7 @@ Took 0m0.000s
 ```
 - 步驟檔使用變數，定義一個 step 能適用多個 scenarios
 
-## 重構特徵描述檔 - 合併場景
+### 重構特徵描述檔 - 合併場景
 
 修改 features/calc.feature，使用 `Scenario Outline` 合併加法、減法場景，並增加更多場景與錯誤處理
 ```python
@@ -333,8 +332,7 @@ Took 0m0.000s
             | hello world   | Invalid Input |
 ```
 
-## 第八次執行 behave
-
+第八次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -379,7 +377,7 @@ Took 0m0.000s
 ```
 - 溫馨提示: 更多 features, scenarios, steps 沒有測試
 
-## 增加更多特徵
+### 增加更多特徵
 
 修改 features/calc.feature，使特徵滿足
 [加法/乘法交換律](https://zh.wikipedia.org/wiki/%E4%BA%A4%E6%8F%9B%E5%BE%8B)、[加法/乘法結合律](https://zh.wikipedia.org/wiki/%E7%BB%93%E5%90%88%E5%BE%8B)、、[乘法分配律](https://zh.wikipedia.org/wiki/%E5%88%86%E9%85%8D%E5%BE%8B)
@@ -414,8 +412,7 @@ Took 0m0.000s
             | 2 * (1 + 3)   | (2*1) + (2*3) |
 ```
 
-## 第九次執行 behave
-
+第九次執行 behave
 ```shell
 $ python manage.py behave --dry-run
 
@@ -428,55 +425,7 @@ Feature: Web calculator # features/calc.feature:3
     When I press "=" button                        # None
     Then I get the answer 5                        # None
 
-  Scenario Outline: do simple operations -- @1.2   # features/calc.feature:17
-    Given I enter 3 - 2                            # None
-    When I press "=" button                        # None
-    Then I get the answer 1                        # None
-
-  Scenario Outline: do simple operations -- @1.3   # features/calc.feature:18
-    Given I enter 3 * 2                            # None
-    When I press "=" button                        # None
-    Then I get the answer 6                        # None
-
-  Scenario Outline: do simple operations -- @1.4   # features/calc.feature:19
-    Given I enter 3 / 2                            # None
-    When I press "=" button                        # None
-    Then I get the answer 1.5                      # None
-
-  Scenario Outline: do simple operations -- @1.5   # features/calc.feature:20
-    Given I enter 3 +-*/ 2                         # None
-    When I press "=" button                        # None
-    Then I get the answer Invalid Input            # None
-
-  Scenario Outline: do simple operations -- @1.6   # features/calc.feature:21
-    Given I enter hello world                      # None
-    When I press "=" button                        # None
-    Then I get the answer Invalid Input            # None
-
-  Scenario Outline: satisfy commutative property -- @1.1   # features/calc.feature:30
-    When I enter 3 + 4 first                               # None
-    And I enter 4 + 3 again                                # None
-    Then I get the same answer                             # None
-
-  Scenario Outline: satisfy commutative property -- @1.2   # features/calc.feature:31
-    When I enter 2 * 5 first                               # None
-    And I enter 5 * 2 again                                # None
-    Then I get the same answer                             # None
-
-  Scenario Outline: satisfy associative property -- @1.1   # features/calc.feature:40
-    When I enter (2 + 3) + 4 first                         # None
-    And I enter 2 + (3 + 4) again                          # None
-    Then I get the same answer                             # None
-
-  Scenario Outline: satisfy associative property -- @1.2   # features/calc.feature:41
-    When I enter 2 * (3 * 4) first                         # None
-    And I enter (2 * 3) * 4 again                          # None
-    Then I get the same answer                             # None
-
-  Scenario Outline: satisfy distributive property -- @1.1   # features/calc.feature:50
-    When I enter 2 * (1 + 3) first                          # None
-    And I enter (2*1) + (2*3) again                         # None
-    Then I get the same answer                              # None
+  ...(略)
 
 0 features passed, 0 failed, 0 skipped, 1 untested
 0 scenarios passed, 0 failed, 0 skipped, 11 untested
@@ -530,7 +479,7 @@ def step_impl(context):
     raise NotImplementedError(u'STEP: When I enter (2*1) + (2*3) again')
 ```
 
-## 增加步驟
+### 增加步驟
 
 ```python
 @when(u'I enter {expr1} first')
@@ -546,9 +495,7 @@ def step_impl(context):
     raise NotImplementedError(u'STEP: Then I get the same answer')
 ```
 
-## 第十次執行 behave
-
-這次不用 `--dry-run` 參數
+第十次執行 behave，這次不用 `--dry-run` 參數
 ```shell
 $ python manage.py behave
 
@@ -600,7 +547,7 @@ Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 一堆 features, scenarios, steps 失敗
 
-## 重構特徵描述檔 - 移除 `NotImplementedError`
+### 重構特徵描述檔 - 移除 `NotImplementedError`
 
 ```python
 from cala.calculator import Calculator
@@ -638,8 +585,7 @@ def step_impl(context):
     assert context.answer1 == context.answer2
 ```
 
-## 第十一次執行 behave
-
+第十一次執行 behave
 ```shell
 $ python manage.py behave
 
@@ -653,7 +599,7 @@ ImportError: No module named 'calc.calculator'; 'calc' is not a package
 ```
 - 溫馨提示: No module named 'calc.calculator'; 'calc' is not a package
 
-## 修改專案設定
+### 修改專案設定
 
 修改 demo/settings.py，增加 `calc` App
 ```python
@@ -663,8 +609,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 第十二次執行 behave
-
+第十二次執行 behave
 ```shell
 $ python manage.py behave
 
@@ -678,14 +623,13 @@ ImportError: No module named 'calc.calculator'
 ```
 - 溫馨提示: No module named 'calc.calculator'
 
-## 增加模組 calc
+### 增加模組 calc
 
 ```shell
 $ touch calc/calculator.py
 ```
 
-## 第十三次執行 behave
-
+第十三次執行 behave
 ```shell
 $ python manage.py behave
 
@@ -699,7 +643,7 @@ ImportError: cannot import name 'Calculator'
 ```
 - 溫馨提示: cannot import name 'Calculator'
 
-## 增加 `Calculator` 類別
+### 增加 `Calculator` 類別
 
 修改 calc/calculator.py，增加 `Calculator` 類別，並提供 `evalString` 方法
 ```python
@@ -709,8 +653,7 @@ class Calculator:
         pass
 ```
 
-## 第十四次執行 behave
-
+第十四次執行 behave
 ```shell
 $ python manage.py behave
 
@@ -751,4 +694,6 @@ Took 0m0.005s
 Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 有些成功、有些失敗 (因為還沒實作功能)
+- 可以開始實作 `Calculator` 了
 
+## 藉由 TDD 引導，實作底層功能
