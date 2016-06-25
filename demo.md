@@ -18,3 +18,82 @@
 - [乘法交換律](https://zh.wikipedia.org/wiki/%E4%BA%A4%E6%8F%9B%E5%BE%8B): "2 × 5 = 5 × 2"
 - [乘法結合律](https://zh.wikipedia.org/wiki/%E7%BB%93%E5%90%88%E5%BE%8B): "(5x2) x 3 = 5 x (2x3) = 30"
 - [乘法分配律](https://zh.wikipedia.org/wiki/%E5%88%86%E9%85%8D%E5%BE%8B): "2 x(1+3) = (2x1) + (2x3)"
+
+## 設定環境
+
+```shell
+vagrant@debian:~$ cd myWorkspace/venv/
+$ source venv/bin/activate
+(venv) vagrant@debian:~/myWorkspace$
+```
+- 以下範例省略提示符號`$`前所有文字
+
+## 安裝 Djando 專案
+
+```shell
+$ django-admin startproject demo
+$ tree demo/
+demo/
+├── demo
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── manage.py
+$ cd demo
+```
+
+## 建立 Calculator App
+
+```shell
+$ python manage.py startapp calc
+$ tree calc
+calc
+├── admin.py
+├── apps.py
+├── __init__.py
+├── migrations
+│   └── __init__.py
+├── models.py
+├── tests.py
+└── views.py
+```
+
+## 新增 Calculator App
+
+修改 demo/settings.py
+```python
+INSTALLED_APPS = [
+    'behave_django',
+    ...
+]
+```
+
+## 第一次執行 behave
+
+```shell
+$ python manage.py behave
+Creating test database for alias 'default'...
+ConfigError: No steps directory in "/home/vagrant/myWorkspace/demo/features"
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 缺少 features/steps 目錄
+
+## 建立 features/steps 目錄
+
+```shell
+$ mkdir -p features/steps
+```
+
+## 第二次執行 behave
+
+```shell
+$ python manage.py behave
+Creating test database for alias 'default'...
+ConfigError: No feature files in "/home/vagrant/myWorkspace/demo/features"
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 沒有 feature 定義檔案
+
+## 建立 calc.feature
+
