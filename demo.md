@@ -599,3 +599,156 @@ Took 0m0.003s
 Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 一堆 features, scenarios, steps 失敗
+
+## 重構特徵描述檔 - 移除 `NotImplementedError`
+
+```python
+from cala.calculator import Calculator
+
+@given(u'I enter {expr}')
+def step_impl(context, expr):
+    context.expr = expr
+
+@when(u'I press "=" button')
+def step_impl(context):
+    calc = Calculator()
+    context.answer = calc.evalString(context.expr)
+
+@then(u'I get the answer {answer}')
+def step_impl(context, answer):
+    try:
+        ans = float(answer)
+    except ValueError:
+        ans = answer
+
+    assert context.answer == ans
+
+@when(u'I enter {expr1} first')
+def step_impl(context, expr1):
+    calc = Calculator()
+    context.answer1 = calc.evalString(expr1)
+
+@when(u'I enter {expr2} again')
+def step_impl(context, expr2):
+    calc = Calculator()
+    context.answer2 = calc.evalString(expr2)
+
+@then(u'I get the same answer')
+def step_impl(context):
+    assert context.answer1 == context.answer2
+```
+
+## 第十一次執行 behave
+
+```shell
+$ python manage.py behave
+
+Creating test database for alias 'default'...
+Exception ImportError: No module named 'calc.calculator'; 'calc' is not a package
+Traceback (most recent call last):
+  ...(略)
+  File "/home/vagrant/myWorkspace/demo/features/steps/calc.py", line 1, in <module>
+    from calc.calculator import Calculator
+ImportError: No module named 'calc.calculator'; 'calc' is not a package
+```
+- 溫馨提示: No module named 'calc.calculator'; 'calc' is not a package
+
+## 修改專案設定
+
+修改 demo/settings.py，增加 `calc` App
+```python
+INSTALLED_APPS = [
+    ...
+    'calc',
+]
+```
+
+## 第十二次執行 behave
+
+```shell
+$ python manage.py behave
+
+Creating test database for alias 'default'...
+Exception ImportError: No module named 'calc.calculator'
+Traceback (most recent call last):
+  ...(略)
+  File "features/steps/calc.py", line 1, in <module>
+    from calc.calculator import Calculator
+ImportError: No module named 'calc.calculator'
+```
+- 溫馨提示: No module named 'calc.calculator'
+
+## 增加模組 calc
+
+```shell
+$ touch calc/calculator.py
+```
+
+## 第十三次執行 behave
+
+```shell
+$ python manage.py behave
+
+Creating test database for alias 'default'...
+Exception ImportError: cannot import name 'Calculator'
+Traceback (most recent call last):
+  ...(略)
+  File "features/steps/calc.py", line 1, in <module>
+    from calc.calculator import Calculator
+ImportError: cannot import name 'Calculator'
+```
+- 溫馨提示: cannot import name 'Calculator'
+
+## 增加 `Calculator` 類別
+
+修改 calc/calculator.py，增加 `Calculator` 類別，並提供 `evalString` 方法
+```python
+class Calculator:
+
+    def evalString(self, string):
+        pass
+```
+
+## 第十四次執行 behave
+
+```shell
+$ python manage.py behave
+
+Creating test database for alias 'default'...
+Feature: Web calculator # features/calc.feature:3
+Creating test database for alias 'default'...
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario Outline: do simple operations -- @1.1   # features/calc.feature:16
+    Given I enter 3 + 2                            # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.000s
+    Then I get the answer 5                        # features/steps/calc.py:12 0.000s
+      Traceback (most recent call last):
+        File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/behave/model.py", line 1456, in run
+          match.run(runner.context)
+        File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/behave/model.py", line 1903, in run
+          self.func(context, *args, **kwargs)
+        File "features/steps/calc.py", line 19, in step_impl
+          assert context.answer == ans
+      AssertionError
+      
+...(略)
+
+Failing scenarios:
+  features/calc.feature:16  do simple operations -- @1.1
+  features/calc.feature:17  do simple operations -- @1.2
+  features/calc.feature:18  do simple operations -- @1.3
+  features/calc.feature:19  do simple operations -- @1.4
+  features/calc.feature:20  do simple operations -- @1.5
+  features/calc.feature:21  do simple operations -- @1.6
+
+0 features passed, 1 failed, 0 skipped
+5 scenarios passed, 6 failed, 0 skipped
+27 steps passed, 6 failed, 0 skipped, 0 undefined
+Took 0m0.005s
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 有些成功、有些失敗 (因為還沒實作功能)
+
