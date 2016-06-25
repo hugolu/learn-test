@@ -316,7 +316,7 @@ Took 0m0.000s
 
 ## 重構特徵描述檔 - 合併場景
 
-修改 features/calc.feature，使用 `Scenario Outline` 合併加法、減法場景，並增加更多場景
+修改 features/calc.feature，使用 `Scenario Outline` 合併加法、減法場景，並增加更多場景與錯誤處理
 ```python
     Scenario Outline: do simple operations
         Given I enter <expression>
@@ -324,11 +324,13 @@ Took 0m0.000s
          Then I get the answer <answer>
 
         Examples:
-            | expression    | answer    |
-            | 3 + 2         | 5         |
-            | 3 - 2         | 1         |
-            | 3 * 2         | 6         |
-            | 3 / 2         | 1.5       |
+            | expression    | answer        |
+            | 3 + 2         | 5             |
+            | 3 - 2         | 1             |
+            | 3 * 2         | 6             |
+            | 3 / 2         | 1.5           |
+            | 3 +-*/        | Invalid Input |
+            | hello world   | Invalid Input |
 ```
 
 ## 第八次執行 behave
@@ -360,10 +362,240 @@ Feature: Web calculator # features/calc.feature:3
     When I press "=" button                        # None
     Then I get the answer 1.5                      # None
 
+  Scenario Outline: do simple operations -- @1.5   # features/calc.feature:20
+    Given I enter 3 +-*/ 2                         # None
+    When I press "=" button                        # None
+    Then I get the answer Invalid Input            # None
+
+  Scenario Outline: do simple operations -- @1.6   # features/calc.feature:21
+    Given I enter hello world                      # None
+    When I press "=" button                        # None
+    Then I get the answer Invalid Input            # None
+
 0 features passed, 0 failed, 0 skipped, 1 untested
-0 scenarios passed, 0 failed, 0 skipped, 4 untested
-0 steps passed, 0 failed, 0 skipped, 0 undefined, 12 untested
+0 scenarios passed, 0 failed, 0 skipped, 6 untested
+0 steps passed, 0 failed, 0 skipped, 0 undefined, 18 untested
 Took 0m0.000s
 ```
 - 溫馨提示: 更多 features, scenarios, steps 沒有測試
 
+## 增加更多特徵
+
+修改 features/calc.feature，使特徵滿足
+[加法/乘法交換律](https://zh.wikipedia.org/wiki/%E4%BA%A4%E6%8F%9B%E5%BE%8B)、[加法/乘法結合律](https://zh.wikipedia.org/wiki/%E7%BB%93%E5%90%88%E5%BE%8B)、、[乘法分配律](https://zh.wikipedia.org/wiki/%E5%88%86%E9%85%8D%E5%BE%8B)
+```python
+    Scenario Outline: satisfy commutative property
+         When I enter <expression1> first
+          And I enter <expression2> again
+         Then I get the same answer
+
+        Examples:
+            | expression1   | expression2   |
+            | 3 + 4         | 4 + 3         |
+            | 2 * 5         | 5 * 2         |
+
+    Scenario Outline: satisfy associative property
+         When I enter <expression1> first
+          And I enter <expression2> again
+         Then I get the same answer
+
+        Examples:
+            | expression1   | expression2   |
+            | (2 + 3) + 4   | 2 + (3 + 4)   |
+            | 2 * (3 * 4)   | (2 * 3) * 4   |
+
+    Scenario Outline: satisfy distributive property
+         When I enter <expression1> first
+          And I enter <expression2> again
+         Then I get the same answer
+
+        Examples:
+            | expression1   | expression2   |
+            | 2 * (1 + 3)   | (2*1) + (2*3) |
+```
+
+## 第九次執行 behave
+
+```shell
+$ python manage.py behave --dry-run
+
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario Outline: do simple operations -- @1.1   # features/calc.feature:16
+    Given I enter 3 + 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 5                        # None
+
+  Scenario Outline: do simple operations -- @1.2   # features/calc.feature:17
+    Given I enter 3 - 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 1                        # None
+
+  Scenario Outline: do simple operations -- @1.3   # features/calc.feature:18
+    Given I enter 3 * 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 6                        # None
+
+  Scenario Outline: do simple operations -- @1.4   # features/calc.feature:19
+    Given I enter 3 / 2                            # None
+    When I press "=" button                        # None
+    Then I get the answer 1.5                      # None
+
+  Scenario Outline: do simple operations -- @1.5   # features/calc.feature:20
+    Given I enter 3 +-*/ 2                         # None
+    When I press "=" button                        # None
+    Then I get the answer Invalid Input            # None
+
+  Scenario Outline: do simple operations -- @1.6   # features/calc.feature:21
+    Given I enter hello world                      # None
+    When I press "=" button                        # None
+    Then I get the answer Invalid Input            # None
+
+  Scenario Outline: satisfy commutative property -- @1.1   # features/calc.feature:30
+    When I enter 3 + 4 first                               # None
+    And I enter 4 + 3 again                                # None
+    Then I get the same answer                             # None
+
+  Scenario Outline: satisfy commutative property -- @1.2   # features/calc.feature:31
+    When I enter 2 * 5 first                               # None
+    And I enter 5 * 2 again                                # None
+    Then I get the same answer                             # None
+
+  Scenario Outline: satisfy associative property -- @1.1   # features/calc.feature:40
+    When I enter (2 + 3) + 4 first                         # None
+    And I enter 2 + (3 + 4) again                          # None
+    Then I get the same answer                             # None
+
+  Scenario Outline: satisfy associative property -- @1.2   # features/calc.feature:41
+    When I enter 2 * (3 * 4) first                         # None
+    And I enter (2 * 3) * 4 again                          # None
+    Then I get the same answer                             # None
+
+  Scenario Outline: satisfy distributive property -- @1.1   # features/calc.feature:50
+    When I enter 2 * (1 + 3) first                          # None
+    And I enter (2*1) + (2*3) again                         # None
+    Then I get the same answer                              # None
+
+0 features passed, 0 failed, 0 skipped, 1 untested
+0 scenarios passed, 0 failed, 0 skipped, 11 untested
+0 steps passed, 0 failed, 0 skipped, 15 undefined, 18 untested
+Took 0m0.000s
+
+You can implement step definitions for undefined steps with these snippets:
+
+@when(u'I enter 3 + 4 first')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 3 + 4 first')
+
+@when(u'I enter 4 + 3 again')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 4 + 3 again')
+
+@then(u'I get the same answer')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I get the same answer')
+
+@when(u'I enter 2 * 5 first')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 2 * 5 first')
+
+@when(u'I enter 5 * 2 again')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 5 * 2 again')
+
+@when(u'I enter (2 + 3) + 4 first')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter (2 + 3) + 4 first')
+
+@when(u'I enter 2 + (3 + 4) again')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 2 + (3 + 4) again')
+
+@when(u'I enter 2 * (3 * 4) first')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 2 * (3 * 4) first')
+
+@when(u'I enter (2 * 3) * 4 again')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter (2 * 3) * 4 again')
+
+@when(u'I enter 2 * (1 + 3) first')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter 2 * (1 + 3) first')
+
+@when(u'I enter (2*1) + (2*3) again')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter (2*1) + (2*3) again')
+```
+
+## 增加步驟
+
+```python
+@when(u'I enter {expr1} first')
+def step_impl(context, expr1):
+    raise NotImplementedError(u'STEP: When I enter {expr} first')
+
+@when(u'I enter {expr2} again')
+def step_impl(context, expr2):
+    raise NotImplementedError(u'STEP: When I enter {expr2} again')
+
+@then(u'I get the same answer')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: Then I get the same answer')
+```
+
+## 第十次執行 behave
+
+這次不用 `--dry-run` 參數
+```shell
+$ python manage.py behave
+
+Creating test database for alias 'default'...
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario Outline: do simple operations -- @1.1   # features/calc.feature:16
+    Given I enter 3 + 2                            # features/steps/calc.py:1 0.000s
+      Traceback (most recent call last):
+        File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/behave/model.py", line 1456, in run
+          match.run(runner.context)
+        File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/behave/model.py", line 1903, in run
+          self.func(context, *args, **kwargs)
+        File "/home/vagrant/.pyenv/versions/3.5.1/lib/python3.5/contextlib.py", line 77, in __exit__
+          self.gen.throw(type, value, traceback)
+        File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/behave/runner.py", line 162, in user_mode
+          yield
+        File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/behave/model.py", line 1903, in run
+          self.func(context, *args, **kwargs)
+        File "features/steps/calc.py", line 3, in step_impl
+          raise NotImplementedError(u'STEP: Given I enter {expr}')
+      NotImplementedError: STEP: Given I enter {expr}
+
+    When I press "=" button                        # None
+    Then I get the answer 5                        # None
+
+...(略)
+
+Failing scenarios:
+  features/calc.feature:16  do simple operations -- @1.1
+  features/calc.feature:17  do simple operations -- @1.2
+  features/calc.feature:18  do simple operations -- @1.3
+  features/calc.feature:19  do simple operations -- @1.4
+  features/calc.feature:20  do simple operations -- @1.5
+  features/calc.feature:21  do simple operations -- @1.6
+  features/calc.feature:30  satisfy commutative property -- @1.1
+  features/calc.feature:31  satisfy commutative property -- @1.2
+  features/calc.feature:40  satisfy associative property -- @1.1
+  features/calc.feature:41  satisfy associative property -- @1.2
+  features/calc.feature:50  satisfy distributive property -- @1.1
+
+0 features passed, 1 failed, 0 skipped
+0 scenarios passed, 11 failed, 0 skipped
+0 steps passed, 11 failed, 22 skipped, 0 undefined
+Took 0m0.003s
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 一堆 features, scenarios, steps 失敗
