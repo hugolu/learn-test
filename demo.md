@@ -1004,6 +1004,193 @@ $ git add .
 $ git commit -m "handle ParseException"
 ```
 
+### 修改 `Calculator` - 處理簡單數學運算
+
+修改 calc/tests.py，增加 `parseString` 測試項目
+```python
+    def test_parseString(self):
+        parseString = self.calc.parseString
+        self.assertEqual(parseString('0'), ['0'])
+        self.assertEqual(parseString('1'), ['1'])
+        self.assertEqual(parseString('3+2'), ['3', '2', '+'])
+```
+
+執行 unittest，測試 `evalString` 方法
+```shell
+$ python manage.py test -v2
+...(略)
+======================================================================
+ERROR: test_parseString (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 14, in test_parseString
+    self.assertEqual(parseString('3+2'), ['3', '2', '+'])
+  ...(略)
+    raise ParseException(instring, loc, self.errmsg, self)
+pyparsing.ParseException: Expected end of text (at char 1), (line:1, col:2)
+```
+- 溫馨提示: 只能解析輸入僅有一個整數的字串，像是 `3+2` 會產生 `ParseException` 例外
+
+修改 calc/calculator.py，完善 `parseString` 方法滿足測試
+```python
+from pyparsing import nums, Word, StringEnd, ParseException, Literal, ZeroOrMore
+
+"""
+integer :: '0'...'9'*
+op      :: '+' | '-' | '*' | '/'
+expr    :: integer [op integer]*
+"""
+
+class Calculator:
+
+    def __init__(self):
+        self.exprStack = []
+        def pushStack(s, l, t):
+            self.exprStack.append(t[0])
+
+        integer = Word(nums).addParseAction(pushStack)
+        op = Literal('+') | Literal('-') | Literal('*') | Literal('/')
+        expr = integer + ZeroOrMore((op + integer).addParseAction(pushStack))
+
+        self.expr = expr + StringEnd()
+
+    def parseString(self, string):
+        self.exprStack = []
+        self.expr.parseString(string(string)
+        return self.exprStack
+    
+    ...(略)
+```
+- `expr :: integer [op integer]*` 可以處理多個運算符號
+- 修改 `parseString` 方法，回傳 `exprStack`
+
+執行 unittest，測試 `parseString` 方法
+```shell
+$ python manage.py test -v2
+...(略)
+test_evalStack (calc.tests.TestCalculator) ... ok
+test_evalString (calc.tests.TestCalculator) ... ok
+test_invalid_input (calc.tests.TestCalculator) ... ok
+test_parseString (calc.tests.TestCalculator) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.007s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+```
+- 溫馨提示: `parseString` 通過測試，繼續修改 `evalString`
+
+修改 calc/tests.py，增加 `evalString` 測試項目
+```python
+    def test_num_op_num(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('3+2'), 5)
+        self.assertEqual(evalString('3-2'), 1)
+        self.assertEqual(evalString('3*2'), 6)
+        self.assertEqual(evalString('3/2'), 1.5)
+```
+
+執行 unittest，測試 `evalString` 方法
+```shell
+$ python manage.py test
+...E.
+======================================================================
+ERROR: test_num_op_num (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 32, in test_num_op_num
+    self.assertEqual(evalString('3+2'), 5)
+  File "/home/vagrant/myWorkspace/demo/calc/calculator.py", line 34, in evalString
+    return self.evalStack(self.exprStack)
+  File "/home/vagrant/myWorkspace/demo/calc/calculator.py", line 29, in evalStack
+    return float(op)
+ValueError: could not convert string to float: '+'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.007s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: `evalStack` 看不懂 `+` 符號
+
+修改 calc/calculator.py，完善 `evalStack` 方法滿足測試
+```python
+from pyparsing import nums, Word, StringEnd, ParseException, Literal, ZeroOrMore
+from scalc import SimpleCalculator
+
+class Calculator:
+
+    def __init__(self):
+        self.exprStack = []
+        def pushStack(s, l, t):
+            self.exprStack.append(t[0])
+
+        integer = Word(nums).addParseAction(pushStack)
+        op = Literal('+') | Literal('-') | Literal('*') | Literal('/')
+        expr = integer + ZeroOrMore((op + integer).addParseAction(pushStack))
+
+        self.expr = expr + StringEnd()
+
+        calc = SimpleCalculator()
+        self.opfun = {
+                '+' : (lambda a, b: calc.add(a,b)),
+                '-' : (lambda a, b: calc.sub(a,b)),
+                '*' : (lambda a, b: calc.mul(a,b)),
+                '/' : (lambda a, b: calc.div(a,b)) }
+
+    def evalStack(self, stack):
+        op = stack.pop()
+        if op in '+-*/':
+            op2 = self.evalStack(stack)
+            op1 = self.evalStack(stack)
+            return self.opfun[op](op1, op2)
+        else:
+            return float(op)
+
+    ...(略)
+```
+- 初始化時產生 `SimpleCalculator` 實例，用來執行 `+`, `-`, `*`, `/` 的運算，並產生 `opfun` dictionary，對應 `+`, `-`, `*`, `/` 與負責運算的匿名函數
+- 在 `evalStack` 方法中，如果看到 `op` 等於 `+`, `-`, `*`, `/`，再取出兩個運算元，呼叫匿名函數執行計算，然後回傳結果
+
+執行 unittest，測試 `evalStack` 方法
+```shell
+$ python manage.py test
+Creating test database for alias 'default'...
+...E.
+======================================================================
+ERROR: test_num_op_num (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  ...(略)
+  File "/home/vagrant/myWorkspace/demo/calc/calculator.py", line 25, in <lambda>
+    '+' : (lambda a, b: calc.add(a,b)),
+  File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/scalc.py", line 6, in add
+    raise NotImplementedError
+NotImplementedError
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.007s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 發生 `NotImplementedError`，`SimpleCalculator.add` 方法還沒完成 :(
+
+> 是的，請**用力**想像這個功能很複雜，另一個團隊正在努力開發中
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
