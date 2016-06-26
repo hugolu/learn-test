@@ -812,6 +812,20 @@ FAILED (failures=1)
         self.assertEqual(parseString('1'), ['1'])
 ```
 
+執行 unittest
+```shell
+$ python manage.py test
+...(略)
+======================================================================
+ERROR: test_parseString (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 11, in test_parseString
+    parseString = self.calc.parseString
+AttributeError: 'Calculator' object has no attribute 'parseString'
+```
+- 溫馨提示: 'Calculator' object has no attribute 'parseString'
+
 修改 calc/calculator.py，增加 `parseString` 方法滿足測試
 ```python
 from pyparsing import nums, Word, StringEnd
@@ -856,6 +870,20 @@ test_parseString (calc.tests.TestCalculator) ... ok
         self.assertEqual(evalStack(['0']), 0)
         self.assertEqual(evalStack(['1']), 1)
 ```
+
+執行 unittest
+```shell
+$ python manage.py test
+...(略)
+======================================================================
+ERROR: test_evalStack (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 16, in test_evalStack
+    evalStack = self.calc.evalStack
+AttributeError: 'Calculator' object has no attribute 'evalStack'
+```
+- 溫馨提示: 'Calculator' object has no attribute 'evalStack'
 
 修改 calc/calculator.py，增加 `evalStack` 方法滿足測試
 ```python
@@ -975,6 +1003,8 @@ Destroying test database for alias 'default'...
 $ git add .
 $ git commit -m "handle ParseException"
 ```
+
+
 
 
 
