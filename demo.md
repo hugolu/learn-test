@@ -736,6 +736,7 @@ $ git commit -m "init project"
 
 Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)、[django-jenkins](django-jenkins.md) 
 
+開啟瀏覽器，連接 http://192.168.33.10:8000/ ([虛擬機](environment.md))
 - Jenkins 管理首頁
     - New Item
         - Item name: `demo`
@@ -759,6 +760,7 @@ Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)、[django-jenkin
             - Test report XMLs: `reports/junit.xml`
         - [x] Report Violations
             - pylint: `reports/pylint.report`
+    - Save 
 
 #### shell command
 ```
