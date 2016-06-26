@@ -716,3 +716,55 @@ db.sqlite3
 $ git add .
 $ git commit -m "init project"
 ```
+
+
+
+
+
+
+
+
+
+
+
+----
+### 環境設定
+
+開發環境相關設定，請參考 [Django 設定環境](django.md#設定環境)
+
+### Jenkins 設定
+
+Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)
+
+- Jenkins 管理首頁
+    - New Item
+        - Item name: `demo`
+        - [x] Freestyle project
+    - Source Code Management
+        - [x] Git
+        - Repository URL: `file:///home/vagrant/myWorkspace/demo`
+    - Build Triggers
+        - [x] Poll SCM
+        - Schedule: `* * * * *`
+    - Build Environment
+        - [x] pyenv build wrapper
+        - The Python version: `3.5.1`
+    - Build
+        - [x] Execute shell
+            - Command: [command1](#command1)
+        - [x] Execute shell
+            - Command: [command2](#command2)
+    - 
+
+#### shell command
+```
+PATH=$WORKSPACE/venv/bin:/usr/local/bin:$PATH
+
+if [ ! -d "venv" ]; then
+        virtualenv venv
+fi
+. venv/bin/activate
+pip install -r requirements.txt
+
+python manage.py jenkins --enable-coverage
+```
