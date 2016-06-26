@@ -762,6 +762,48 @@ $ git add .
 $ git commit -m "add test_evalString"
 ```
 
+### 再多一點點測試
+
+修改 calc/tests.py
+```python
+    def test_evalString(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('0'), 0)
+        self.assertEqual(evalString('0'), 1)
+```
+
+執行 unittest
+```shell
+$ python manage.py test -v2
+...（略)
+
+test_evalString (calc.tests.TestCalculator) ... FAIL
+
+======================================================================
+FAIL: test_evalString (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 13, in test_evalString
+    self.assertEqual(evalString('0'), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
+```
+- 溫馨提示: `test_evalString` 測試失敗，快去修改 `Calculator`
+
+### 插播 pyparsing
+
+接下來會使用 pyparsing 來解析輸入字串，把字串變成“數字”與“運算符號”，然後根據運算符號執行正確的計算。
+
+例如，輸入 `3+2`，解析字串後得到 `exprStack=['3', '2', '+']`，從 `exprStack` 取出 (pop) 元素 `+`，因為 `+` 是運算符號，要再取出兩個運算元 `2` 與 `3` (依照取出順序)，然後呼叫 `+` 符號對應的函數 `add(3, 2)`，最後得答案 `5`。
+
+> 細節請參考 pyparsing [說明](pyparsing.md)與[範例](pyparsing_exercise.md)
+
+### 修改 `Calculator` - 增加解析字串能力
+
 
 
 
