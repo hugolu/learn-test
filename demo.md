@@ -804,11 +804,118 @@ FAILED (failures=1)
 
 ### 修改 `Calculator` - 增加解析字串能力
 
+修改 calc/tests.py，增加 `parseString` 測試
+```python
+    def test_parseString(self):
+        parseString = self.calc.parseString
+        self.assertEqual(parseString('0'), ['0'])
+        self.assertEqual(parseString('1'), ['1'])
+```
 
+修改 calc/calculator.py，增加 `parseString` 方法滿足測試
+```python
+from pyparsing import nums, Word, StringEnd
 
+"""
+integer :: '0'...'9'*
+expr    :: integer
+"""
 
+class Calculator:
 
+    def __init__(self):
+        self.exprStack = []
 
+        integer = Word(nums)
+        self.expr = integer + StringEnd()
+
+    def parseString(self, string):
+        self.exprStack = []
+        return self.expr.parseString(string).asList()
+
+    def evalString(self, string):
+        return 0
+```
+- 增加 `parseString` 解析功能
+
+執行 unittest，測試 `parseString` 方法
+```shell
+$ python manage.py test -v2
+...(略)
+test_evalString (calc.tests.TestCalculator) ... FAIL
+test_parseString (calc.tests.TestCalculator) ... ok
+```
+- 溫馨提示: `test_parseString` 測試通過，繼續努力
+
+### 修改 `Calculator` - 增加解析 `exprStack` 能力
+
+修改 calc/tests.py，增加 `evalStack` 測試
+```python
+    def test_evalStack(self):
+        evalStack = self.calc.evalStack
+        self.assertEqual(evalStack(['0']), 0)
+        self.assertEqual(evalStack(['1']), 1)
+```
+
+修改 calc/calculator.py，增加 `evalStack` 方法滿足測試
+```python
+class Calculator:
+
+    ...(略)
+    
+    def evalStack(self, stack):
+        op = stack.pop()
+        return float(op)
+```
+
+執行 unittest，測試 `evalStack` 方法
+```shell
+$ python manage.py test -v2
+...(略)
+test_evalStack (calc.tests.TestCalculator) ... ok
+test_evalString (calc.tests.TestCalculator) ... FAIL
+test_parseString (calc.tests.TestCalculator) ... ok
+```
+- 溫馨提示: `test_evalStack` 測試通過，快讓 `test_evalString` 通過測試吧
+
+### 修改 `Calculator` - 完善解析字串能力
+
+這次不修改 calc/tests.py，沿用裡面的測試
+
+修改 calc/calculator.py，完善 `parseString` 方法滿足測試
+```python
+class Calculator:
+
+    def __init__(self):
+        self.exprStack = []
+
+        def pushStack(s, l, t):
+            self.exprStack.append(t[0])
+
+        integer = Word(nums).addParseAction(pushStack)
+        self.expr = integer + StringEnd()
+
+    ...(略)
+    
+    def evalString(self, string):
+        self.parseString(string)
+        return self.evalStack(self.exprStack)
+```
+
+執行 unittest，測試 `evalString` 方法
+```shell
+$ python manage.py test -v2
+...(略)
+test_evalStack (calc.tests.TestCalculator) ... ok
+test_evalString (calc.tests.TestCalculator) ... ok
+test_parseString (calc.tests.TestCalculator) ... ok
+```
+- 溫馨提示: `test_evalStack`, `test_evalString`, `test_parseString` 測試通過，先 git commit 吧
+
+```shell
+$ git add .
+$ git commit -m "test evalStack, evalString, parseString: ok"
+```
 
 
 ----
