@@ -1721,6 +1721,7 @@ Feature: Web calculator # features/calc.feature:3
 Took 0m0.018s
 Destroying test database for alias 'default'...
 ```
+- 溫馨提示: 太棒了，開發的功能已經滿足規格書 (Happy Path)
 
 ----
 ### 環境設定
