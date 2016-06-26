@@ -917,6 +917,73 @@ $ git add .
 $ git commit -m "test evalStack, evalString, parseString: ok"
 ```
 
+### 修改 `Calculator` - 增加錯誤處理
+
+修改 calc/tests.py，增加輸入錯誤測試
+```python
+    def test_invalid_input(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('hello world'), 'Invalid Input')
+```
+
+執行 unittest，測試 `evalString` 方法
+```shell
+$ python manage.py test
+..E.
+======================================================================
+ERROR: test_invalid_input (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  ...(略)
+  File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/pyparsing.py", line 1936, in parseImpl
+    raise ParseException(instring, loc, self.errmsg, self)
+pyparsing.ParseException: Expected W:(0123...) (at char 0), (line:1, col:1)
+
+```
+- 溫馨提示: 發生 `ParseException`，快去處理
+
+修改 calc/calculator.py，完善 `parseString` 方法滿足測試
+```python
+from pyparsing import nums, Word, StringEnd, ParseException
+
+class Calculator:
+
+    ...(略)
+    
+    def evalString(self, string):
+        try:
+            self.parseString(string)
+            return self.evalStack(self.exprStack)
+        except ParseException:
+            return 'Invalid Input'
+```
+
+執行 unittest，測試 `evalString` 方法
+```shell
+$ python manage.py test
+Creating test database for alias 'default'...
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.005s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 測試全部通過，先 git commit 吧
+
+```shell
+$ git add .
+$ git commit -m "handle ParseException"
+```
+
+
+
+
+
+
+
+
+
 
 ----
 ### 環境設定
