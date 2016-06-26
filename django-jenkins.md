@@ -70,16 +70,16 @@ $ git commit -m "first commit"
 - Jenkins 管理首頁
     - New Item
         - Item name: `demo`
-        - [x] Freestyle project
+            - [x] Freestyle project
     - Source Code Management
         - [x] Git
-        - Repository URL: `file:///home/vagrant/myWorkspace/demo`
+            - Repository URL: `file:///home/vagrant/myWorkspace/demo`
     - Build Triggers
         - [x] Poll SCM
-        - Schedule: `* * * * *`
+            - Schedule: `* * * * *`
     - Build Environment
         - [x] pyenv build wrapper
-        - The Python version: `3.5.1`
+            - The Python version: `3.5.1`
     - Build
         - [x] Execute shell
             - Command: [shell command](#shell-command)
