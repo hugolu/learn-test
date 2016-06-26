@@ -1355,24 +1355,372 @@ $ git commit -m "use dicts.py"
 
 ### 修改 `Calculator` - 處理先乘除後加減
 
+修改 calc/tests.py，增加“加減乘除”混合運算測試
+```python
+    def test_order_of_operations(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('4+3*2'), 10)
+        self.assertEqual(evalString('9-3*2+2/1'), 5)
+```
 
+執行 unittest，測試 `evalString`
+```shell
+$ python manage.py test
+...(略)
+======================================================================
+FAIL: test_order_of_operations (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 62, in test_order_of_operations
+    self.assertEqual(evalString('4+3*2'), 10)
+AssertionError: 14.0 != 10
+```
+- 溫馨提示: 現在的 `evalString` 沒有做到先乘除後加減
 
+修改 calc/calculator.py，讓乘除優先於加減
+```python
+...(略)
 
+"""
+integer :: '0'...'9'*
+addop   :: '+' | '-'
+mulop   :: '*' | '/'
+atom    :: integer
+term    :: atom [mulop atom]*
+expr    :: term [addop term]*
+"""
 
+class Calculator:
 
+    def __init__(self, calc):
+        self.exprStack = []
+        def pushStack(s, l, t):
+            self.exprStack.append(t[0])
 
+        integer = Word(nums).addParseAction(pushStack)
+        addop = Literal('+') | Literal('-')
+        mulop = Literal('*') | Literal('/')
 
+        atom = integer
+        term = atom + ZeroOrMore((mulop + atom).addParseAction(pushStack))
+        expr = term + ZeroOrMore((addop + term).addParseAction(pushStack))
+        self.expr = expr + StringEnd()
 
+        self.opfun = {
+                '+' : (lambda a, b: calc.add(a,b)),
+                '-' : (lambda a, b: calc.sub(a,b)),
+                '*' : (lambda a, b: calc.mul(a,b)),
+                '/' : (lambda a, b: calc.div(a,b)) }
 
+    ...(略)
+```
 
+執行 unittest，測試 `evalString`
+```shell
+$ python manage.py test
+Creating test database for alias 'default'...
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.018s
 
+OK
+Destroying test database for alias 'default'...
+```
+溫馨提示: 搞定先乘除後加減
 
+趕快 git commit
+```shell
+$ git add .
+$ git commit -m "evalString can handle the order of operations"
+```
 
+### 修改 `Calculator` - 處理括號運算
 
+修改 calc/tests.py，增加括號運算測試
+```python
+    def test_parentheses(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('(4+3)*2'), 14)
+        self.assertEqual(evalString('(9-3)*(2+2)/1'), 24)
+```
 
+執行 unittest，測試 `evalString`
+```shell
+$ python manage.py test
+...(略)
+======================================================================
+FAIL: test_parentheses (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 67, in test_parentheses
+    self.assertEqual(evalString('(4+3)*2'), 14)
+AssertionError: 'Invalid Input' != 14
+```
+- 溫韾提醒: `evalString` 看不懂括號
 
+修改 calc/calculator.py，讓程式可以處理括號
+```python
+from pyparsing import nums, Word, StringEnd, ParseException, Literal, ZeroOrMore, Forward
 
+"""
+integer :: '0'...'9'*
+addop   :: '+' | '-'
+mulop   :: '*' | '/'
+atom    :: integer | '(' + expr + ')'
+term    :: atom [mulop atom]*
+expr    :: term [addop term]*
+"""
 
+class Calculator:
+
+    def __init__(self, calc):
+        self.exprStack = []
+        def pushStack(s, l, t):
+            self.exprStack.append(t[0])
+
+        integer = Word(nums).addParseAction(pushStack)
+        addop = Literal('+') | Literal('-')
+        mulop = Literal('*') | Literal('/')
+        lpar = Literal('(')
+        rpar = Literal(')')
+
+        expr = Forward()
+        atom = integer | lpar + expr + rpar
+        term = atom + ZeroOrMore((mulop + atom).addParseAction(pushStack))
+        expr << term + ZeroOrMore((addop + term).addParseAction(pushStack))
+        self.expr = expr + StringEnd()
+
+        self.opfun = {
+                '+' : (lambda a, b: calc.add(a,b)),
+                '-' : (lambda a, b: calc.sub(a,b)),
+                '*' : (lambda a, b: calc.mul(a,b)),
+                '/' : (lambda a, b: calc.div(a,b)) }
+
+    ...(略)
+```
+
+執行 unittest，測試 `evalString`
+```shell
+$ python manage.py test
+...(略)
+======================================================================
+ERROR: test_parentheses (calc.tests.TestCalculator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  ...(略)
+  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 19, in div
+    return div_dict[args]
+KeyError: (24.0, 1.0)
+```
+- 溫韾提醒: 偽造物件呼叫參數超出範圍，原來是 `24/1` 沒有涵蓋在 div_dict 裡面
+
+修補一下 calc/tests.py
+```python
+    def setUp(self):
+
+        def add(*args):
+            return add_dict[args]
+        def sub(*args):
+            return sub_dict[args]
+        def mul(*args):
+            return mul_dict[args]
+        def div(*args):
+            if args == (24,1):
+                return 24
+            return div_dict[args]
+
+        ...(略)
+```
+
+執行 unittest，測試 `evalString`
+```shell
+$ python manage.py test
+Creating test database for alias 'default'...
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.020s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫韾提醒: 測試通過
+
+趕快 git commit
+```shell
+$ git add .
+$ git commit -m "evalString can handle parentheses"
+```
+
+### 好消息 `SimpleCalculator` 終於完成
+
+完成的 scalc.py 如下:
+```python
+class SimpleCalculator:
+
+    def add(self, a, b):
+        return a+b
+
+    def sub(self, a, b):
+        return a-b
+
+    def mul(self, a, b):
+        return a*b
+
+    def div(self, a, b):
+        return a/b
+```
+
+放上 git repository
+```shell
+$ git add calc/scalc.py
+$ git commit -m "scalc is finished"
+```
+
+修改 calc/calculator.py，預設使用 `SimpleCalculator`
+```python
+from calc.scalc import SimpleCalculator
+...(略)
+
+class Calculator:
+
+    def __init__(self, calc = SimpleCalculator()):
+    ...(略)
+```
+
+修改 calc/tests.py，移除測試替身
+```
+    def setUp(self):
+        self.calc = Calculator()
+```
+
+執行 unittest，看看重構測試有沒有改爛
+```shell
+$ python manage.py  test
+Creating test database for alias 'default'...
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.015s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: Well done!
+
+趕快 git commit
+```shell
+$ git add .
+$ git commit -m "remove test double"
+```
+
+### 一口氣測試交換律、交換律、分配律
+
+修改 calc/tests.py，增加相關測試
+```python
+    def test_commutative_property(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('3+4'), evalString('4+3'))
+        self.assertEqual(evalString('2*5'), evalString('5*2'))
+
+    def test_associative_property(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('(5+2) + 1'), evalString('5 + (2+1)'))
+        self.assertEqual(evalString('(5*2) * 3'), evalString('5 * (2*3)'))
+
+    def test_distributive_property(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('2 * (1+3)'), evalString('(2*1) + (2*3)'))
+```
+
+執行 unittest，測試 `evalString`
+```shell
+$ python manage.py  test
+Creating test database for alias 'default'...
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.021s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: Good job! 不用修改 `Calculator` 已經滿足測試
+
+趕快放上 git repository
+```shell
+$ git add .
+$ git commit -m "satisfy commutative, associative, distributive properties"
+```
+
+### 回過頭來驗證是否滿足 features/scenarios
+
+```shell
+$ python manage.py behave
+
+Creating test database for alias 'default'...
+Feature: Web calculator # features/calc.feature:3
+  As a student
+  In order to finish my homework
+  I want to do arithmatical operations
+  Scenario Outline: do simple operations -- @1.1   # features/calc.feature:16
+    Given I enter 3 + 2                            # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.001s
+    Then I get the answer 5                        # features/steps/calc.py:12 0.000s
+
+  Scenario Outline: do simple operations -- @1.2   # features/calc.feature:17
+    Given I enter 3 - 2                            # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.001s
+    Then I get the answer 1                        # features/steps/calc.py:12 0.000s
+
+  Scenario Outline: do simple operations -- @1.3   # features/calc.feature:18
+    Given I enter 3 * 2                            # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.001s
+    Then I get the answer 6                        # features/steps/calc.py:12 0.000s
+
+  Scenario Outline: do simple operations -- @1.4   # features/calc.feature:19
+    Given I enter 3 / 2                            # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.001s
+    Then I get the answer 1.5                      # features/steps/calc.py:12 0.000s
+
+  Scenario Outline: do simple operations -- @1.5   # features/calc.feature:20
+    Given I enter 3 +-*/ 2                         # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.001s
+    Then I get the answer Invalid Input            # features/steps/calc.py:12 0.000s
+
+  Scenario Outline: do simple operations -- @1.6   # features/calc.feature:21
+    Given I enter hello world                      # features/steps/calc.py:3 0.000s
+    When I press "=" button                        # features/steps/calc.py:7 0.001s
+    Then I get the answer Invalid Input            # features/steps/calc.py:12 0.000s
+
+  Scenario Outline: satisfy commutative property -- @1.1   # features/calc.feature:30
+    When I enter 3 + 4 first                               # features/steps/calc.py:21 0.001s
+    And I enter 4 + 3 again                                # features/steps/calc.py:26 0.001s
+    Then I get the same answer                             # features/steps/calc.py:31 0.000s
+
+  Scenario Outline: satisfy commutative property -- @1.2   # features/calc.feature:31
+    When I enter 2 * 5 first                               # features/steps/calc.py:21 0.001s
+    And I enter 5 * 2 again                                # features/steps/calc.py:26 0.001s
+    Then I get the same answer                             # features/steps/calc.py:31 0.000s
+
+  Scenario Outline: satisfy associative property -- @1.1   # features/calc.feature:40
+    When I enter (2 + 3) + 4 first                         # features/steps/calc.py:21 0.001s
+    And I enter 2 + (3 + 4) again                          # features/steps/calc.py:26 0.001s
+    Then I get the same answer                             # features/steps/calc.py:31 0.000s
+
+  Scenario Outline: satisfy associative property -- @1.2   # features/calc.feature:41
+    When I enter 2 * (3 * 4) first                         # features/steps/calc.py:21 0.001s
+    And I enter (2 * 3) * 4 again                          # features/steps/calc.py:26 0.001s
+    Then I get the same answer                             # features/steps/calc.py:31 0.000s
+
+  Scenario Outline: satisfy distributive property -- @1.1   # features/calc.feature:50
+    When I enter 2 * (1 + 3) first                          # features/steps/calc.py:21 0.001s
+    And I enter (2*1) + (2*3) again                         # features/steps/calc.py:26 0.001s
+    Then I get the same answer                              # features/steps/calc.py:31 0.000s
+
+1 feature passed, 0 failed, 0 skipped
+11 scenarios passed, 0 failed, 0 skipped
+33 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 0m0.018s
+Destroying test database for alias 'default'...
+```
 
 ----
 ### 環境設定
