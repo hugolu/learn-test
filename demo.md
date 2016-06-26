@@ -1197,9 +1197,9 @@ class SimpleCalculator:
         raise NotImplementedError
 ```
 
-## 修改 `Calculator` - 逆轉控制 (Inversion of Control, IoC)
+### 修改 `Calculator` - 逆轉控制 (Inversion of Control, IoC)
 
-除了乾等另一個團隊完成底層的功能，還有另一條路可走：使用測試替身，偽造底層的功能
+除了乾等另一個團隊完成底層的功能，還有另一條路可走：使用測試替身 (test double)，偽造底層的功能
 
 修改 calc/calculator.py，讓 `SimpleCalculator` 在初始化時傳入，而不是自己產生
 ```python
@@ -1264,16 +1264,98 @@ $ git add .
 $ git commit -m "IoC and mock of SimpleCalculator"
 ```
 
+### 修改測試替身 - 要裝就就裝像一點
 
+跟製作 `SimpleCalculator` 的團隊要了一張 `add`, `sub`, `mul`, `div` 函數的輸入、輸出對應表
+- `add(a,b)` a:0~19, b:0~19
+- `sub(a,b)` a:0~19, b:0~19
+- `mul(a,b)` a:0~19, b:0~19
+- `div(a,b)` a:0~19, b:1~19 (除以0會爆炸)
 
+字典檔完整內容請參考 [dicts.py](demo/calc/dicts.py):
+```python
+add_dict = { (0.0,0.0):0.0, (0.0,1.0):1.0, (0.0,2.0):2.0, (0.0,3.0):3.0, (0.0,4.0):4.0, (0.0,5.0):5.0, (0.0,6.0):6.0, (0.0,7.0):7.0, (0.0,8.0):8.0, (0.0,9.0):9.0, ... }
 
+sub_dict = { (0.0,0.0):0.0, (0.0,1.0):-1.0, (0.0,2.0):-2.0, (0.0,3.0):-3.0, (0.0,4.0):-4.0, (0.0,5.0):-5.0, (0.0,6.0):-6.0, (0.0,7.0):-7.0, (0.0,8.0):-8.0, (0.0,9.0):-9.0, ... }
 
+mul_dict = { (0.0,0.0):0.0, (0.0,1.0):0.0, (0.0,2.0):0.0, (0.0,3.0):0.0, (0.0,4.0):0.0, (0.0,5.0):0.0, (0.0,6.0):0.0, (0.0,7.0):0.0, (0.0,8.0):0.0, (0.0,9.0):0.0, ... }
 
+div_dict = { (0.0,1.0):0.0, (0.0,2.0):0.0, (0.0,3.0):0.0, (0.0,4.0):0.0, (0.0,5.0):0.0, (0.0,6.0):0.0, (0.0,7.0):0.0, (0.0,8.0):0.0, (0.0,9.0):0.0, ... }
+```
 
+修改 calc/tests.py，匯入 dicts
+```python
+...(略)
+from calc.dicts import *
 
+class TestCalculator(TestCase):
 
+    def setUp(self):
 
+        def add(*args):
+            return add_dict[args]
+        def sub(*args):
+            return sub_dict[args]
+        def mul(*args):
+            return mul_dict[args]
+        def div(*args):
+            return div_dict[args]
 
+        scalc = SimpleCalculator()
+        scalc.add = MagicMock(side_effect = add)
+        scalc.sub = MagicMock(side_effect = sub)
+        scalc.mul = MagicMock(side_effect = mul)
+        scalc.div = MagicMock(side_effect = div)
+
+        self.calc = Calculator(scalc)
+```
+- 用 dicts 裡面的 `add_dict`, `sub_dict`, `mul_dict`, `div_dict` 取在先前在 `setUp` 中手刻的字典
+
+執行 unittest，測試偽造 `SimpleCalculator` 效果
+```shell
+Creating test database for alias 'default'...
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.015s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 取代成功
+
+修改 calc/tests.py，增加更多測試
+```python
+    def test_num_op_num(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('3+2'), 5)
+        self.assertEqual(evalString('3-2'), 1)
+        self.assertEqual(evalString('3*2'), 6)
+        self.assertEqual(evalString('3/2'), 1.5)
+        self.assertEqual(evalString('15+5'), 20)
+        self.assertEqual(evalString('15-5'), 10)
+        self.assertEqual(evalString('15*5'), 75)
+        self.assertEqual(evalString('15/5'), 3)
+```
+
+執行 unittest，測試偽造 `SimpleCalculator` 效果
+```shell
+Creating test database for alias 'default'...
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.015s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: 取代成功 :D
+
+更新 git repository
+```shell
+$ git add .
+$ git commit -m "use dicts.py"
+```
+
+### 修改 `Calculator` - 處理先乘除後加減
 
 
 
