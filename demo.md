@@ -1272,7 +1272,7 @@ $ git commit -m "IoC and mock of SimpleCalculator"
 - `mul(a,b)` a:0~9, b:0~9
 - `div(a,b)` a:0~9, b:1~9 (除以0會爆炸)
 
-字典檔完整內容請參考 [dicts.py](demo/calc/dicts.py):
+字典檔完整內容請參考 [dicts.py](https://gist.github.com/hugolu/79f9436066d9a8dce31807d869f32eb9):
 ```python
 add_dict = { (0.0,0.0):0.0, (0.0,1.0):1.0, (0.0,2.0):2.0, (0.0,3.0):3.0, (0.0,4.0):4.0, (0.0,5.0):5.0, (0.0,6.0):6.0, (0.0,7.0):7.0, (0.0,8.0):8.0, (0.0,9.0):9.0, ... }
 
