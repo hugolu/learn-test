@@ -650,15 +650,13 @@ ImportError: cannot import name 'Calculator'
 class Calculator:
 
     def evalString(self, string):
-        pass
+        return 0
 ```
 
 第十四次執行 behave
 ```shell
 $ python manage.py behave
 
-Creating test database for alias 'default'...
-Feature: Web calculator # features/calc.feature:3
 Creating test database for alias 'default'...
 Feature: Web calculator # features/calc.feature:3
   As a student
@@ -676,7 +674,7 @@ Feature: Web calculator # features/calc.feature:3
         File "features/steps/calc.py", line 19, in step_impl
           assert context.answer == ans
       AssertionError
-      
+
 ...(略)
 
 Failing scenarios:
@@ -710,6 +708,7 @@ db.sqlite3
 .python-version
 *.pyc
 .*.swp
+reports/
 ```
 
 ```shell
@@ -717,8 +716,51 @@ $ git add .
 $ git commit -m "init project"
 ```
 
+### 新增第一個測試案例
 
+修改 calc/tests.py
+```python
+from django.test import TestCase
+from calc.calculator import Calculator
 
+# Create your tests here.
+class TestCalculator(TestCase):
+
+    def setUp(self):
+        self.calc = Calculator()
+
+    def test_evalString(self):
+        evalString = self.calc.evalString
+        self.assertEqual(evalString('0'), 0)
+```
+
+執行 unittest
+```shell
+$ python manage.py test -v2
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Operations to perform:
+  Synchronize unmigrated apps: behave_django, messages, django_jenkins, staticfiles
+  Apply all migrations: sessions, admin, auth, contenttypes
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  ...(略)
+test_evalString (calc.tests.TestCalculator) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+```
+- 溫馨提示: 剛剛最簡單的測試 `test_evalString` 通過
+
+把通過測試的程式碼與測試程式碼放上 git repository
+```shell
+$ git add .
+$ git commit -m "add test_evalString"
+```
 
 
 
@@ -740,16 +782,16 @@ Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)、[django-jenkin
 - Jenkins 管理首頁
     - New Item
         - Item name: `demo`
-        - [x] Freestyle project
+            - [x] Freestyle project
     - Source Code Management
         - [x] Git
-        - Repository URL: `file:///home/vagrant/myWorkspace/demo`
+            - Repository URL: `file:///home/vagrant/myWorkspace/demo`
     - Build Triggers
         - [x] Poll SCM
-        - Schedule: `* * * * *`
+            - Schedule: `* * * * *`
     - Build Environment
         - [x] pyenv build wrapper
-        - The Python version: `3.5.1`
+            - The Python version: `3.5.1`
     - Build
         - [x] Execute shell
             - Command: [shell command](#shell-command)
