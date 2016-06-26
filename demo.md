@@ -734,7 +734,7 @@ $ git commit -m "init project"
 
 ### Jenkins 設定
 
-Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)
+Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)、[django-jenkins](django-jenkins.md) 
 
 - Jenkins 管理首頁
     - New Item
@@ -751,10 +751,14 @@ Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)
         - The Python version: `3.5.1`
     - Build
         - [x] Execute shell
-            - Command: [command1](#command1)
-        - [x] Execute shell
-            - Command: [command2](#command2)
-    - 
+            - Command: [shell command](#shell-command)
+    - Post-build Actions
+        - [x] Publish Cobertura Coverage Report
+            - Cobertura xml report pattern: `reports/coverage.xml`
+        - [x] Publish JUnit test result report
+            - Test report XMLs: `reports/junit.xml`
+        - [x] Report Violations
+            - pylint: `reports/pylint.report`
 
 #### shell command
 ```
