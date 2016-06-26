@@ -1267,10 +1267,10 @@ $ git commit -m "IoC and mock of SimpleCalculator"
 ### 修改測試替身 - 要裝就就裝像一點
 
 跟製作 `SimpleCalculator` 的團隊要了一張 `add`, `sub`, `mul`, `div` 函數的輸入、輸出對應表
-- `add(a,b)` a:0~19, b:0~19
-- `sub(a,b)` a:0~19, b:0~19
-- `mul(a,b)` a:0~19, b:0~19
-- `div(a,b)` a:0~19, b:1~19 (除以0會爆炸)
+- `add(a,b)` a:0~9, b:0~9
+- `sub(a,b)` a:0~9, b:0~9
+- `mul(a,b)` a:0~9, b:0~9
+- `div(a,b)` a:0~9, b:1~9 (除以0會爆炸)
 
 字典檔完整內容請參考 [dicts.py](demo/calc/dicts.py):
 ```python
@@ -1327,14 +1327,11 @@ Destroying test database for alias 'default'...
 ```python
     def test_num_op_num(self):
         evalString = self.calc.evalString
-        self.assertEqual(evalString('3+2'), 5)
-        self.assertEqual(evalString('3-2'), 1)
-        self.assertEqual(evalString('3*2'), 6)
-        self.assertEqual(evalString('3/2'), 1.5)
-        self.assertEqual(evalString('15+5'), 20)
-        self.assertEqual(evalString('15-5'), 10)
-        self.assertEqual(evalString('15*5'), 75)
-        self.assertEqual(evalString('15/5'), 3)
+        ...(略)
+        self.assertEqual(evalString('7+5'), 12)
+        self.assertEqual(evalString('7-5'), 2)
+        self.assertEqual(evalString('7*5'), 35)
+        self.assertEqual(evalString('7/5'), 1.4)
 ```
 
 執行 unittest，測試偽造 `SimpleCalculator` 效果
