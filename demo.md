@@ -1118,7 +1118,7 @@ Destroying test database for alias 'default'...
 修改 calc/calculator.py，完善 `evalStack` 方法滿足測試
 ```python
 from pyparsing import nums, Word, StringEnd, ParseException, Literal, ZeroOrMore
-from scalc import SimpleCalculator
+from calc.scalc import SimpleCalculator
 
 class Calculator:
 
@@ -1166,7 +1166,7 @@ Traceback (most recent call last):
   ...(略)
   File "/home/vagrant/myWorkspace/demo/calc/calculator.py", line 25, in <lambda>
     '+' : (lambda a, b: calc.add(a,b)),
-  File "/home/vagrant/myWorkspace/venv/lib/python3.5/site-packages/scalc.py", line 6, in add
+  File "/home/vagrant/myWorkspace/demo/calc/scalc.py", line 6, in add
     raise NotImplementedError
 NotImplementedError
 
@@ -1179,6 +1179,23 @@ Destroying test database for alias 'default'...
 - 溫馨提示: 發生 `NotImplementedError`，`SimpleCalculator.add` 方法還沒完成 :(
 
 > 是的，請**用力**想像這個功能很複雜，另一個團隊正在努力開發中
+
+目前 calc/scalc.py 長這樣:
+```python
+class SimpleCalculator:
+
+    def add(self, a, b):
+        raise NotImplementedError
+
+    def sub(self, a, b):
+        raise NotImplementedError
+
+    def mul(self, a, b):
+        raise NotImplementedError
+
+    def div(self, a, b):
+        raise NotImplementedError
+```
 
 ## 修改 `Calculator` - 逆轉控制 (Inversion of Control, IoC)
 
@@ -1195,7 +1212,7 @@ class Calculator:
 修改測試程式 calc/tests.py，偽造 `SimpleCalculator` 實例在 `Calculator` 初始化時傳入
 ```python
 ...(略)
-from scalc import SimpleCalculator
+from calc.scalc import SimpleCalculator
 from unittest.mock import MagicMock
 
 class TestCalculator(TestCase):
@@ -1225,6 +1242,8 @@ class TestCalculator(TestCase):
 
     ...(略)
 ```
+- 偽造 `SimpleCalculator.add` 方法，不是真的要完成所有功能，只要滿足測試中的呼叫即可
+- 以測試案例 `self.assertEqual(evalString('3+2'), 5)` 為例，只要透過事先準備的資料，當呼叫 `SimpleCalculator.add(3,2)` 跑去 `add_dict` 查表得到 `(3,2) : 5`，回傳 `5` 當作結果就能在測試中扮演好 `SimpleCalculator.add` 的角色
 
 執行 unittest，測試 IoC 與偽造 `SimpleCalculator` 效果
 ```shell
