@@ -1180,6 +1180,79 @@ Destroying test database for alias 'default'...
 
 > 是的，請**用力**想像這個功能很複雜，另一個團隊正在努力開發中
 
+## 修改 `Calculator` - 逆轉控制 (Inversion of Control, IoC)
+
+除了乾等另一個團隊完成底層的功能，還有另一條路可走：使用測試替身，偽造底層的功能
+
+修改 calc/calculator.py，讓 `SimpleCalculator` 在初始化時傳入，而不是自己產生
+```python
+class Calculator:
+
+    def __init__(self, calc):
+        ...(略)
+```
+
+修改測試程式 calc/tests.py，偽造 `SimpleCalculator` 實例在 `Calculator` 初始化時傳入
+```python
+...(略)
+from scalc import SimpleCalculator
+from unittest.mock import MagicMock
+
+class TestCalculator(TestCase):
+
+    def setUp(self):
+        add_dict = {(3,2) : 5}
+        sub_dict = {(3,2) : 1}
+        mul_dict = {(3,2) : 6}
+        div_dict = {(3,2) : 1.5}
+
+        def add(*args):
+            return add_dict[args]
+        def sub(*args):
+            return sub_dict[args]
+        def mul(*args):
+            return mul_dict[args]
+        def div(*args):
+            return div_dict[args]
+
+        scalc = SimpleCalculator()
+        scalc.add = MagicMock(side_effect = add)
+        scalc.sub = MagicMock(side_effect = sub)
+        scalc.mul = MagicMock(side_effect = mul)
+        scalc.div = MagicMock(side_effect = div)
+
+        self.calc = Calculator(scalc)
+
+    ...(略)
+```
+
+執行 unittest，測試 IoC 與偽造 `SimpleCalculator` 效果
+```shell
+$ python manage.py test
+Creating test database for alias 'default'...
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.012s
+
+OK
+Destroying test database for alias 'default'...
+```
+- 溫馨提示: You make it!
+
+趕快 git commit 吧
+```shell
+$ git add .
+$ git commit -m "IoC and mock of SimpleCalculator"
+```
+
+
+
+
+
+
+
+
+
 
 
 
