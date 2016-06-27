@@ -1723,6 +1723,12 @@ Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 太棒了，開發的功能已經滿足規格書 (Happy Path)
 
+### I am watching you!
+
+測試驅動另一個重要貢獻是**自動化**，在開始 TDD 的時候我設定了 [Jenkins](#jenkins-設定)，所以之後的測試與程式碼都會因為 git commit 觸發自動化測試，一旦有異常就會透過紅燈或寄信通知開發群組相關人員。下圖為之前開發歷程的報告，包含 Build History, Code Coverage, Code Analysis, Test Result Trend。
+
+![demo reports](demo-reports.png)
+
 ----
 ### 環境設定
 
