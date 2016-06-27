@@ -1723,11 +1723,74 @@ Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 太棒了，開發的功能已經滿足規格書 (Happy Path)
 
-### I am watching you!
+### Watch your back!
 
-測試驅動另一個重要貢獻是**自動化**，在開始 TDD 的時候我設定了 [Jenkins](#jenkins-設定)，所以之後的測試與程式碼都會因為 git commit 觸發自動化測試，一旦有異常就會透過紅燈或寄信通知開發群組相關人員。下圖為之前開發歷程的報告，包含 Build History, Code Coverage, Code Analysis, Test Result Trend。
+測試驅動另一個重要貢獻是**自動化**，在開始 TDD 的時候我設定了 [Jenkins](#jenkins-設定)，所以之後的測試與程式碼都會因為 git commit 觸發自動化測試，一旦有異常就會透過紅燈或寄信通知開發群組相關人員。
+
+下圖為之前開發歷程的報告，包含 Build History, Code Coverage, Code Analysis, Test Result Trend。
 
 ![demo reports](demo-reports.png)
+
+## Django View
+
+底層 `Calculator` 終於開發完成，可以搭配 View 提供 GUI 來一場 Live demo。
+
+新增 calc/templates/ 目錄，再增加一個網頁範本 alc/templates/calculator.html
+```html
+<form ation="." method="post">
+    {% csrf_token %}
+    <input id="expr" type="text" name="expr" value="{{ value }}">
+    <input type="submit" value="=">
+</form>
+```
+
+修改 calc/views.py，新增 calculator view
+```python
+from django.shortcuts import render
+from django.http import HttpResponse
+from .calculator import Calculator
+
+# Create your views here.
+def calc(request):
+    value = ''
+    if request.method == 'POST':
+        calc = Calculator()
+        expr = request.POST['expr']
+        value = calc.evalString(expr)
+    return render(request, 'calculator.html', {'value': value})
+```
+
+修改 demo/urls.py，告訴 Django 如何處理 url
+```python
+urlpatterns = [
+    ...(略)
+    url(r'^$', calc_views.calc),
+]
+```
+
+啟動網頁伺服器
+```shell
+$ python manage.py runserver 0.0.0.0:8000
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have unapplied migrations; your app may not work properly until they are applied.
+Run 'python manage.py migrate' to apply them.
+
+June 27, 2016 - 01:58:25
+Django version 1.9.7, using settings 'demo.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+```
+
+開啟瀏覽器，連接 http://192.168.33.10:8000/ ([虛擬機](environment.md))，輸入運算式按下 `=` 得到答案。範例如下：
+
+![demo calc1](demo-calc1.png)
+![demo calc2](demo-calc2.png)
+
+> 關於 BDD 的一點小感想：使用 Gherkin 描述產品規格，產生測試步驟 (steps) 的測試框架 (如 Cucumber, Behave)，與錄製網頁、App點擊行為實現自動化測試的工具 (如 Selenium)，在本質上有很大的差異。前者用來溝通、討論、定義，然後把規格變成自動化測試，後者只能等程式開發完成，被動的依照規格書、驗收條件逐一核對。如果蓋大樓一開始設計圖就畫錯了，事後再好的品管只能確保用對的方式蓋歪掉的樓，相信很多開發人員一定發現了這荒謬的現象，但礙於「按圖施工、保證成功」的開發流程或是「不要問問題、趕快做事情」的企業文化，很多人都默默承受了。
 
 ----
 ### 環境設定
@@ -1738,7 +1801,7 @@ Destroying test database for alias 'default'...
 
 Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)、[django-jenkins](django-jenkins.md) 
 
-開啟瀏覽器，連接 http://192.168.33.10:8000/ ([虛擬機](environment.md))
+開啟瀏覽器，連接 http://192.168.33.10:8080/ ([虛擬機](environment.md))
 - Jenkins 管理首頁
     - New Item
         - Item name: `demo`
