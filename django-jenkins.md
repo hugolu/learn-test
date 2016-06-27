@@ -66,7 +66,7 @@ $ git commit -m "first commit"
 
 ## 設定 Jenkins server
 
-開啟瀏覽器，連接 http://192.168.33.10:8000/ ([虛擬機](environment.md))
+開啟瀏覽器，連接 http://192.168.33.10:8080/ ([虛擬機](environment.md))
 
 - Jenkins 管理首頁
     - New Item
