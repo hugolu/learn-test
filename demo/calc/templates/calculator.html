@@ -1,0 +1,5 @@
+<form ation="." method="post">
+    {% csrf_token %}
+    <input id="expr" type="text" name="expr" value="{{ value }}">
+    <input type="submit" value="=">
+</form>
