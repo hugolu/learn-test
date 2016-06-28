@@ -1752,7 +1752,7 @@ Destroying test database for alias 'default'...
 
 底層 `Calculator` 終於開發完成，可以搭配 View 提供 GUI 來一場 Live demo。
 
-新增 calc/templates/ 目錄，再增加一個網頁範本 alc/templates/calculator.html
+新增 calc/templates/ 目錄，再增加一個網頁範本 calc/templates/calculator.html
 ```html
 <form ation="." method="post">
     {% csrf_token %}
