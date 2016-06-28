@@ -1640,6 +1640,7 @@ $ git commit -m "remove test double"
     def test_distributive_property(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('2 * (1+3)'), evalString('(2*1) + (2*3)'))
+        self.assertEqual(evalString('(1+3) * 2'), evalString('(1*2) + (3*2)'))
 ```
 
 執行 unittest，測試 `evalString`
