@@ -778,7 +778,7 @@ $ git commit -m "add test_evalString"
     def test_evalString(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('0'), 0)
-        self.assertEqual(evalString('0'), 1)
+        self.assertEqual(evalString('1'), 1)
 ```
 
 執行 unittest
@@ -793,7 +793,7 @@ FAIL: test_evalString (calc.tests.TestCalculator)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
   File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 13, in test_evalString
-    self.assertEqual(evalString('0'), 1)
+    self.assertEqual(evalString('1'), 1)
 AssertionError: 0 != 1
 
 ----------------------------------------------------------------------
