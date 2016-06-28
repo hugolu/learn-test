@@ -778,7 +778,7 @@ $ git commit -m "add test_evalString"
     def test_evalString(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('0'), 0)
-        self.assertEqual(evalString('0'), 1)
+        self.assertEqual(evalString('1'), 1)
 ```
 
 執行 unittest
@@ -793,7 +793,7 @@ FAIL: test_evalString (calc.tests.TestCalculator)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
   File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 13, in test_evalString
-    self.assertEqual(evalString('0'), 1)
+    self.assertEqual(evalString('1'), 1)
 AssertionError: 0 != 1
 
 ----------------------------------------------------------------------
@@ -1206,7 +1206,9 @@ class SimpleCalculator:
         raise NotImplementedError
 ```
 
-### 修改 `Calculator` - 逆轉控制 (Inversion of Control, IoC)
+### 修改 `Calculator` - 依賴注入 (Dependency Injection, DI)
+
+DI 相關說明請參考  [INVERSION OF CONTROL, DEPENDENCY INVERSION PRINCIPLE & DEPENDENCY INJECTION](https://codeitsfun.com/2014/07/22/inversion-of-control-dependency-inversion-principle-dependency-injection/)。
 
 除了乾等另一個團隊完成底層的功能，還有另一條路可走：使用測試替身 (test double)，偽造底層的功能
 
@@ -1254,7 +1256,7 @@ class TestCalculator(TestCase):
 - 偽造 `SimpleCalculator.add` 方法，不是真的要完成所有功能，只要滿足測試中的呼叫即可
 - 以測試案例 `self.assertEqual(evalString('3+2'), 5)` 為例，只要透過事先準備的資料，當呼叫 `SimpleCalculator.add(3,2)` 跑去 `add_dict` 查表得到 `(3,2) : 5`，回傳 `5` 當作結果就能在測試中扮演好 `SimpleCalculator.add` 的角色
 
-執行 unittest，測試 IoC 與偽造 `SimpleCalculator` 效果
+執行 unittest，測試 DI 與偽造 `SimpleCalculator` 效果
 ```shell
 $ python manage.py test
 Creating test database for alias 'default'...
@@ -1270,7 +1272,7 @@ Destroying test database for alias 'default'...
 趕快 git commit 吧
 ```shell
 $ git add .
-$ git commit -m "IoC and mock of SimpleCalculator"
+$ git commit -m "DI and mock of SimpleCalculator"
 ```
 
 ### 修改測試替身 - 要裝就就裝像一點
@@ -1638,6 +1640,7 @@ $ git commit -m "remove test double"
     def test_distributive_property(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('2 * (1+3)'), evalString('(2*1) + (2*3)'))
+        self.assertEqual(evalString('(1+3) * 2'), evalString('(1*2) + (3*2)'))
 ```
 
 執行 unittest，測試 `evalString`
