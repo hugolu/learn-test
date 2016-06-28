@@ -410,6 +410,7 @@ Took 0m0.000s
         Examples:
             | expression1   | expression2   |
             | 2 * (1 + 3)   | (2*1) + (2*3) |
+            | (1 + 3) * 2   | (1*2) + (3*2) |
 ```
 
 第九次執行 behave
@@ -477,6 +478,14 @@ def step_impl(context):
 @when(u'I enter (2*1) + (2*3) again')
 def step_impl(context):
     raise NotImplementedError(u'STEP: When I enter (2*1) + (2*3) again')
+
+@when(u'I enter (1 + 3) * 2 first')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter (1 + 3) * 2 first')
+
+@when(u'I enter (1*2) + (3*2) again')
+def step_impl(context):
+    raise NotImplementedError(u'STEP: When I enter (1*2) + (3*2) again')
 ```
 
 ### 增加步驟
@@ -1712,13 +1721,18 @@ Feature: Web calculator # features/calc.feature:3
 
   Scenario Outline: satisfy distributive property -- @1.1   # features/calc.feature:50
     When I enter 2 * (1 + 3) first                          # features/steps/calc.py:21 0.001s
-    And I enter (2*1) + (2*3) again                         # features/steps/calc.py:26 0.001s
+    And I enter (2*1) + (2*3) again                         # features/steps/calc.py:26 0.002s
+    Then I get the same answer                              # features/steps/calc.py:31 0.000s
+
+  Scenario Outline: satisfy distributive property -- @1.2   # features/calc.feature:51
+    When I enter (1 + 3) * 2 first                          # features/steps/calc.py:21 0.001s
+    And I enter (1*2) + (3*2) again                         # features/steps/calc.py:26 0.001s
     Then I get the same answer                              # features/steps/calc.py:31 0.000s
 
 1 feature passed, 0 failed, 0 skipped
-11 scenarios passed, 0 failed, 0 skipped
-33 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 0m0.018s
+12 scenarios passed, 0 failed, 0 skipped
+36 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 0m0.024s
 Destroying test database for alias 'default'...
 ```
 - 溫馨提示: 太棒了，開發的功能已經滿足規格書 (Happy Path)
