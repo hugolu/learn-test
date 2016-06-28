@@ -63,3 +63,4 @@ class TestCalculator(TestCase):
     def test_distributive_property(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('2 * (1+3)'), evalString('(2*1) + (2*3)'))
+        self.assertEqual(evalString('(1+3) * 2'), evalString('(1*2) + (3*2)'))
