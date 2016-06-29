@@ -2,18 +2,22 @@
 
 ## Chapter 3 - Discovering Through Short Feedback Loops and Stakeholders’ Desirements
 
-- “Deliberate discovery does not happen from the failure itself but rather from understanding the failure, making an improvement, and then trying again.”
-- “Frequent feedback loops provide you with the ability to correct errors while costs are minimal. It is the responsibility of the team not only to learn about the problem but also to help stakeholders understand what is being built for them.”
-- “There is a powerful and important feedback loop that occurs when stakeholders have early access to running software. They can experiment with real software, come up with new ideas, and change their minds about old ideas and perceptions.”
-- “Fulfilling desirements through early and continuous delivery of valuable software can result in sprints that stakeholders want to evaluate.”
+“Deliberate discovery does not happen from the failure itself but rather from understanding the failure, making an improvement, and then trying again.”
+
+“Frequent feedback loops provide you with the ability to correct errors while costs are minimal. It is the responsibility of the team not only to learn about the problem but also to help stakeholders understand what is being built for them.”
+
+“There is a powerful and important feedback loop that occurs when stakeholders have early access to running software. They can experiment with real software, come up with new ideas, and change their minds about old ideas and perceptions.”
+
+“Fulfilling desirements through early and continuous delivery of valuable software can result in sprints that stakeholders want to evaluate.”
 
 ## Chapter 4 - Expressing Desirements with User Stories
 
-- “As a <role>, I want <desire> so that <benefit>.”
+“As a `<role>`, I want `<desire>` so that `<benefit>`.”
   - Who = role
   - What = desire
   - Why = benefit
-- “A well-written user story follows the INVEST mnemonic developed by Bill Wake.”
+
+“A well-written user story follows the INVEST mnemonic developed by Bill Wake.”
   - **Independent**: A story should stand alone and be self-contained without depending on other stories.
   - **Negotiable**: A story is a placeholder that facilitates conversation and negotiation between the team and stakeholders. At any time, the story can be rewritten or even discarded. A story is not fixed and set in stone, up until it is part of the upcoming sprint.
   - **Valuable**: A story needs to deliver value to the stakeholders (either the end user or the purchaser).
@@ -22,6 +26,32 @@
   - **Testable**: A story must provide the necessary information to clearly define the acceptance criteria that confirm the story is completed.
 
 ## Chapter 5 - Refining User Stories by Grooming the Product Backlog
+
+“The product owner is responsible for ensuring that the product backlog is always in a healthy state. He is the primary interface between the development team and the stakeholders.”
+
+“There is a major difference between a true analyst and a product owner. Product owners represent the business and have the authority to make decisions that affect their product. Typically, an analyst does not have this decision-making authority.”
+
+“Grooming the backlog boils down to a sequence of four activities: ranking, illustrating, sizing, and splitting user stories.”
+
+“Although, according to the development team, the product owner is perceived as the one who decides the ordering of the backlog, it is actually not his decision. He must rely on stakeholders who are the ones who decide the importance of each story.”
+
+“The product owner is a facilitator, not a decider.”
+
+“If user stories help monitor conversations with stakeholders, storyboards help to illustrate expectations rapidly and cheaply.”
+
+“As experience teaches, stakeholders love to envision the software from the user interface standpoint.”
+
+“Only the development team can identify the size of a story.”
+
+“Humans are poor at estimating absolute sizes. However, we are great at assessing relative sizes.”
+
+“The product owner should not plan stories that are bigger than one-half the velocity.”
+
+“You should focus on the perspective of stakeholders by thin slicing stories that favor the business value. Thin slicing is based on evolutionary architecture; it provides stories that implement only a small bit of functionality, but all the way through the architecture layers of the software.”
+
+“In this regard, over the years, experienced practitioners have acknowledged the neces- sity of structuring the backlog along a two-dimensional collaboration board. This way of organizing the stories to avoid half-baked incremental iterations was initially promoted by Jeff Patton and is now known as story mapping.”
+
+“When a story has gone through the process of grooming, you have reached an important milestone, which is the transition from conversation to confirmation.”
 
 ## Chapter 6 - Confirming User Stories with Scenarios
 
