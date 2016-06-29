@@ -80,6 +80,21 @@
 
 ## Chapter 7 - Automating Confirmation with Acceptance Tests
 
+“You must turn scenarios into acceptance tests with minimal changes. An acceptance test is only a copy of a scenario in a format suitable for execution on a computer.”
+
+“The intent is not to verify whether the team is building the software correctly. First and foremost, we want to confirm requirements have been met. These “executable” scenarios are not a quality assurance tool. They are used to prevent defects, not to discover them.”
+
+“these “executable” scenarios do not replace the need to include quality assurance practices, such as exploratory or unit testing.”
+
+“It goes without saying that the widespread approach of creating tests using record-and-playback tools is inappropriate. ... Their main advantage, which is to enable testers to author tests without having to learn how to craft code, is also their main weakness.”
+
+“Acceptance tests represent assumptions stakeholders made during the specification.”
+
+“The red-green-refactor cycle is the core of Test-Driven Development (TDD). It is a widely recognized programming practice popularized by Kent Beck that promotes the notion of writing tests first when pro- gramming a piece of code. TDD relies on the repetition of a short development cycle divided into three stages: the red, the green, and the refactor stage.”
+
+“TDD requires programmers to articulate their assump- tions using a test case. Programmers must foresee how the functionality will be used by the test case. TDD places constraints on programmers; it requires that they define the interface before deciding on the implementation. TDD tends to lead to better designs.”
+
+
 ----
 ## 參考
 - [Executable Specifications with Scrum](http://www.ibchamber.org/wp-content/uploads/2014/09/AWP.Executable.Specifications.with_.Scrum_.Jul_.2013.pdf)
