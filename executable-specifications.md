@@ -9,6 +9,18 @@
 
 ## Chapter 4 - Expressing Desirements with User Stories
 
+- “As a <role>, I want <desire> so that <benefit>.”
+  - Who = role
+  - What = desire
+  - Why = benefit
+- “A well-written user story follows the INVEST mnemonic developed by Bill Wake.”
+  - **Independent**: A story should stand alone and be self-contained without depending on other stories.
+  - **Negotiable**: A story is a placeholder that facilitates conversation and negotiation between the team and stakeholders. At any time, the story can be rewritten or even discarded. A story is not fixed and set in stone, up until it is part of the upcoming sprint.
+  - **Valuable**: A story needs to deliver value to the stakeholders (either the end user or the purchaser).
+  - **Estimable**: The team needs to be able to roughly estimate the size of the effort to complete the story.
+  - **Small**: A story can start its life as a big placeholder. As time goes by and you better understand the intricacies of the desires, the place- holder will be split into smaller stories. When the most important ones are close to being delivered, they need to be small enough so that they can be completed in a single sprint.
+  - **Testable**: A story must provide the necessary information to clearly define the acceptance criteria that confirm the story is completed.
+
 ## Chapter 5 - Refining User Stories by Grooming the Product Backlog
 
 ## Chapter 6 - Confirming User Stories with Scenarios
