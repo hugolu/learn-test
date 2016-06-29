@@ -1630,7 +1630,7 @@ $ git add .
 $ git commit -m "remove test double"
 ```
 
-### 一口氣測試交換律、交換律、分配律
+### 一口氣測試交換律、結合律、分配律
 
 修改 calc/tests.py，增加相關測試
 ```python
