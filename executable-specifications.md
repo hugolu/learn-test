@@ -106,6 +106,19 @@
 
 “ Testing the “executable” scenarios during the nightly build ensures that every morning the team can easily confirm that the software under construction still meets the evolving specifications.”
 
+## Chapter 8 - Addressing Nonfunctional Requirements
+
+“External quality is how well the software carries out its functions at run time, and as such, is not only visible to stakeholders, but is also highly desirable.”
+
+“Internal quality is characteristics of the software barely visible to stakeholders but which simplifies the process of building and evolv- ing the software.
+”
+
+
+## Chapter 9 - Conclusion
+
+“If you are going to put time and effort into solving a problem, ensure that you first solve the right problem and then that you solve it properly.”
+
+“To be successful, you must remember that above all else, needs are emergent and constantly evolving. There is no set plan that can and will be successful. Instead, it is a question of constantly being open to changes and uncertainties. It is only when flexibility is embraced that the proper attitude can be taken.”
 
 ----
 ## 參考
