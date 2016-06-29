@@ -55,6 +55,29 @@
 
 ## Chapter 6 - Confirming User Stories with Scenarios
 
+“If user stories and their storyboards help monitor conversations with stakeholders during backlog grooming, the scenarios help to confirm expectations when the team is ready to plan a new sprint.”
+
+“Success criteria establish the conditions of acceptation from the stakeholders’ point of view. Scenarios are the perfect medium for expressing the success criteria.”
+
+“The scenario contains a precondition, an action, and a consequence.”
+  - A precondition is the current state of the software before action is taken.
+  - An action is something that is accomplished to perform the behavior of the scenario.
+  - A consequence is the result of the action.
+
+“Triggering a single action is crucial in keeping the state transition simple.”
+
+“Successful teams don’t use raw examples, they refine the specifi- cation from them. They extract the essence from the key examples and turn them into a clear and unambiguous definition of what makes the implementation done, without any extraneous detail.”
+
+“It is important to note that the analyst’s competency is related to the specifications and not to how the software will be implemented.”
+
+“The role of business analysts is now more focused and can be summarized as ensuring that all the scenarios illustrating a story are refined and completed in time for the development team.”
+
+“Because designing the technical solution is not the purpose of the specification, you should focus only on writing scenarios that relate to the business rules.”
+
+“‘Why?’ five times, successively, helps the team understand the true root cause of the scenario and easily reformulate it at the business domain level.”
+
+“A feature is a piece of high-level functionality that delivers value to one or more stakeholders.”
+
 ## Chapter 7 - Automating Confirmation with Acceptance Tests
 
 ----
