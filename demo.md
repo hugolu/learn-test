@@ -898,6 +898,15 @@ AttributeError: 'Calculator' object has no attribute 'evalStack'
 ```python
 class Calculator:
 
+    def __init__(self):
+        self.exprStack = []
+
+        def pushStack(s, l, t):
+            self.exprStack.append(t[0])
+
+        integer = Word(nums).addParseAction(pushStack)
+        self.expr = integer + StringEnd()
+
     ...(略)
     
     def evalStack(self, stack):
@@ -924,15 +933,13 @@ test_parseString (calc.tests.TestCalculator) ... ok
 class Calculator:
 
     def __init__(self):
-        self.exprStack = []
+        ...(略)
 
-        def pushStack(s, l, t):
-            self.exprStack.append(t[0])
+    def parseString(self, string):
+        ...(略)
 
-        integer = Word(nums).addParseAction(pushStack)
-        self.expr = integer + StringEnd()
-
-    ...(略)
+    def evalStack(self, stack):
+        ...(略)
     
     def evalString(self, string):
         self.parseString(string)
