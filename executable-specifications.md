@@ -94,6 +94,18 @@
 
 “TDD requires programmers to articulate their assump- tions using a test case. Programmers must foresee how the functionality will be used by the test case. TDD places constraints on programmers; it requires that they define the interface before deciding on the implementation. TDD tends to lead to better designs.”
 
+“If the development team members are the only ones who understand the result of the translation, they lose the ability to collaborate effectively with stakeholders.”
+
+“To obtain a failing assertion, the tester must design the programming interface and connect the newly created test with it.”
+
+“When connecting the newly created test, the tester focuses first on defining the outside-facing programming interface and only after that does the programmer go on evolving the internal implementation.”
+
+“The natural candidates for this type of design are the testers because they are the ones responsible for creating a failing acceptance test.”
+
+“You must resist this temptation to mix acceptance tests with continuous integration. Because of hardware constraints, this can unduly slow down the code integration.”
+
+“ Testing the “executable” scenarios during the nightly build ensures that every morning the team can easily confirm that the software under construction still meets the evolving specifications.”
+
 
 ----
 ## 參考
