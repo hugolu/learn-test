@@ -1098,7 +1098,7 @@ class Calculator:
 
     def parseString(self, string):
         self.exprStack = []
-        self.expr.parseString(string(string))
+        self.expr.parseString(string)
         return self.exprStack
     
     ...(略)
