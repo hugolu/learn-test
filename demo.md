@@ -795,7 +795,7 @@ $ git commit -m "init project"
 
 請參考[細節](#jenkins-設定)
 
-> Jenkins "Publish JUnit test result report" 有個討厭的特性，如果沒有任何 unit test，執行結果就視為失敗，所以等到有第一個測試案例後才建立 Jenkins project
+> Jenkins "Publish JUnit test result report" 有個 tricky 的特性，如果沒有任何 unit test，執行結果就視為失敗，所以等到有第一個測試案例後才建立 Jenkins project
 
 ### 再多一點點測試
 
