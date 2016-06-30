@@ -1121,7 +1121,13 @@ Ran 4 tests in 0.007s
 OK
 Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
 ```
-- 溫馨提示: `parseString` 通過測試，繼續修改 `evalString`
+- 溫馨提示: `parseString` 通過測試，先 git commit，再繼續修改 `evalString`
+
+提交程式碼
+```shell
+$ git add .
+$ git commit -m "parseString of '3+2': ok"
+```
 
 修改 calc/tests.py，增加 `evalString` 測試項目
 ```python
