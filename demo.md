@@ -718,6 +718,11 @@ db.sqlite3
 reports/
 ```
 
+紀錄套件相依訊息
+```shell
+$ pip freeze > requirements.txt
+```
+
 ```shell
 $ git add .
 $ git commit -m "init project"
