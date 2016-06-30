@@ -1,5 +1,27 @@
 # Quotes of Executable Specifications with Scrum
 
+## Chapter 1 - Solving the Right Problem
+
+“Unfortunately, there are still too many bloated and complex software systems. Even if all team members write code correctly, more often than not, they do not efficiently solve the actual problem. There is a distinct disconnect between what the client may want or need and what is subsequently produced.”
+
+“Conversely, when almost all the risks are related to the requirements, you are in the position experienced by the majority of software development teams. This is where using an agile framework, such as Scrum, is appropriate.”
+
+## Chapter 2 - Relying on a Stable Foundation
+
+“The most important element of this team is the presence of someone devoted full time to the specification of the software.”
+
+“The second most important element is a development team with devel- opers who have complementary skills and expertise.”
+
+“The third most important element is a product owner who ensures the development team is the ultimate product.”
+
+“The fourth and final element of importance to creating a healthy team is a team that inspects and adapts repeatedly, using prescribed events.”
+
+“Expressing a shared vision is an activity directed by the product owner. It consists mainly of face-to-face meetings with stakeholders. The result is a short, one-line summary of what the software is supposed to be and do.”
+
+“A feature is a piece of high-level functionality that delivers value to one or more stakeholders.”
+
+“The vision, the meaningful common goal, and the high-level features are guardrails because it is unlikely those will change rapidly.”
+
 ## Chapter 3 - Discovering Through Short Feedback Loops and Stakeholders’ Desirements
 
 “Deliberate discovery does not happen from the failure itself but rather from understanding the failure, making an improvement, and then trying again.”
