@@ -726,31 +726,11 @@ reports/
 $ pip freeze > requirements.txt
 ```
 
-修改 demo/settings.py，增加 Jenkins 設定
-```python
-INSTALLED_APPS = [
-    'behave_django',
-    'django_jenkins',
-    ...
-]
-
-# Jenkins settings
-PROJECT_APPS = [
-    'calc',
-]
-
-JENKINS_TASKS = (
-    'django_jenkins.tasks.run_pylint',
-)
-```
-
 提交程式碼
 ```shell
 $ git add .
 $ git commit -m "init project"
 ```
-
-> Jenkins "Publish JUnit test result report" 有個討厭的特性，如果沒有任何 unit test，執行結果就視為失敗，所以第一個 CI build history 會是刺眼的紅燈。有潔癖的人，可以在待會第一個測試案例後再 git commit。
 
 ### 新增第一個測試案例
 
@@ -796,6 +776,36 @@ Destroying test database for alias 'default' ('file:memorydb_default?mode=memory
 ```shell
 $ git add .
 $ git commit -m "add test_evalString"
+```
+
+### 設定 Jenkins Server
+
+設定 Jenkins server [細節](#jenkins-設定)
+
+修改 demo/settings.py，增加 Jenkins 相關設定
+```python
+INSTALLED_APPS = [
+    'behave_django',
+    'django_jenkins',
+    ...
+]
+
+# Jenkins settings
+PROJECT_APPS = [
+    'calc',
+]
+
+JENKINS_TASKS = (
+    'django_jenkins.tasks.run_pylint',
+)
+```
+
+> Jenkins "Publish JUnit test result report" 有個討厭的特性，如果沒有任何 unit test，執行結果就視為失敗，所以等到有第一個測試案例後才建立 Jenkins project
+
+提交 Jenkins 相關設定
+```shell
+$ git add .
+$ git commit -m "settings of jenkins"
 ```
 
 ### 再多一點點測試
