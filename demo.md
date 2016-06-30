@@ -703,35 +703,6 @@ Destroying test database for alias 'default'...
 
 ## 藉由 TDD 引導，實作底層功能
 
-### CI 相關設定
-開始開發 `Calculator` 功能之前，先把剛剛的程式碼放到 git repository
-
-初始化 git repository
-```shell
-$ git init
-```
-
-新增 .gitignore 檔案，避免某些檔案加入 git repository
-```
-__pycache__
-db.sqlite3
-.python-version
-*.pyc
-.*.swp
-reports/
-```
-
-產生套件相依訊息
-```shell
-$ pip freeze > requirements.txt
-```
-
-提交程式碼
-```shell
-$ git add .
-$ git commit -m "init project"
-```
-
 ### 新增第一個測試案例
 
 修改 calc/tests.py
@@ -772,15 +743,29 @@ Destroying test database for alias 'default' ('file:memorydb_default?mode=memory
 ```
 - 溫馨提示: 剛剛最簡單的測試 `test_evalString` 通過
 
-把通過測試的程式碼與測試程式碼放上 git repository
+接下來把通過測試的程式碼與測試程式碼放上 git repository
+
+## 程式碼版本控制
+
+初始化 git repository
 ```shell
-$ git add .
-$ git commit -m "add test_evalString"
+$ git init
 ```
 
-### 設定 Jenkins Server
+新增 .gitignore 檔案，避免某些檔案加入 git repository
+```
+__pycache__
+db.sqlite3
+.python-version
+*.pyc
+.*.swp
+reports/
+```
 
-設定 Jenkins server [細節](#jenkins-設定)
+產生套件相依訊息
+```shell
+$ pip freeze > requirements.txt
+```
 
 修改 demo/settings.py，增加 Jenkins 相關設定
 ```python
@@ -800,13 +785,17 @@ JENKINS_TASKS = (
 )
 ```
 
-> Jenkins "Publish JUnit test result report" 有個討厭的特性，如果沒有任何 unit test，執行結果就視為失敗，所以等到有第一個測試案例後才建立 Jenkins project
-
-提交 Jenkins 相關設定
+第一次提交
 ```shell
 $ git add .
-$ git commit -m "settings of jenkins"
+$ git commit -m "init project"
 ```
+
+### 設定 Jenkins Server (CI 相關設定)
+
+請參考[細節](#jenkins-設定)
+
+> Jenkins "Publish JUnit test result report" 有個討厭的特性，如果沒有任何 unit test，執行結果就視為失敗，所以等到有第一個測試案例後才建立 Jenkins project
 
 ### 再多一點點測試
 
