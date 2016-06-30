@@ -1406,6 +1406,13 @@ $ git commit -m "evalString can handle the order of operations"
 
 修改 calc/tests.py，增加括號運算測試
 ```python
+    def setUp(self):
+        add_dict = {(3,2) : 5, (4,6) : 10, (4,3) : 7, (2,2) : 4}
+        sub_dict = {(3,2) : 1, (9,6) : 3, (9,3) : 6}
+        mul_dict = {(3,2) : 6, (7,2) : 14, (6,4) : 24}
+        div_dict = {(3,2) : 1.5, (2,1) : 2, (24,1) : 24}
+        ...(略)
+
     def test_parentheses(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('(4+3)*2'), 14)
@@ -1470,43 +1477,10 @@ class Calculator:
 執行 unittest，測試 `evalString`
 ```shell
 $ python manage.py test
-...(略)
-======================================================================
-ERROR: test_parentheses (calc.tests.TestCalculator)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  ...(略)
-  File "/home/vagrant/myWorkspace/demo/calc/tests.py", line 19, in div
-    return div_dict[args]
-KeyError: (24.0, 1.0)
-```
-- 溫韾提醒: 偽造物件呼叫參數超出範圍，原來是 `24/1` 沒有涵蓋在 div_dict 裡面
-
-修補一下 calc/tests.py
-```python
-    def setUp(self):
-
-        def add(*args):
-            return add_dict[args]
-        def sub(*args):
-            return sub_dict[args]
-        def mul(*args):
-            return mul_dict[args]
-        def div(*args):
-            if args == (24,1):
-                return 24
-            return div_dict[args]
-
-        ...(略)
-```
-
-執行 unittest，測試 `evalString`
-```shell
-$ python manage.py test
 Creating test database for alias 'default'...
 .......
 ----------------------------------------------------------------------
-Ran 7 tests in 0.020s
+Ran 7 tests in 0.021s
 
 OK
 Destroying test database for alias 'default'...
