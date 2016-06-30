@@ -1861,10 +1861,9 @@ Jenkins 伺服器建置說明，請參考 [Jenkins](jenkins.md)、[django-jenkin
 PATH=$WORKSPACE/venv/bin:/usr/local/bin:$PATH
 
 if [ ! -d "venv" ]; then
-        virtualenv venv
+        pyvenv venv
 fi
 . venv/bin/activate
 pip install -r requirements.txt
-
 python manage.py jenkins --enable-coverage
 ```
