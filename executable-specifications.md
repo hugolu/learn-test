@@ -32,6 +32,10 @@
 “There is a major difference between a true analyst and a product owner. Product owners represent the business and have the authority to make decisions that affect their product. Typically, an analyst does not have this decision-making authority.”
 
 “Grooming the backlog boils down to a sequence of four activities: ranking, illustrating, sizing, and splitting user stories.”
+- Ranking User Stories with a Dot Voting Method
+- Illustrating User Stories with Storyboards
+- Sizing User Stories Using Comparison
+- Splitting User Stories Along Business Values
 
 “Although, according to the development team, the product owner is perceived as the one who decides the ordering of the backlog, it is actually not his decision. He must rely on stakeholders who are the ones who decide the importance of each story.”
 
