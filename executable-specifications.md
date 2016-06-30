@@ -86,7 +86,7 @@
 
 “You must turn scenarios into acceptance tests with minimal changes. An acceptance test is only a copy of a scenario in a format suitable for execution on a computer.”
 
-“The intent is not to verify whether the team is building the software correctly. First and foremost, we want to confirm requirements have been met. These “executable” scenarios are not a quality assurance tool. They are used to prevent defects, not to discover them.”
+“First and foremost, we want to confirm requirements have been met. These “executable” scenarios are not a quality assurance tool. They are used to prevent defects, not to discover them.”
 
 “these “executable” scenarios do not replace the need to include quality assurance practices, such as exploratory or unit testing.”
 
@@ -108,15 +108,13 @@
 
 “You must resist this temptation to mix acceptance tests with continuous integration. Because of hardware constraints, this can unduly slow down the code integration.”
 
-“ Testing the “executable” scenarios during the nightly build ensures that every morning the team can easily confirm that the software under construction still meets the evolving specifications.”
+“Testing the “executable” scenarios during the nightly build ensures that every morning the team can easily confirm that the software under construction still meets the evolving specifications.”
 
 ## Chapter 8 - Addressing Nonfunctional Requirements
 
 “External quality is how well the software carries out its functions at run time, and as such, is not only visible to stakeholders, but is also highly desirable.”
 
-“Internal quality is characteristics of the software barely visible to stakeholders but which simplifies the process of building and evolving the software.
-”
-
+“Internal quality is characteristics of the software barely visible to stakeholders but which simplifies the process of building and evolving the software.”
 
 ## Chapter 9 - Conclusion
 
