@@ -103,8 +103,6 @@ Destroying test database for alias 'default'...
 
 產生檔案 features/calc.feature:
 ```python
-#file: features/calc.feature
-
 Feature: Web calculator
 
     As a student
