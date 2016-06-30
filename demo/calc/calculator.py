@@ -14,6 +14,7 @@ class Calculator:
 
     def __init__(self, calc = SimpleCalculator()):
         self.exprStack = []
+
         def pushStack(s, l, t):
             self.exprStack.append(t[0])
 
@@ -22,7 +23,7 @@ class Calculator:
         mulop = Literal('*') | Literal('/')
         lpar = Literal('(')
         rpar = Literal(')')
-        
+
         expr = Forward()
         atom = integer | lpar + expr + rpar
         term = atom + ZeroOrMore((mulop + atom).addParseAction(pushStack))

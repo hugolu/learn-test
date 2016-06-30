@@ -1,5 +1,3 @@
-#file: features/calc.feature
-
 Feature: Web calculator
 
     As a student

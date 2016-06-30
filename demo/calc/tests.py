@@ -7,6 +7,29 @@ from unittest.mock import MagicMock
 class TestCalculator(TestCase):
 
     def setUp(self):
+        """
+        add_dict = {(3,2) : 5, (4,6) : 10, (4,3) : 7, (2,2) : 4}
+        sub_dict = {(3,2) : 1, (9,6) : 3, (9,3) : 6}
+        mul_dict = {(3,2) : 6, (7,2) : 14, (6,4) : 24}
+        div_dict = {(3,2) : 1.5, (2,1) : 2, (24,1) : 24}
+
+        def add(*args):
+            return add_dict[args]
+        def sub(*args):
+            return sub_dict[args]
+        def mul(*args):
+            return mul_dict[args]
+        def div(*args):
+            return div_dict[args]
+
+        scalc = SimpleCalculator()
+        scalc.add = MagicMock(side_effect = add)
+        scalc.sub = MagicMock(side_effect = sub)
+        scalc.mul = MagicMock(side_effect = mul)
+        scalc.div = MagicMock(side_effect = div)
+
+        self.calc = Calculator(scalc)
+        """
         self.calc = Calculator()
 
     def test_parseString(self):
@@ -35,10 +58,6 @@ class TestCalculator(TestCase):
         self.assertEqual(evalString('3-2'), 1)
         self.assertEqual(evalString('3*2'), 6)
         self.assertEqual(evalString('3/2'), 1.5)
-        self.assertEqual(evalString('7+5'), 12)
-        self.assertEqual(evalString('7-5'), 2)
-        self.assertEqual(evalString('7*5'), 35)
-        self.assertEqual(evalString('7/5'), 1.4)
 
     def test_order_of_operations(self):
         evalString = self.calc.evalString
