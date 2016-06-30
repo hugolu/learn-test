@@ -1314,99 +1314,17 @@ $ git add .
 $ git commit -m "DI and mock of SimpleCalculator"
 ```
 
-### 修改測試替身 - 要裝就就裝像一點
-
-跟製作 `SimpleCalculator` 的團隊要了一張 `add`, `sub`, `mul`, `div` 函數的輸入、輸出對應表
-- `add(a,b)` a:0~9, b:0~9
-- `sub(a,b)` a:0~9, b:0~9
-- `mul(a,b)` a:0~9, b:0~9
-- `div(a,b)` a:0~9, b:1~9 (除以0會爆炸)
-
-字典檔完整內容請參考 [dicts.py](https://gist.github.com/hugolu/79f9436066d9a8dce31807d869f32eb9):
-```python
-add_dict = { (0.0,0.0):0.0, (0.0,1.0):1.0, (0.0,2.0):2.0, (0.0,3.0):3.0, (0.0,4.0):4.0, (0.0,5.0):5.0, (0.0,6.0):6.0, (0.0,7.0):7.0, (0.0,8.0):8.0, (0.0,9.0):9.0, ... }
-
-sub_dict = { (0.0,0.0):0.0, (0.0,1.0):-1.0, (0.0,2.0):-2.0, (0.0,3.0):-3.0, (0.0,4.0):-4.0, (0.0,5.0):-5.0, (0.0,6.0):-6.0, (0.0,7.0):-7.0, (0.0,8.0):-8.0, (0.0,9.0):-9.0, ... }
-
-mul_dict = { (0.0,0.0):0.0, (0.0,1.0):0.0, (0.0,2.0):0.0, (0.0,3.0):0.0, (0.0,4.0):0.0, (0.0,5.0):0.0, (0.0,6.0):0.0, (0.0,7.0):0.0, (0.0,8.0):0.0, (0.0,9.0):0.0, ... }
-
-div_dict = { (0.0,1.0):0.0, (0.0,2.0):0.0, (0.0,3.0):0.0, (0.0,4.0):0.0, (0.0,5.0):0.0, (0.0,6.0):0.0, (0.0,7.0):0.0, (0.0,8.0):0.0, (0.0,9.0):0.0, ... }
-```
-> 本來想針對加減乘除各弄一個 20x20 的字典，但在 jenkins build reports 時會卡住，只好縮小成 10x10
-
-修改 calc/tests.py，匯入 dicts
-```python
-...(略)
-from calc.dicts import *
-
-class TestCalculator(TestCase):
-
-    def setUp(self):
-
-        def add(*args):
-            return add_dict[args]
-        def sub(*args):
-            return sub_dict[args]
-        def mul(*args):
-            return mul_dict[args]
-        def div(*args):
-            return div_dict[args]
-
-        scalc = SimpleCalculator()
-        scalc.add = MagicMock(side_effect = add)
-        scalc.sub = MagicMock(side_effect = sub)
-        scalc.mul = MagicMock(side_effect = mul)
-        scalc.div = MagicMock(side_effect = div)
-
-        self.calc = Calculator(scalc)
-```
-- 用 dicts 裡面的 `add_dict`, `sub_dict`, `mul_dict`, `div_dict` 取在先前在 `setUp` 中手刻的字典
-
-執行 unittest，測試偽造 `SimpleCalculator` 效果
-```shell
-Creating test database for alias 'default'...
-.....
-----------------------------------------------------------------------
-Ran 5 tests in 0.015s
-
-OK
-Destroying test database for alias 'default'...
-```
-- 溫馨提示: 取代成功
-
-修改 calc/tests.py，增加更多測試
-```python
-    def test_num_op_num(self):
-        evalString = self.calc.evalString
-        ...(略)
-        self.assertEqual(evalString('7+5'), 12)
-        self.assertEqual(evalString('7-5'), 2)
-        self.assertEqual(evalString('7*5'), 35)
-        self.assertEqual(evalString('7/5'), 1.4)
-```
-
-執行 unittest，測試偽造 `SimpleCalculator` 效果
-```shell
-Creating test database for alias 'default'...
-.....
-----------------------------------------------------------------------
-Ran 5 tests in 0.015s
-
-OK
-Destroying test database for alias 'default'...
-```
-- 溫馨提示: 取代成功 :D
-
-更新 git repository
-```shell
-$ git add .
-$ git commit -m "use dicts.py"
-```
-
 ### 修改 `Calculator` - 處理先乘除後加減
 
 修改 calc/tests.py，增加“加減乘除”混合運算測試
 ```python
+    def setUp(self):
+        add_dict = {(3,2) : 5, (4,6) : 10}
+        sub_dict = {(3,2) : 1, (9,6) : 3}
+        mul_dict = {(3,2) : 6}
+        div_dict = {(3,2) : 1.5, (2,1) : 2}
+        ...(略)
+
     def test_order_of_operations(self):
         evalString = self.calc.evalString
         self.assertEqual(evalString('4+3*2'), 10)
