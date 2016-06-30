@@ -64,9 +64,9 @@
 “Success criteria establish the conditions of acceptation from the stakeholders’ point of view. Scenarios are the perfect medium for expressing the success criteria.”
 
 “The scenario contains a precondition, an action, and a consequence.”
-  - A precondition is the current state of the software before action is taken.
-  - An action is something that is accomplished to perform the behavior of the scenario.
-  - A consequence is the result of the action.
+  - `Given` A precondition is the current state of the software before action is taken.
+  - `When` An action is something that is accomplished to perform the behavior of the scenario.
+  - `Then` A consequence is the result of the action.
 
 “Triggering a single action is crucial in keeping the state transition simple.”
 
