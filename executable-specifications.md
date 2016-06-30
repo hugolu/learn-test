@@ -22,7 +22,7 @@
   - **Negotiable**: A story is a placeholder that facilitates conversation and negotiation between the team and stakeholders. At any time, the story can be rewritten or even discarded. A story is not fixed and set in stone, up until it is part of the upcoming sprint.
   - **Valuable**: A story needs to deliver value to the stakeholders (either the end user or the purchaser).
   - **Estimable**: The team needs to be able to roughly estimate the size of the effort to complete the story.
-  - **Small**: A story can start its life as a big placeholder. As time goes by and you better understand the intricacies of the desires, the place- holder will be split into smaller stories. When the most important ones are close to being delivered, they need to be small enough so that they can be completed in a single sprint.
+  - **Small**: A story can start its life as a big placeholder. As time goes by and you better understand the intricacies of the desires, the placeholder will be split into smaller stories. When the most important ones are close to being delivered, they need to be small enough so that they can be completed in a single sprint.
   - **Testable**: A story must provide the necessary information to clearly define the acceptance criteria that confirm the story is completed.
 
 ## Chapter 5 - Refining User Stories by Grooming the Product Backlog
@@ -49,7 +49,7 @@
 
 “You should focus on the perspective of stakeholders by thin slicing stories that favor the business value. Thin slicing is based on evolutionary architecture; it provides stories that implement only a small bit of functionality, but all the way through the architecture layers of the software.”
 
-“In this regard, over the years, experienced practitioners have acknowledged the neces- sity of structuring the backlog along a two-dimensional collaboration board. This way of organizing the stories to avoid half-baked incremental iterations was initially promoted by Jeff Patton and is now known as story mapping.”
+“In this regard, over the years, experienced practitioners have acknowledged the necessity of structuring the backlog along a two-dimensional collaboration board. This way of organizing the stories to avoid half-baked incremental iterations was initially promoted by Jeff Patton and is now known as story mapping.”
 
 “When a story has gone through the process of grooming, you have reached an important milestone, which is the transition from conversation to confirmation.”
 
@@ -66,7 +66,7 @@
 
 “Triggering a single action is crucial in keeping the state transition simple.”
 
-“Successful teams don’t use raw examples, they refine the specifi- cation from them. They extract the essence from the key examples and turn them into a clear and unambiguous definition of what makes the implementation done, without any extraneous detail.”
+“Successful teams don’t use raw examples, they refine the specification from them. They extract the essence from the key examples and turn them into a clear and unambiguous definition of what makes the implementation done, without any extraneous detail.”
 
 “It is important to note that the analyst’s competency is related to the specifications and not to how the software will be implemented.”
 
@@ -90,9 +90,9 @@
 
 “Acceptance tests represent assumptions stakeholders made during the specification.”
 
-“The red-green-refactor cycle is the core of Test-Driven Development (TDD). It is a widely recognized programming practice popularized by Kent Beck that promotes the notion of writing tests first when pro- gramming a piece of code. TDD relies on the repetition of a short development cycle divided into three stages: the red, the green, and the refactor stage.”
+“The red-green-refactor cycle is the core of Test-Driven Development (TDD). It is a widely recognized programming practice popularized by Kent Beck that promotes the notion of writing tests first when programming a piece of code. TDD relies on the repetition of a short development cycle divided into three stages: the red, the green, and the refactor stage.”
 
-“TDD requires programmers to articulate their assump- tions using a test case. Programmers must foresee how the functionality will be used by the test case. TDD places constraints on programmers; it requires that they define the interface before deciding on the implementation. TDD tends to lead to better designs.”
+“TDD requires programmers to articulate their assumptions using a test case. Programmers must foresee how the functionality will be used by the test case. TDD places constraints on programmers; it requires that they define the interface before deciding on the implementation. TDD tends to lead to better designs.”
 
 “If the development team members are the only ones who understand the result of the translation, they lose the ability to collaborate effectively with stakeholders.”
 
@@ -110,7 +110,7 @@
 
 “External quality is how well the software carries out its functions at run time, and as such, is not only visible to stakeholders, but is also highly desirable.”
 
-“Internal quality is characteristics of the software barely visible to stakeholders but which simplifies the process of building and evolv- ing the software.
+“Internal quality is characteristics of the software barely visible to stakeholders but which simplifies the process of building and evolving the software.
 ”
 
 
