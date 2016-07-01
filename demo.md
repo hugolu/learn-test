@@ -19,6 +19,12 @@
 - [乘法結合律](https://zh.wikipedia.org/wiki/%E7%BB%93%E5%90%88%E5%BE%8B): "(5x2) x 3 = 5 x (2x3) = 30"
 - [乘法分配律](https://zh.wikipedia.org/wiki/%E5%88%86%E9%85%8D%E5%BE%8B): "2 x(1+3) = (2x1) + (2x3)"
 
+### Source code
+
+[demo/](demo/) 不包含開發過程，只有最終完整的程式碼。
+
+如果想玩CI (要git commit)，請複製 demo/ 目錄到其他位置。因為上層的 learn-test/ 本身就有一個 git repository，裡面再放一個 git repository，後果會很可怕。
+
 ## 設定環境
 
 ```shell
@@ -1750,10 +1756,6 @@ $ git commit -m "add template/view/URL of web calculator"
 > 關於 BDD 的一點小感想：使用 Gherkin 描述產品規格，產生測試步驟 (steps) 的測試框架 (如 Cucumber, Behave)，與錄製網頁、App點擊行為實現自動化測試的工具 (如 Selenium)，在本質上有很大的差異。前者用來溝通、討論、定義，然後把規格變成自動化測試，後者只能等程式開發完成，被動的依照規格書、驗收條件逐一核對。如果蓋大樓一開始設計圖就畫錯了，事後再好的品管只能確保用對的方式蓋歪掉的樓，相信很多開發人員一定發現了這荒謬的現象，但礙於「按圖施工、保證成功」的開發流程或是「不要問問題、趕快做事情」的企業文化，很多人都默默承受了。
 
 ## 補充資料
-
-### Source code
-
-[demo/](demo/) 不包含開發過程，只有最終完整的程式碼
 
 ### 環境設定
 
