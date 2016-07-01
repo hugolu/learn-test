@@ -4,10 +4,10 @@
 
 “Unfortunately, there are still too many bloated and complex software systems. Even if all team members write code correctly, more often than not, they do not efficiently solve the actual problem. There is a distinct disconnect between what the client may want or need and what is subsequently produced.”
 
-![Uncertainty diagram](uncertainty.png)
-![Traditional engineering and uncertainty](uncertainty_traditional_engineering.png)
-![R&D and uncertainty](uncertainty_rd.png)
-![Agile and uncertainty](uncertainty_agile.png)
+<img src="uncertainty.png" alt="Uncertainty diagram" width="49%"/>
+<img src="uncertainty_traditional_engineering.png" alt="Traditional engineering and uncertainty" width="49%"/>
+<img src="uncertainty_rd.png" alt="R&D and uncertainty" width="49%"/>
+<img src="uncertainty_agile.png" alt="Agile and uncertainty" width="49%"/>
 
 “Conversely, when almost all the risks are related to the requirements, you are in the position experienced by the majority of software development teams. This is where using an agile framework, such as Scrum, is appropriate.”
 
