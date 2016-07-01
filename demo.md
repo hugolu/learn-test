@@ -1685,6 +1685,10 @@ Destroying test database for alias 'default'...
 
 ![demo reports](demo-reports.png)
 
+- Code Coverage (代碼覆蓋) - 軟體測試中的一種度量，描述程式中源代碼被測試的比例和程度，所得比例稱為代碼覆蓋率。
+- Code Violations (pylint) - 程式碼靜態檢查結果，顯示程式碼品質符不符合規範。
+- Test Result Trend - 測試成功/失敗趨勢圖 (count 測試案例的數目)。
+
 ## Django View
 
 底層 `Calculator` 終於開發完成，可以搭配 View 提供 GUI 來一場 Live demo。
