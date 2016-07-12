@@ -1,5 +1,8 @@
 # 關於測試，我說的其實是......
 
+## Slide
+- [關於測試，我說的其實是......](http://www.slideshare.net/hugolu/ss-63936508)
+
 ## Study Map
 
 - 重要觀念
