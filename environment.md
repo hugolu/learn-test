@@ -36,6 +36,8 @@ $ vagrant up
 $ vagrant ssh
 ```
 
+> 懶人安裝腳本：[env.sh](env.sh)
+
 ## 安裝基本套件
 
 ```shell
