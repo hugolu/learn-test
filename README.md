@@ -3,7 +3,13 @@
 ## Slide
 - [關於測試，我說的其實是......](http://www.slideshare.net/hugolu/ss-63936508)
 
-## Study Map
+## Demo
+
+- [demo](demo.md) - 透過開發網頁計算的的例子，串連 BDD, TDD, Test Double, Test Automation, Web Development 多項技術
+  - [source code](demo/)
+- [環境設定](environment.md)
+
+## 參考
 
 - 重要觀念
   - [可執行的需求](executable-specifications.md) - 這次學習的濫觴，薄薄一本言簡意賅，超推！
@@ -28,7 +34,4 @@
   - [pyparsing](pyparsing.md) - 翻譯說明文件
   - [pyparsing 練習](pyparsing_exercise.md) - 透過幾個練習，熟悉 pyparsing 解析字串的功能
   - [pyparsing/](pyparsing/) - pyparsing 練習的程式碼 
-- Demo
-  - [demo](demo.md) - 透過開發網頁計算的的例子，串連 BDD, TDD, Test Double, Test Automation, Web Development 多項技術
-  - [demo/](demo/) - demo 的程式碼
-- [環境設定](environment.md)
+
